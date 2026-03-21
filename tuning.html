@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ウクレレ診断 - チューニング</title>
+  <style>
+    /* スタイルは前回の「グレーアウト」と「弦の色」を維持 */
+    body { margin: 0; background: #4a3728; color: #fff; font-family: sans-serif; overflow: hidden; touch-action: none; }
+
+    :root{
+      --vh: 1vh;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    /* ===== TOPへ戻るボタン (新規追加) ===== */
+    .nav-back { 
+      position:fixed; top:15px; right:15px; z-index: 2200; 
+      top: calc(var(--safe-top) + 15px); right: calc(var(--safe-right) + 15px);
+    }
+    .nav-back a {
+      display:inline-block; background:rgba(255,255,255,0.85);
+      color:#4a3728; font-weight:bold; text-decoration:none;
+      padding:10px 18px; border-radius:20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      font-family: sans-serif; font-size: 14px;
+      transition: transform 0.1s;
+    }
+    .nav-back a:active { transform: scale(0.95); }
+
+    /* ===== iPhone / small screen responsive fixes (UI崩れ対策) ===== */
+    #guide-msg{
+      top: calc(var(--safe-top) + 12px);
+      padding: 0 12px;
+      font-size: clamp(16px, 4.8vw, 26px);
+      line-height: 1.2;
+      white-space: normal;
+      word-break: keep-all;
+    }
+    #tuner-nav{
+      top: calc(var(--safe-top) + 54px);
+      height: auto;
+      min-height: 92px;
+      font-size: clamp(46px, 12vw, 80px);
+    }
+
+    .ui-panel{ display:none; /* hide right buttons: use left labels instead */
+
+      bottom: calc(var(--safe-bottom) + 14px);
+      gap: clamp(10px, 3vw, 15px);
+    }
+    .string-btn{
+      width: clamp(54px, 14vw, 75px);
+      height: clamp(54px, 14vw, 75px);
+      font-size: clamp(14px, 4.2vw, 20px);
+      border-width: clamp(3px, 1vw, 4px);
+    }
+    .string-btn.active{
+      border-width: clamp(6px, 1.6vw, 8px);
+    }
+    .start-btn{
+      font-size: clamp(18px, 5vw, 24px);
+      padding: clamp(16px, 4.8vw, 25px) clamp(28px, 7vw, 50px);
+    }
+    #diagnosis-card{
+      max-height: calc((var(--vh) * 100) - var(--safe-top) - var(--safe-bottom) - 40px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (max-height: 700px){
+      #guide-msg{ top: calc(var(--safe-top) + 6px); }
+      #tuner-nav{ top: calc(var(--safe-top) + 44px); }
+      .ui-panel{ bottom: calc(var(--safe-bottom) + 10px); }
+    }
+
+    #screen-tuning { background: linear-gradient(135deg, #a8d8f0 0%, #f7d7d2 52%, #bff0d6 100%);
+width: 100vw; height: 100dvh; height: calc(var(--vh) * 100); position: relative; }
+    canvas { display: block; width: 100%; height: 100%; }
+    #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+    .start-btn { background: linear-gradient(90deg, #ff5f6d 0%, #ffb86c 100%); color: #fff; border: none; padding: clamp(16px, 4.8vw, 25px) clamp(28px, 7vw, 50px); font-size: clamp(18px, 5vw, 24px); font-weight: 900; border-radius: 26px; cursor: pointer; box-shadow: 0 10px 0 rgba(0,0,0,0.16), 0 18px 32px rgba(0,0,0,0.22); transition: transform 0.1s; }
+    .start-btn:active{ transform: translateY(2px); box-shadow: 0 8px 0 rgba(0,0,0,0.16), 0 14px 26px rgba(0,0,0,0.22); }
+
+
+
+    /* start overlay card (match menu feel) */
+    .start-card{
+      width: min(560px, 92vw);
+      background: rgba(255,255,255,0.92);
+      border-radius: 26px;
+      padding: 22px 20px;
+      box-shadow: 0 10px 0 rgba(122,177,204,0.24), 0 18px 34px rgba(0,0,0,0.18);
+      text-align: center;
+    }
+    .start-title{
+      font-size: clamp(22px, 4.6vw, 30px);
+      font-weight: 1000;
+      color: #ff7a3d;
+      text-shadow: 2px 2px 0 rgba(255,255,255,0.9);
+      margin-bottom: 6px;
+    }
+    .start-sub{
+      font-size: clamp(14px, 3.2vw, 18px);
+      font-weight: 900;
+      color: #4a3728;
+      opacity: 0.92;
+      margin-bottom: 14px;
+    }
+    .start-btn{
+      width: min(420px, 82vw);
+      border-radius: 22px;
+    }    #guide-msg { position: absolute; top: 6%; width: 100%; text-align: center; font-size: 26px; font-weight: bold; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); z-index: 5; }
+    #tuner-nav { position: absolute; top: 12%; left: 50%; transform: translateX(-50%); text-align: center; font-size: 80px; font-weight: 900; z-index: 5; height: 120px;}
+    .arrow-up { color: #ff5757; text-shadow: 0 0 20px #fff; }
+    .arrow-down { color: #5ce1e6; text-shadow: 0 0 20px #fff; }
+    .status-msg { font-size: clamp(14px, 4.2vw, 22px); display:block; margin-top: clamp(2px, 0.8vw, 8px); line-height: 1.2; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+    .ui-panel { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 10; }
+    .string-btn { width: 75px; height: 75px; border-radius: 50%; border: 4px solid #fff; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; color: white; opacity: 0.8; }
+    .string-btn.played { background: #888 !important; color: #ccc !important; border-color: #666 !important; transform: scale(0.9); opacity: 0.5; }
+    .string-btn.active { border-width: 8px; transform: scale(1.1); box-shadow: 0 0 20px rgba(255,255,255,0.8); z-index: 11; opacity: 1; }
+    #diagnosis-card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; max-width: 450px; background: white; color: #333; padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 1000; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    #diagnosis-card.show { transform: translate(-50%, -50%) scale(1); }
+    .diag-item { margin: 15px 0; padding: 10px; border-radius: 15px; background: #f9f9f9; }
+    .diag-label { font-size: 14px; color: #888; margin-bottom: 4px; font-weight: bold; }
+    .diag-value { font-size: 18px; color: #4a3728; font-weight: 900; }
+/* --- Teacher chip (diagnosis result) --- */
+.teacher-chip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 248, 235, 0.96);
+  border: 2px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+  font-size: 13px;
+  font-weight: 1000;
+  color: #4a3728;
+  margin: 0 auto 10px;
+  user-select: none;
+}
+
+  
+
+/* --- Teacher chip (splash only) --- */
+.teacher-chip-splash{ margin: 0 auto 10px; }
+.teacher-hint{
+  margin-top: -2px;
+  font-size: 14px;
+  font-weight: 1000;
+  color: rgba(20,20,20,0.72);
+  letter-spacing: .02em;
+}
+/* ===== Diagnosis splash ===== */
+.splash{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.splash.show{ display:flex; }
+.splash-inner{
+  width: min(560px, 92vw);
+  background: #fff;
+  border-radius: 22px;
+  padding: 28px 20px 22px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+  text-align: center;
+}
+.splash-pop{
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  color: #ff7a3d;
+  text-shadow: 0 3px 0 rgba(0,0,0,0.06);
+  transform: scale(0.6);
+  opacity: 0;
+}
+.splash.show .splash-pop{
+  animation: popIn 520ms cubic-bezier(.2,1.35,.35,1) forwards;
+}
+@keyframes popIn{
+  0% { transform: scale(0.6) rotate(-2deg); opacity: 0; }
+  70% { transform: scale(1.08) rotate(1deg); opacity: 1; }
+  100% { transform: scale(1.0) rotate(0deg); opacity: 1; }
+}
+.splash-btn{
+  margin-top: 18px;
+  border: 0;
+  border-radius: 18px;
+  padding: 14px 22px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  background: #3fc26b;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+.splash-btn:active{ transform: translateY(2px); }
+
+/* ===== Diagnosis extra lines ===== */
+.diag-meaning{
+  margin-top: 6px;
+  font-size: 14px;
+  color: #7a7a7a;
+  font-weight: 700;
+}
+.diag-scoreline{
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #ff7a3d;
+}
+
+
+/* ===== Drumroll ===== */
+.splash-pop.blink{
+  animation: blinkRoll 120ms steps(1,end) infinite;
+}
+@keyframes blinkRoll{
+  0%{ opacity: 1; }
+  50%{ opacity: 0.25; }
+  100%{ opacity: 1; }
+}
+.splash-btn[disabled]{
+  opacity: 0.6;
+  cursor: default;
+  filter: grayscale(0.1);
+}
+
+
+    /* ===== iPhone landscape fix (横画面でボタンがネックに被る対策) ===== */
+    @media (orientation: landscape){
+      /* 上のガイドは1行に寄せて省スペース */
+      #guide-msg{
+        top: calc(var(--safe-top) + 6px);
+        font-size: clamp(14px, 3.6vw, 20px);
+        line-height: 1.05;
+      }
+      #tuner-nav{
+        top: calc(var(--safe-top) + 34px);
+        min-height: 64px;
+        font-size: clamp(34px, 8vw, 56px);
+      }
+
+      /* 弦ボタンを右側に縦並びで退避（ネックに被らない） */
+      .ui-panel{
+        left: auto !important;
+        right: calc(var(--safe-right) + 10px);
+        bottom: auto !important;
+        top: 54%;
+        transform: translateY(-50%);
+        flex-direction: column-reverse;
+        gap: 10px;
+      }
+      .string-btn{
+        width: clamp(48px, 9vw, 60px);
+        height: clamp(48px, 9vw, 60px);
+        font-size: clamp(13px, 2.8vw, 16px);
+      }
+
+      /* ネック表示エリアを少し下げて上の文字と干渉させない */
+      #neck-area{
+        margin-top: 12px;
+      }
+    }
+
+
+/* FINAL OVERRIDE: hide right string buttons */
+.ui-panel{display:none !important;}
+
+/* DDR4: emoji rendering */
+#diag-personality, #diag-ukulele {
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+               "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+.diag-subline{margin-top:6px; font-size:18px; font-weight:700; color:#333; text-align:center;}
+.diag-mini-title{font-weight:700;}
+.diag-personality{margin-top:16px; font-size:32px; font-weight:900; color:#3a2a1a; text-align:center;}
+
+
+  /* iPhone横で、見出しと状態が重ならないように */
+  @media (orientation: landscape) and (max-height: 430px){
+    #guide-msg{ top: calc(env(safe-area-inset-top) + 8px) !important; font-size: 26px !important; padding: 10px 14px !important; }
+    #tuner-nav{ top: calc(env(safe-area-inset-top) + 64px) !important; }
+  }
+
+/* === PAGE_FLIP_TRANSITION v1 (shared) === */
+#pageFlip{
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  display: none;
+  perspective: 900px;
+}
+#pageFlip::before{
+  content:"";
+  position:absolute;
+  inset: -6vh -8vw;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,0.00) 0%,
+      rgba(255,255,255,0.65) 35%,
+      rgba(255,255,255,0.98) 62%,
+      rgba(255,255,255,1.00) 100%);
+  box-shadow: -18px 0 45px rgba(0,0,0,0.18);
+  transform-origin: right center;
+  transform: translateX(110%) rotateY(-35deg);
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+#pageFlip.run::before{
+  animation: pageFlipIn 320ms ease-out forwards;
+}
+@keyframes pageFlipIn{
+  0%   { transform: translateX(110%) rotateY(-35deg); opacity: 0.0; }
+  25%  { opacity: 1.0; }
+  100% { transform: translateX(0%) rotateY(0deg); opacity: 1.0; }
+}
+@media (prefers-reduced-motion: reduce){
+  #pageFlip.run::before{ animation: none; transform: translateX(0) rotateY(0); opacity: 1; }
+}
+
+</style>
+</head>
+<body>
+
+  <div id="start-overlay">
+  <div class="start-card">
+    <div class="start-title">🎵 チューニング</div>
+    <div class="start-sub">1げんから おとを あわせよう</div>
+    <button class="start-btn" onclick="startEverything()">はじめる</button>
+  </div>
+</div><div class="nav-back"><a href="ukulele.html" onclick="goFlip('ukulele.html'); return false;">🪕 もどる</a></div>
+
+  <section id="screen-tuning">
+    <div id="guide-msg">1げんを ひいてみよう</div>
+    <div id="tuner-nav">
+      <div id="nav-arrow"></div>
+      <div id="nav-text" class="status-msg"></div>
+    </div>
+    <canvas id="tuningCanvas"></canvas>
+    
+  <div id="diagnosis-splash" class="splash">
+    <div class="splash-inner">
+      
+      <div class="teacher-chip teacher-chip-splash">🐰 せんせい</div>
+      <div class="teacher-hint">さいごに けっかを みよう！</div>
+<div class="splash-pop" id="splash-pop">今日のウクレレ診断結果！！</div>
+      <button id="btn-show-result" class="splash-btn">結果を見る</button>
+    </div>
+  </div>
+
+<div id="diagnosis-card">
+      <div id="diag-personality" style="font-size:28px; font-weight:900; margin:10px 0 6px; color:#4a3728;"></div>
+      <div id="diag-ukulele" style="font-size:18px; font-weight:900; margin:4px 0 10px; color:#333;"></div>
+      <div id="diag-scoreline" class="diag-scoreline"></div>
+      <div id="diag-meaning" class="diag-meaning"></div>
+<button id="btn-details" style="margin:10px auto 0; display:block; background:#fff; border:2px solid #ddd; border-radius:12px; padding:8px 14px; font-weight:900; cursor:pointer;">くわしく</button>
+<div id="detail-panel" style="display:none; margin-top:12px;">
+        
+      <div class="diag-item"><div class="diag-label">アドバイス</div><div id="diag-advice" class="diag-value"></div></div>
+      <div class="diag-item"><div class="diag-label">性格の理由</div><div id="diag-personality-reason" class="diag-value"></div></div>
+      <div class="diag-item"><div class="diag-label">げんのようす（原因のヒント）</div><div id="diag-string-state" class="diag-value"></div></div>
+<div class="diag-item"><div class="diag-label">コンディション</div><div id="diag-cond" class="diag-value"></div></div>
+      <div class="diag-item"><div class="diag-label">メンテナンス</div><div id="diag-maint" class="diag-value"></div></div>
+      </div>
+      <button onclick="resetAll()" style="background:#7ed957; border:none; padding:12px 25px; border-radius:15px; color:white; font-weight:bold; cursor:pointer;">もういちど</button>
+    </div>
+
+    <div class="ui-panel">
+      <div class="string-btn" id="btn3" style="background:#5ce1e6" onclick="manualSelect(3)">4 G</div>
+      <div class="string-btn" id="btn2" style="background:#7ed957" onclick="manualSelect(2)">3 C</div>
+      <div class="string-btn" id="btn1" style="background:#ffde59; color:#4a3728" onclick="manualSelect(1)">2 E</div>
+      <div class="string-btn active" id="btn0" style="background:#ff5757" onclick="manualSelect(0)">1 A</div>
+    </div>
+  </section>
+
+<script>
+const canvas = document.getElementById('tuningCanvas');
+const ctx = canvas.getContext('2d');
+
+// ===== SHARED_STAGE_BLOCK v1 (GAME/TUNING 共通) =====
+// 目的: ネック/弦/フレットの「座標と見た目」を1か所で固定し、ズレ再発を防ぐ。
+// 注意: ここは原則いじらない（変更すると game/tuning 両方に影響）。
+const STAGE = Object.freeze({
+  NUT_X: 150,
+  NECK_HALF_H: 130,
+  NECK_H: 260,
+  FRET_COUNT: 12,
+  FRET_RIGHT_PAD: 20,        // (canvas.width - NUT_X - PAD)/FRET_COUNT
+  LANE_DY: 75,
+  LABEL_X: 110,
+  LABEL_R: 22,
+  NUT_LINE_W: 10,
+  FRET_LINE_W: 3,
+  STRING_LINE_W: 6,
+  NUT_COLOR: "#eee",
+  FRET_COLOR: "#a1887f",
+  FRET_MARK_COLOR: "#c9b7ae",
+  FRET_MARK_W_MULT: 1.3,
+  INLAY_COLOR: "rgba(255,255,255,0.28)",
+  INLAY_STROKE: "rgba(0,0,0,0.15)",
+  INLAY_R: 6,
+  INLAY_DY: 16,
+  NECK_COLOR: "#6d4c41",
+  LABEL_FONT: "bold 16px sans-serif",
+  NUT_BLOCK_W: 18,
+  NUT_BLOCK_OVER: 6,
+  FRET_HINTS: Object.freeze([1,3,5,7,10,12]),
+  FRET_HINT_FONT: "700 13px sans-serif",
+  FRET_HINT_COLOR: "rgba(255,255,255,0.62)",
+  FRET_HINT_Y_PAD:  2,
+});
+
+function stageGeom(canvas){
+  const cy = canvas.height/2;
+  const nutX = STAGE.NUT_X;
+  const fretW = (canvas.width - nutX - STAGE.FRET_RIGHT_PAD) / STAGE.FRET_COUNT;
+  const y = cy - STAGE.NECK_HALF_H;
+  const h = STAGE.NECK_H;
+  return { cy, nutX, fretW, y, h };
+}
+
+function rrRect(ctx,x,y,w,h,r){
+  r = Math.max(0, Math.min(r, w/2, h/2));
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w, y, x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x, y+h, r);
+  ctx.arcTo(x, y+h, x, y, r);
+  ctx.arcTo(x, y, x+w, y, r);
+  ctx.closePath();
+}
+
+function drawFretboardBase(ctx, canvas, stringColors){
+  const g = stageGeom(canvas);
+  const { cy, nutX, fretW } = g;
+
+  // neck
+  ctx.fillStyle = STAGE.NECK_COLOR;
+  // main neck (from nut to right)
+  ctx.fillRect(nutX, cy - STAGE.NECK_HALF_H, canvas.width - nutX, STAGE.NECK_H);
+
+  // nut block (clearly visible)
+  (function(){
+    const nutW = STAGE.NUT_BLOCK_W;
+    const over = STAGE.NUT_BLOCK_OVER;
+    const x0 = nutX - nutW/2;
+    const y0 = cy - STAGE.NECK_HALF_H - over;
+    const h0 = STAGE.NECK_H + over*2;
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = STAGE.NUT_COLOR;
+    rrRect(ctx, x0, y0, nutW, h0, 6);
+    ctx.fill();
+    ctx.restore();
+    // outline
+    ctx.strokeStyle = "rgba(0,0,0,0.25)";
+    ctx.lineWidth = 2;
+    rrRect(ctx, x0, y0, nutW, h0, 6);
+    ctx.stroke();
+  })();
+
+// frets (1..10)  ※ inlay描画がパスを潰さないよう、先にフレット線をstrokeしてからインレイを描く
+  for (let i=1; i<=STAGE.FRET_COUNT; i++){
+    const x = nutX + g.fretW * i;
+    const isMark = (i===5 || i===10);
+
+    ctx.strokeStyle = isMark ? STAGE.FRET_MARK_COLOR : STAGE.FRET_COLOR;
+    ctx.lineWidth = STAGE.FRET_LINE_W * (isMark ? STAGE.FRET_MARK_W_MULT : 1);
+
+    ctx.beginPath();
+    ctx.moveTo(x, g.y);
+    ctx.lineTo(x, g.y + g.h);
+    ctx.stroke();
+
+    // inlays: 5F=1dot, 10F=2dot（同じ●●）
+    if(i===5){
+      ctx.save();
+      ctx.fillStyle = STAGE.INLAY_COLOR;
+      ctx.strokeStyle = STAGE.INLAY_STROKE;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(x, cy, STAGE.INLAY_R, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }else if(i===10){
+      ctx.save();
+      ctx.fillStyle = STAGE.INLAY_COLOR;
+      ctx.strokeStyle = STAGE.INLAY_STROKE;
+      ctx.lineWidth = 1;
+      const dy = STAGE.INLAY_DY;
+      for(const yy of [cy - dy, cy + dy]){
+        ctx.beginPath();
+        ctx.arc(x, yy, STAGE.INLAY_R, 0, Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  // teacher fret hints (inside neck top edge)
+  (function(){
+    ctx.save();
+    const born = (window.__fretHintBorn ?? (window.__fretHintBorn = performance.now()));
+    const dt = performance.now() - born;
+    // brief "noticeable" pulse on load, then settle subtle
+    const boost = dt < 900 ? (2.2 - 1.2*(dt/900)) : 1.0;
+
+    ctx.font = STAGE.FRET_HINT_FONT;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    const yTxt = g.y + STAGE.FRET_HINT_Y_PAD;
+
+    const baseA = 0.65; // keep subtle but readable
+    ctx.globalAlpha = Math.min(1, baseA * boost);
+
+    // outline for readability on brown neck
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(0,0,0,0.28)";
+    ctx.fillStyle = STAGE.FRET_HINT_COLOR;
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(0,0,0,0.18)";
+    for (const n of STAGE.FRET_HINTS){
+      if (n < 1 || n > STAGE.FRET_COUNT) continue;
+      const x = nutX + g.fretW * n;
+      const s = String(n);
+      ctx.strokeText(s, x, yTxt);
+      ctx.strokeText(s, x, yTxt);
+      ctx.fillText(s, x, yTxt);
+      }
+    ctx.restore();
+  })();
+
+// strings + left labels
+  const labs = ['1A','2E','3C','4G'];
+  for(let i=0;i<4;i++){
+    const y = cy + (i-1.5) * STAGE.LANE_DY;
+
+    // left circle
+    ctx.beginPath();
+    ctx.fillStyle = stringColors[i];
+    ctx.globalAlpha = 1.0;
+    ctx.arc(STAGE.LABEL_X, y, STAGE.LABEL_R, 0, Math.PI*2);
+    ctx.fill();
+
+    // label text
+    ctx.fillStyle = "#fff";
+    ctx.font = STAGE.LABEL_FONT;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(labs[i], STAGE.LABEL_X, y);
+
+    // straight string (tuning will overdraw as vibration if needed)
+    ctx.strokeStyle = stringColors[i];
+    ctx.lineWidth = STAGE.STRING_LINE_W;
+    ctx.beginPath();
+    ctx.moveTo(nutX, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+
+  // restore defaults for other drawing
+  ctx.textAlign = "start";
+  ctx.textBaseline = "alphabetic";
+
+  return g; // {cy,nutX,fretW}
+}
+// ===== /SHARED_STAGE_BLOCK v1 =====
+
+
+const FREQS = [440.00, 329.63, 261.63, 392.00]; 
+const COLORS = ["#ff5757", "#ffde59", "#7ed957", "#5ce1e6"];
+
+// ===== Noise calibration / adaptive thresholds =====
+let NOISE_RMS = 0;
+let AUTO_CORR_MIN_RMS = 0.010; // autoCorrelateの無音閾値（環境により調整）
+let PLUCK_HIGH_RMS = 0.012;    // 「弾いた」とみなす音量（環境により調整）
+let PLUCK_RISE_RMS = 0.010;    // 直前がこの値未満なら「立ち上がり」とみなす
+let OK_REL_THRESH = 0.013;     // OKの相対誤差（環境により調整）
+let PLUCK_WINDOW_MS = 1400;    // 弾いた直後の判定有効時間（環境により調整）
+
+// ===== Diagnostics (がっつり診断) =====
+const STRING_NAMES = ["1A", "2E", "3C", "4G"];
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const IS_MOBILE = IS_IOS || /Android/.test(navigator.userAgent);
+let __micStream = null;
+let __loopToken = 0;
+// ===== Mobile sensitivity tuning (PCはそのまま / iPhoneだけ軽く弾いても反応) =====
+if (IS_IOS) {
+  AUTO_CORR_MIN_RMS = 0.0012;
+  PLUCK_RISE_RMS = 0.0016;
+  PLUCK_HIGH_RMS = 0.0020;
+} else if (IS_MOBILE) {
+  AUTO_CORR_MIN_RMS = 0.0075;
+  PLUCK_RISE_RMS = 0.007;
+  PLUCK_HIGH_RMS = 0.009;
+}
+
+function getPluckHighRms(){
+  // 2Eと4Gは反応しづらい端末があるので、少しだけ甘くする（iPhoneのみ）
+  if (IS_IOS && (currentTargetIdx === 1 || currentTargetIdx === 2)) return PLUCK_HIGH_RMS * 0.30; // 2げん/3げん
+  if (IS_IOS && (currentTargetIdx === 3)) return PLUCK_HIGH_RMS * 0.36; // 4げん
+  return PLUCK_HIGH_RMS;
+}
+function getPluckRiseRms(){
+  if (IS_IOS && (currentTargetIdx === 1 || currentTargetIdx === 2)) return PLUCK_RISE_RMS * 0.28; // 2げん/3げん
+  if (IS_IOS && (currentTargetIdx === 3)) return PLUCK_RISE_RMS * 0.34; // 4げん
+  return PLUCK_RISE_RMS;
+}
+
+let DIAG = null;
+let currentStringStartedAt = 0;
+let lastArrowDir = null; // "up" | "down" | null
+
+function initDiagnostics() {
+  DIAG = {
+    noiseRms: NOISE_RMS || 0,
+    createdAt: Date.now(),
+    strings: Array.from({length: 4}, (_, i) => ({
+      idx: i,
+      name: STRING_NAMES[i],
+      startedAt: 0,
+      finishedAt: 0,
+      timeToOkMs: 0,
+      okPitchHz: null,
+      okDiffHz: null,
+      okRelDiff: null,
+      flips: 0,
+      samplesHz: [],
+      samplesRms: [],
+      rmsPeak: 0,
+      rmsAvg: 0,
+      hzStd: 0,
+      hzRange: 0
+    }))
+  };
+  currentStringStartedAt = Date.now();
+  DIAG.strings[0].startedAt = currentStringStartedAt;
+  lastArrowDir = null;
+}
+
+function pushSample(idx, hz, rmsVal) {
+  const s = DIAG?.strings?.[idx];
+  if (!s) return;
+  s.samplesHz.push(hz);
+  if (s.samplesHz.length > 40) s.samplesHz.shift();
+  s.samplesRms.push(rmsVal);
+  if (s.samplesRms.length > 40) s.samplesRms.shift();
+  if (rmsVal > s.rmsPeak) s.rmsPeak = rmsVal;
+}
+
+function finalizeString(idx, okPitchHz, targetHz) {
+  const s = DIAG?.strings?.[idx];
+  if (!s) return;
+  const now = Date.now();
+  s.finishedAt = now;
+  s.timeToOkMs = Math.max(0, now - (s.startedAt || currentStringStartedAt || now));
+  s.okPitchHz = okPitchHz;
+  s.okDiffHz = okPitchHz - targetHz;
+  s.okRelDiff = Math.abs(s.okDiffHz / targetHz);
+
+  const hz = s.samplesHz;
+  if (hz.length >= 3) {
+    const mean = hz.reduce((a,b)=>a+b,0)/hz.length;
+    const v = hz.reduce((a,b)=>a + (b-mean)*(b-mean),0)/hz.length;
+    s.hzStd = Math.sqrt(v);
+    const mn = Math.min(...hz);
+    const mx = Math.max(...hz);
+    s.hzRange = mx - mn;
+  }
+
+  const rr = s.samplesRms;
+  if (rr.length) s.rmsAvg = rr.reduce((a,b)=>a+b,0)/rr.length;
+}
+
+function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+function msToSec(ms){ return (ms/1000).toFixed(1); }
+
+function scoreFromRelDiff(rel) {
+  const v = 1 - (rel / 0.02);
+  return Math.round(100 * clamp01(v));
+}
+function scoreFromStd(stdHz) {
+  const v = 1 - (stdHz / 6.0);
+  return Math.round(100 * clamp01(v));
+}
+function scoreFromTime(ms) {
+  const v = 1 - ((ms/1000 - 1) / 19);
+  return Math.round(100 * clamp01(v));
+}
+function scoreFromFlips(flips) {
+  const v = 1 - (flips / 8);
+  return Math.round(100 * clamp01(v));
+}
+
+function buildDiagnosis() {
+  const strings = DIAG?.strings || [];
+  const done = strings.filter(s => s.okRelDiff != null);
+  if (!done.length) {
+    return {
+      title: "診断できなかった…",
+      condition: "もう一度チューニングしてみてね。",
+      maintenance: "マイク許可と静かな場所を確認してね。"
+    };
+  }
+
+  const acc = Math.round(done.reduce((a,s)=>a+scoreFromRelDiff(s.okRelDiff),0)/done.length);
+  const stab = Math.round(done.reduce((a,s)=>a+scoreFromStd(s.hzStd),0)/done.length);
+  const speed = Math.round(done.reduce((a,s)=>a+scoreFromTime(s.timeToOkMs),0)/done.length);
+  const control = Math.round(done.reduce((a,s)=>a+scoreFromFlips(s.flips),0)/done.length);
+
+  const total = Math.round(acc*0.4 + stab*0.3 + control*0.2 + speed*0.1);
+
+  let title = "バランス職人";
+  if (acc >= 85 && stab >= 80) title = "精密チューナー";
+  else if (speed >= 85 && control >= 75) title = "スピード・チューナー";
+  else if (stab < 55) title = "ゆらぎマスター";
+  else if (control < 55) title = "回しすぎ注意報";
+
+  const worstAcc = done.reduce((p,c)=> (c.okRelDiff>p.okRelDiff?c:p), done[0]);
+  const worstStab = done.reduce((p,c)=> (c.hzStd>p.hzStd?c:p), done[0]);
+
+  let condition = `総合 ${total}点｜精度${acc} 安定${stab} 操作${control} 速さ${speed}`;
+  condition += `
+ズレやすい（音がちがう所に行きやすい）：${worstAcc.name}（±${(worstAcc.okRelDiff*100).toFixed(2)}%）`;
+  condition += `
+揺れやすい（音がふらふら動く）：${worstStab.name}（ゆらぎ ${worstStab.hzStd.toFixed(1)}Hz）`;
+
+  const tips = [];
+  if ((DIAG.noiseRms || 0) >= 0.015) tips.push("周りがにぎやか。静かな場所 or 口元に近づけると安定。");
+  if (acc < 70) tips.push("最後の1回は短く弾いて、表示が落ち着いた瞬間に合わせると精度UP。");
+  if (stab < 65) tips.push("弦を強く弾きすぎると揺れやすい。軽く1回弾きでOK。");
+  if (control < 65) tips.push("ペグは“ちょい回し→確認”の刻みが安定。行き過ぎたら戻し過ぎない。");
+
+  const times = done.map(s=>s.timeToOkMs);
+  const avgT = times.reduce((a,b)=>a+b,0)/times.length;
+  const longOne = done.find(s=>s.timeToOkMs > avgT*1.8 && s.timeToOkMs > 8000);
+  if (longOne) tips.push(`${longOne.name}は合わせにくい傾向。弦の巻き/ペグ滑り/弦の劣化をチェック。`);
+
+  const maintenance = tips.length ? tips.slice(0,3).join("\n") : "すごく良い感じ！このまま弾こう！";
+  const meaningMap = {
+    "精密チューナー": "音をピタッと正しく合わせられるよ。",
+    "スピード・チューナー": "",
+    "ゆらぎマスター": "音がふらふらしやすい日かも。",
+    "回しすぎ注意報": "ペグを回しすぎちゃうことがあるよ。",
+    "バランス職人": "バランスよく合わせられているよ。"
+  };
+  const meaning = meaningMap[title] || "今日の調子を見ながら、ゆっくり合わせていこう。";
+
+  // ほめ言葉（必ず1つ入れる）
+  const praise = [];
+  if (speed >= 85) praise.push("テンポよく進められてる！");
+  if (control >= 80) praise.push("ペグ操作が上手い！");
+  if (acc >= 80) praise.push("音程の詰めがきれい！");
+  if (stab >= 75) praise.push("音が安定していて気持ちいい！");
+  if (!praise.length) praise.push("最後までやり切ったのがえらい！");
+
+  // “最近弾いていないかも”は断定しない：時間がかかる/揺れる場合に提案として
+  const maybeRusty = (speed < 55 || stab < 55) && (DIAG.noiseRms || 0) < 0.012;
+
+  // 弦コンディション推定
+  const wornHint = (done.some(s => s.hzStd > 4.5) && done.some(s => s.timeToOkMs > 9000));
+
+  const scoreline = `きょうのウクレレの調子 ${total}点！！`;
+  const condition2 = `${praise[0]}\n${condition}` + (maybeRusty ? "\n※もし久しぶりなら、最初の1分だけ軽く鳴らすと安定しやすいよ。" : "");
+
+  const tips2 = [];
+  tips2.push(...tips);
+  if (wornHint) tips2.push("弦が疲れている可能性。最近交換していないなら、そろそろ交換も検討。\n（交換直後なら、伸びるので数回チューニングして馴染ませてね）");
+  // 弦別ひとこと
+  tips2.push(`弦の状態メモ：ズレやすい ${worstAcc.name}／揺れやすい ${worstStab.name}`);
+
+  const simpleTips = [];
+  // 子どもでも分かる「やること」だけにする
+  if ((DIAG.noiseRms || 0) >= 0.015) simpleTips.push("まわりがうるさいときは、マイクに近づけてね。");
+  if (stab < 65) simpleTips.push("音がふらふらしたら、弱く1回だけ弾いてね。");
+  if (control < 65) simpleTips.push("ペグは少しずつ回してね（ちょい→確認）。");
+  if (acc < 70) simpleTips.push("最後は短く弾いて、数字が止まったときに合わせよう。");
+  if (wornHint) simpleTips.push("弦が古いかも。新しい弦にすると良くなるよ。");
+  if (!simpleTips.length) simpleTips.push("問題なし！このまま弾こう！");
+  const maintenance2 = simpleTips.slice(0,3).join("\n");
+  return { title, meaning, scoreline, condition: condition2, maintenance: maintenance2 };
+}
+
+let vibrations = [0, 0, 0, 0];
+let playedStrings = [false, false, false, false];
+let currentTargetIdx = 0; 
+let audioCtx = null;
+let analyser = null;
+let micGain = null;
+let isMonitoring = false;
+let pitchHistory = [];
+let ignorePluckUntil = 0;
+let pluckHoldCount = 0;
+let lastPluckAt = 0; // ★最後に「弾いた」と判断した時刻（放置で勝手に進まない）
+let prevRms = 0;
+let currentRmsVal = 0;
+const SAMPLES_REQUIRED = 4; // 反応をより機敏にするため減らしました
+
+async function startEverything(forceReinit=false) {
+  document.getElementById('start-overlay').style.display = 'none';
+
+  // iOSは「もういちど」後にAudioの内部状態が固まることがあるので、必要時は完全に作り直す
+  if (forceReinit) {
+    try { isMonitoring = false; } catch(e) {}
+    try {
+      if (__micStream) { __micStream.getTracks().forEach(t => t.stop()); }
+      __micStream = null;
+    } catch(e) {}
+    try {
+      if (audioCtx && audioCtx.state !== 'closed') await audioCtx.close();
+    } catch(e) {}
+    audioCtx = null;
+    analyser = null;
+    micGain = null;
+  }
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  try {
+    const audioOpts = IS_IOS
+      ? { echoCancellation:false, noiseSuppression:false, autoGainControl:false }
+      : true;
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: audioOpts });
+    __micStream = stream;
+
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    micGain = audioCtx.createGain();
+    micGain.gain.value = (IS_IOS ? 3.9 : 1.0);
+    analyser.fftSize = (IS_IOS ? 4096 : 2048);
+
+    source.connect(micGain);
+    micGain.connect(analyser);
+
+    // runtime reset (見た目/UIは触らない)
+    isMonitoring = false;
+    lastPluckAt = 0;
+    prevRms = 0;
+    pluckHoldCount = 0;
+    ignorePluckUntil = 0;
+    pitchHistory = [];
+
+    // マイク許可直後に環境ノイズを測定して、判定しきい値を自動調整
+    await calibrateNoise(1500);
+    prevRms = (NOISE_RMS || 0);
+    ignorePluckUntil = Date.now() + 700;
+    initDiagnostics();
+
+    isMonitoring = true;
+
+    // ピッチループは「1本だけ」にする（多重起動バグ防止）
+    const myToken = ++__loopToken;
+    requestAnimationFrame(() => updatePitch(myToken));
+
+    document.getElementById('nav-text').innerText = "きいてるよ...";
+  } catch (err) {
+    alert("マイクが使えません。");
+  }
+}
+
+async function calibrateNoise(durationMs = 1500) {
+  // マイク許可直後に環境ノイズ（rms）を計測して、判定しきい値を自動調整する
+  const navText = document.getElementById('nav-text');
+  const guide = document.getElementById('guide-msg');
+  const navArrow = document.getElementById('nav-arrow');
+  navArrow.innerText = "";
+  navText.innerText = "";
+  guide.innerText = "環境ノイズ測定中…（弾かないでね）";
+
+  const samples = [];
+  const buffer = new Float32Array(analyser.fftSize);
+  const start = Date.now();
+
+  while (Date.now() - start < durationMs) {
+    analyser.getFloatTimeDomainData(buffer);
+    let rms = 0;
+    for (let i = 0; i < buffer.length; i++) {
+      const v = buffer[i];
+      rms += v * v;
+    }
+    const rmsVal = Math.sqrt(rms / buffer.length);
+    samples.push(rmsVal);
+
+    // 60fps想定の軽いウェイト
+    await new Promise(r => setTimeout(r, 50));
+  }
+
+  samples.sort((a,b) => a-b);
+  const avg = samples.reduce((a,b)=>a+b,0) / Math.max(1, samples.length);
+  const p90 = samples[Math.floor(samples.length * 0.90)] ?? avg;
+
+  NOISE_RMS = p90;
+
+  // しきい値を環境に合わせて設定（安全寄り）
+  // - ノイズが大きいほど「無音判定」と「弾いた判定」を上げる
+  // - iPhoneはrmsが小さく見えやすいので、iPhoneだけ別スケールで下げる（PCの挙動は維持）
+  if (IS_IOS) {
+    const auto = p90 * 2.5;
+    const rise = p90 * 2.0;
+    const high = p90 * 3.0;
+
+    // iPhone用：下限(床)を残しつつ、環境ノイズで自動スケール
+    AUTO_CORR_MIN_RMS = Math.min(0.0040, Math.max(0.0012, auto * 0.25));
+    PLUCK_RISE_RMS    = Math.min(0.0060, Math.max(0.0016, rise * 0.25));
+    PLUCK_HIGH_RMS    = Math.min(0.0080, Math.max(0.0020, high * 0.25));
+  } else {
+    AUTO_CORR_MIN_RMS = Math.max(0.010, p90 * 2.5);
+    PLUCK_RISE_RMS    = Math.max(0.010, p90 * 2.0);
+    PLUCK_HIGH_RMS    = Math.max(0.012, p90 * 3.0);
+
+    // モバイル（Android等）は少しだけ感度を上げる
+    if (IS_MOBILE) {
+      AUTO_CORR_MIN_RMS = Math.max(0.007, AUTO_CORR_MIN_RMS * 0.75);
+      PLUCK_RISE_RMS    = Math.max(0.007, PLUCK_RISE_RMS * 0.75);
+      PLUCK_HIGH_RMS    = Math.max(0.009, PLUCK_HIGH_RMS * 0.75);
+    }
+  }
+
+  // - ノイズが大きいほどOK判定を少し甘く、判定ウィンドウを少し長く
+  if (p90 < 0.008) {
+    OK_REL_THRESH = 0.012;      // 静か：少し厳しめ
+    PLUCK_WINDOW_MS = 1200;
+    guide.innerText = "静かで検出しやすいよ！";
+  } else if (p90 < 0.015) {
+    OK_REL_THRESH = 0.013;      // 普通
+    PLUCK_WINDOW_MS = 1400;
+    guide.innerText = "環境ノイズ：ふつう（OK）";
+  } else {
+    OK_REL_THRESH = 0.016;      // うるさい：少し甘く
+    PLUCK_WINDOW_MS = 1800;
+    guide.innerText = "周りがにぎやかかも。少し強めに弾いてね！";
+  }
+
+  // 1秒だけ表示してから戻す
+  await new Promise(r => setTimeout(r, 1900));
+  guide.innerText = `${currentTargetIdx+1}げんを ひいてみよう`;
+  navText.innerText = "";
+}
+
+
+function updatePitch(token) {
+  if (token !== __loopToken) return;
+  // ループは止めない（止めると再開できず「再起動が必要」になる）
+  if (!isMonitoring) {
+    requestAnimationFrame(() => updatePitch(token));
+    return;
+  }
+
+  const buffer = new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(buffer);
+
+  // ★簡易RMS（弾いた瞬間の検出に使う）
+  let rms = 0;
+  for (let i = 0; i < buffer.length; i++) {
+    const v = buffer[i];
+    rms += v * v;
+  }
+  const rmsVal = Math.sqrt(rms / buffer.length);
+  currentRmsVal = rmsVal;
+
+  // ★「弾いた」検出：iPhoneはノイズ床が高くなりやすいので「差分」も見る
+  // ===== Pluck detection (iPhone 2/3/4げんをさらに甘く) =====
+  const highTh = (typeof getPluckHighRms === 'function') ? getPluckHighRms() : PLUCK_HIGH_RMS;
+  const riseTh = (typeof getPluckRiseRms === 'function') ? getPluckRiseRms() : PLUCK_RISE_RMS;
+
+  const noiseBase = (NOISE_RMS || 0);
+
+  // iPhoneは弦によって反応差が出やすいので、2げん(E2)をさらに甘く
+  const isE2 = (IS_IOS && currentTargetIdx === 1);
+  const isC3 = (IS_IOS && currentTargetIdx === 2);
+  const isG4 = (IS_IOS && currentTargetIdx === 3);
+
+  let relTh = (IS_IOS ? 1.20 : 1.70);
+  if (isE2) relTh = 0.82;          // 2げん（さらに甘く）          // 2げん（さらに1段階さげ）
+  else if (isC3) relTh = 0.98;     // 3げん（甘く）     // 3げん
+  else if (isG4) relTh = 1.02; // 4げん（少し甘く） // 4げん（1段階さげ）
+
+  // ノイズ連動しきい値（周囲音に引っ張られすぎないように上限）
+  const rawByNoise = noiseBase > 0 ? (noiseBase * relTh) : 0;
+  let cap = Infinity;
+  if (isE2) cap = 0.0098;          // 2げん（下げ）          // 2げん（さらに1段階さげ）
+  else if (isC3) cap = 0.0120;
+  else if (isG4) cap = 0.0140;
+  else if (IS_IOS) cap = 0.018;
+
+  const highByNoise = Math.min(rawByNoise, cap);
+  const high = Math.max(highTh, highByNoise);
+  // しきい値の微調整（追加の段階調整）
+  // - 2げんはさらに 0.001 下げ
+  // - 4げんは 0.0005 下げ
+  const floorBase = (IS_IOS ? 0.0005 : 0.006);
+  const highAdj = Math.max(floorBase, high - (isE2 ? 0.0014 : (IS_IOS && currentTargetIdx === 3 ? 0.0005 : 0)));
+
+
+  const rise = rmsVal - prevRms;
+
+  // 誤判定対策：
+  // - ボタン操作直後は無効化
+  // - 「prevRmsが小さいだけ」でOKにしない
+  const now = Date.now();
+  const canUpdatePluck = now >= (ignorePluckUntil || 0);
+
+  // iPhone 2げんは立ち上がり最小値を少し下げる（ただし2フレーム連続で確定）
+  const riseMin = isE2 ? 0.0008 : (isC3 ? 0.0014 : (isG4 ? 0.0018 : (IS_IOS ? 0.0028 : 0.004)));
+  const riseNeed = Math.max(riseTh * (IS_IOS ? 0.32 : 0.55), riseMin);
+
+  const candidate = canUpdatePluck && (rmsVal > highAdj) && (rise > riseNeed);
+
+  // 2フレーム連続で candidate のときだけ pluck とみなす（感度↑でも誤判定↓）
+  if (candidate) pluckHoldCount = Math.min(pluckHoldCount + 1, 6);
+  else pluckHoldCount = Math.max(pluckHoldCount - 1, 0);
+
+  if (pluckHoldCount >= 2) {
+    lastPluckAt = now;
+    pluckHoldCount = 0;
+  }
+
+  prevRms = rmsVal;
+
+  // ★放置対策：弾いた直後(2.5秒)だけ判定する
+  const isInPluckWindow = (Date.now() - lastPluckAt) < PLUCK_WINDOW_MS;
+  if (!isInPluckWindow) {
+    // 表示だけ軽く案内（頻繁に書き換えたくないので控えめ）
+    const navText = document.getElementById('nav-text');
+  const guide = document.getElementById('guide-msg');
+    if (!navText.innerText || navText.innerText.includes("放置") || navText.innerText.includes("弾いて")) {
+      guide.innerText = `${currentTargetIdx+1}げんを ひいてみよう`;
+  navText.innerText = "";
+    }
+    requestAnimationFrame(() => updatePitch(token));
+    return;
+  }
+
+  const pitchRaw = autoCorrelate(buffer, audioCtx.sampleRate);
+
+  if (pitchRaw !== -1) {
+    const target = FREQS[currentTargetIdx];
+
+    // オクターブ補正：target近辺に寄せる（倍音/オクターブ誤検出対策）
+    let pitch = pitchRaw;
+    while (pitch < target * 0.8) pitch *= 2;
+    while (pitch > target * 1.2) pitch /= 2;
+
+    // 最終ゲート（少し余裕）
+    if (pitch > target * 0.85 && pitch < target * 1.15) {
+      processPitch(pitch);
+    }
+  }
+
+  requestAnimationFrame(() => updatePitch(token));
+}
+
+function processPitch(detectedPitch) {
+  const target = FREQS[currentTargetIdx];
+  pitchHistory.push(detectedPitch);
+  if (pitchHistory.length > SAMPLES_REQUIRED) pitchHistory.shift();
+
+  if (pitchHistory.length === SAMPLES_REQUIRED) {
+    const avgPitch = pitchHistory.reduce((a, b) => a + b) / SAMPLES_REQUIRED;
+    const diff = avgPitch - target;
+    try { pushSample(currentTargetIdx, avgPitch, (typeof currentRmsVal==='number'?currentRmsVal:0)); } catch(e) {}
+    const navArrow = document.getElementById('nav-arrow');
+    const navText = document.getElementById('nav-text');
+  const guide = document.getElementById('guide-msg');
+
+    navText.innerText = `いま: ${avgPitch.toFixed(1)} Hz / 目標: ${target.toFixed(2)} Hz`;
+
+    // ★OK判定：相対誤差で安定化（弦が違うのにOKになる事故を防ぐ）
+    const relDiff = Math.abs(diff / target);
+    let arrowDir = null;
+    if (relDiff < OK_REL_THRESH) arrowDir = 'ok';
+    else if (diff > 0) arrowDir = 'down';
+    else arrowDir = 'up';
+    if (arrowDir === 'up' || arrowDir === 'down') {
+      if (lastArrowDir && lastArrowDir !== arrowDir) {
+        const s = DIAG?.strings?.[currentTargetIdx];
+        if (s) s.flips = (s.flips || 0) + 1;
+      }
+      lastArrowDir = arrowDir;
+    }
+
+    // ★1弦(A)の誤動作対策：音量が十分で、かつ判定を少し厳しめにする
+    const okThreshold = (currentTargetIdx === 0) ? 0.008 : 0.013; // Aだけ少し厳しく
+    const minRmsForOk = (currentTargetIdx === 0) ? 0.018 : 0.012; // Aだけ音量要求
+
+    if (relDiff < okThreshold && currentRmsVal >= minRmsForOk) { // 約±1%
+      navArrow.innerText = "✨";
+      try { finalizeString(currentTargetIdx, avgPitch, target); } catch(e) {}
+      navArrow.className = "";
+      navText.innerText = `オッケー！（いま: ${avgPitch.toFixed(1)} Hz）`;
+      vibrations[currentTargetIdx] = 40;
+
+      // 連続OK連打防止：短時間だけ止めて次へ
+      isMonitoring = false;
+      setTimeout(() => {
+        markAsDone(currentTargetIdx);
+        isMonitoring = true;
+        // 次の弦へ移った直後は「弾いた」判定待ちにする
+        lastPluckAt = 0;
+        ignorePluckUntil = Date.now() + 450;
+  pluckHoldCount = 0;
+        prevRms = (typeof currentRmsVal === "number" ? currentRmsVal : (NOISE_RMS || 0));
+        pitchHistory = [];
+      }, 600);
+
+    } else if (diff > 0) {
+      navArrow.innerText = "↓";
+      navArrow.className = "arrow-down";
+      navText.innerText = `すこし ゆるめて！（いま: ${avgPitch.toFixed(1)} Hz）`;
+    } else {
+      navArrow.innerText = "↑";
+      navArrow.className = "arrow-up";
+      navText.innerText = `すこし しめて！（いま: ${avgPitch.toFixed(1)} Hz）`;
+    }
+  }
+}
+
+function markAsDone(idx) {
+  if (playedStrings[idx]) return;
+  playedStrings[idx] = true;
+
+  const btn = document.getElementById(`btn${idx}`);
+  btn.classList.add('played');
+  btn.classList.remove('active');
+
+  pitchHistory = [];
+  document.getElementById('nav-arrow').innerText = "";
+
+  // 次の未完了弦へ自動で切り替え
+  let next = playedStrings.indexOf(false);
+  if (next !== -1) {
+    currentTargetIdx = next;
+    try {
+      currentStringStartedAt = Date.now();
+      if (DIAG?.strings?.[next]) DIAG.strings[next].startedAt = currentStringStartedAt;
+      lastArrowDir = null;
+    } catch(e) {}
+
+    // active表示を更新
+    document.querySelectorAll('.string-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`btn${next}`).classList.add('active');
+
+    document.getElementById('guide-msg').innerText = `${idx+1}げんを ひいてみよう`;
+    ignorePluckUntil = Date.now() + 350;
+    pluckHoldCount = 0;
+    prevRms = (typeof currentRmsVal === "number" ? currentRmsVal : (NOISE_RMS || 0));
+    document.getElementById('nav-text').innerText = "弾いてね…";
+  } else {
+    document.getElementById('guide-msg').innerText = "ぜんぶ できたね！";
+    document.getElementById('nav-text').innerText = "";
+    setTimeout(doDiagnosis, 800);
+  }
+}
+
+// ★手動ボタンは「即クリア」ではなく「切替」に変更
+function manualSelect(idx) {
+  // 任意の弦を選択して再チューニングできる（完了済みでもOK）
+  currentTargetIdx = idx;
+  pitchHistory = [];
+  lastPluckAt = 0;
+  ignorePluckUntil = Date.now() + 450;
+  pluckHoldCount = 0;
+  prevRms = (typeof currentRmsVal === "number" ? currentRmsVal : (NOISE_RMS || 0));
+
+  // 完了済みを選んだ場合は「未完了」に戻す（そこから先をやり直せる）
+  if (playedStrings[idx]) {
+    playedStrings[idx] = false;
+    const btn = document.getElementById(`btn${idx}`);
+    btn.classList.remove('played');
+  }
+
+  // active表示を更新
+  document.querySelectorAll('.string-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`btn${idx}`).classList.add('active');
+
+  document.getElementById('guide-msg').innerText = `${idx+1}げんを ひいてみよう`;
+    ignorePluckUntil = Date.now() + 350;
+    pluckHoldCount = 0;
+    prevRms = (typeof currentRmsVal === "number" ? currentRmsVal : (NOISE_RMS || 0));
+
+  document.getElementById('nav-arrow').innerText = "";
+  document.getElementById('nav-text').innerText = "弾いてね…";
+  isMonitoring = true;
+}
+
+// ピッチ検出：小音量でも拾えるように閾値を調整
+function autoCorrelate(buf, sampleRate) {
+  let SIZE = buf.length;
+  let rms = 0;
+  for (let i=0;i<SIZE;i++) { let val = buf[i]; rms += val*val; }
+  if (Math.sqrt(rms/SIZE) < AUTO_CORR_MIN_RMS) return -1; // 0.01から0.005へ下げ、感度アップ
+
+  let r1=0, r2=SIZE-1, thres=0.2;
+  for (let i=0; i<SIZE/2; i++) if (Math.abs(buf[i]) < thres) { r1=i; break; }
+  for (let i=1; i<SIZE/2; i++) if (Math.abs(buf[SIZE-i]) < thres) { r2=SIZE-i; break; }
+  buf = buf.slice(r1,r2);
+  SIZE = buf.length;
+  let c = new Float32Array(SIZE);
+  for (let i=0; i<SIZE; i++) for (let j=0; j<SIZE-i; j++) c[i] = c[i] + buf[j]*buf[j+i];
+  let d=0; while (c[d]>c[d+1]) d++;
+  let maxval=-1, maxpos=-1;
+  for (let i=d; i<SIZE; i++) { if (c[i] > maxval) { maxval = c[i]; maxpos = i; } }
+  return sampleRate/maxpos;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const g = drawFretboardBase(ctx, canvas, COLORS);
+  const midY = g.cy;
+  const nutX = g.nutX;
+  const fretW = g.fretW;
+
+const labels = ['1A','2E','3C','4G'];
+for (let i = 0; i < 4; i++) {
+    const y = midY + (i - 1.5) * 75;
+    const isActive = (i === currentTargetIdx);
+
+    // (base) 左の丸と文字は drawFretboardBase() で描画済み
+    const cx = STAGE.LABEL_X;
+    // Active highlight (visual only; geometry identical)
+    if (isActive) {
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.beginPath();
+      ctx.fillStyle = COLORS[i];
+      ctx.arc(cx, y, STAGE.LABEL_R + 8, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+// 弦（振動）
+    const vib = Math.sin(Date.now() * 0.15) * vibrations[i];
+    vibrations[i] *= 0.94;
+    ctx.strokeStyle = COLORS[i]; ctx.lineWidth = STAGE.STRING_LINE_W;
+    ctx.beginPath(); ctx.moveTo(nutX, y);
+    ctx.quadraticCurveTo(nutX + (canvas.width - nutX)/2, y + vib, canvas.width, y);
+    ctx.stroke();
+  }
+  // 以降の描画で textAlign を戻す
+  ctx.textAlign = 'start';
+  ctx.textBaseline = 'alphabetic';
+  requestAnimationFrame(draw);
+}
+
+
+// ===== SE (軽いドラムロール風) =====
+let _seCtx = null;
+function getSeCtx(){
+  if (!_seCtx) _seCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _seCtx;
+}
+function playTick(){
+  try{
+    const ctx = getSeCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "square";
+    o.frequency.value = 180 + Math.random()*60;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
+    o.connect(g).connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.07);
+  }catch(e){}
+}
+function playTaDa(){
+  try{
+    const ctx = getSeCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(660, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+    o.connect(g).connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.26);
+  }catch(e){}
+}
+
+
+function resetAll() {
+  // 診断画面を閉じて、最初からやり直す（ページリロードなし）
+  document.getElementById('diagnosis-card').classList.remove('show');
+  const splash = document.getElementById('diagnosis-splash');
+  if (splash) splash.classList.remove('show');
+
+  // 状態リセット
+  playedStrings = [false, false, false, false];
+  vibrations = [0, 0, 0, 0];
+  currentTargetIdx = 0;
+  pitchHistory = [];
+  lastPluckAt = 0;
+  ignorePluckUntil = Date.now() + 700;
+  pluckHoldCount = 0;
+  prevRms = (typeof currentRmsVal === "number" ? currentRmsVal : (NOISE_RMS || 0));
+  lastArrowDir = null;
+
+  // ボタン見た目リセット
+  document.querySelectorAll('.string-btn').forEach(b => {
+    b.classList.remove('played');
+    b.classList.remove('active');
+  });
+  const b0 = document.getElementById('btn0');
+  if (b0) b0.classList.add('active');
+
+  // ガイド文を1げんに戻す
+  const guide = document.getElementById('guide-msg');
+  if (guide) guide.innerText = "1げんを ひいてみよう";
+  const nav = document.getElementById('nav-text');
+  if (nav) nav.innerText = "弾いてね…";
+  const arrow = document.getElementById('nav-arrow');
+  if (arrow) arrow.innerText = "";
+
+  // 診断ログもリセット
+  try { initDiagnostics(); } catch(e) {}
+
+  // 監視を再開（iOSは念のためAudioを作り直す）
+  isMonitoring = true;
+
+  if (IS_IOS) {
+    // iOS: 「もういちど」で固まる/遅れて急に拾う対策として、AudioContextとStreamを作り直す
+    startEverything(true);
+    return;
+  }
+
+  // 非iOS: マイクはそのまま・ループだけを確実に単独再起動
+  const myToken = ++__loopToken;
+  requestAnimationFrame(() => updatePitch(myToken));
+}
+
+
+
+function computeUkulelePersonality(diag, ukuleleDiagText, conditionKidText){
+  // Returns: "この子は、◯◯です。"
+  // Sets: window.__personalityReason (short text)
+  try{
+    const done = (diag?.strings || []).filter(s => s && (s.okRelDiff != null || s.hzStd != null || s.rmsAvg != null));
+    if (!done.length){
+      window.__personalityReason = "データが少ないよ。";
+      return "この子は、ひかえめです。";
+    }
+
+    const rmsAvg = done.reduce((a,s)=>a+(Number(s.rmsAvg||0)),0)/done.length;
+    const jitterAvg = done.reduce((a,s)=>a+(Number(s.hzStd||0)),0)/done.length;
+    const driftAvg = done.reduce((a,s)=>a+Math.abs(Number(s.okRelDiff||0)),0)/done.length;
+    const jitterMax = Math.max(...done.map(s=>Number(s.hzStd||0)));
+    const driftMax  = Math.max(...done.map(s=>Math.abs(Number(s.okRelDiff||0))));
+
+    const clamp01 = (x)=>Math.max(0, Math.min(1, x));
+
+    // normalize
+    const loud   = clamp01((rmsAvg - 0.010) / 0.020);          // 0.010..0.030
+    const quiet  = 1 - loud;
+    const stable = 1 - clamp01((jitterAvg - 3) / 10);          // <=3 good, >=13 bad
+    const accurate = 1 - clamp01((driftAvg - 0.004) / 0.016);  // <=0.4% good, >=2.0% bad (rel diff)
+    const incons = clamp01(((jitterMax - jitterAvg) + (driftMax - driftAvg)) / 10);
+
+    const score = { "まじめ":0,"のびのび":0,"きらきら":0,"げんき":0,"きまぐれ":0,"ひかえめ":0 };
+
+    score["ひかえめ"] = quiet*1.4 + (1-loud)*0.2;
+    score["まじめ"]   = stable*1.2 + accurate*1.1 - incons*0.3;
+    score["きらきら"] = loud*1.2 + accurate*0.9 - (1-stable)*0.2;
+
+    const lively = clamp01((jitterAvg - 2) / 10);
+    score["げんき"]   = loud*1.0 + lively*0.9 + accurate*0.2;
+    score["のびのび"] = loud*0.7 + stable*0.6 + (1-accurate)*0.3;
+    // きまぐれ：本当に「ばらつき」が強い時だけ出るようにする（出過ぎ防止）
+    const kJ = clamp01((jitterAvg - 9) / 10);              // 平均ゆれが大きい時（閾値を上げる）
+    const kI = clamp01((incons - 0.25) / 0.75);            // 弦ごとの差が大きい時
+    const kD = clamp01((driftMax - 0.018) / 0.015);        // 最大ズレが大きい時（1.8%〜）
+    score["きまぐれ"] = (kJ*0.6 + kI*0.9 + kD*0.3) - stable*0.25;
+
+    let best = "まじめ", bestVal = -1;
+    Object.keys(score).forEach(k=>{ if (score[k] > bestVal){ bestVal = score[k]; best = k; } });
+
+    // --- Consistency with ukulele diagnosis ---
+    const u = String(ukuleleDiagText||"");
+    const isLowEnergy = u.includes("元気がない") || u.includes("まだ本気") || u.includes("これから音がよく");
+    if (isLowEnergy){
+      if (best === "げんき") best = "きまぐれ";
+      if (best === "きらきら") best = (quiet > 0.55) ? "ひかえめ" : "まじめ";
+    }
+
+    // --- Consistency with condition text ---
+    const c = String(conditionKidText||"");
+    const hasDrift = c.includes("ズレやすい");
+    const hasJitter = c.includes("ゆれやすい") || c.includes("揺れやすい");
+
+    
+    // タイブレーク：安定・精度がそこそこあるのに「きまぐれ」になるのを防ぐ
+    if (best === "きまぐれ" && stable > 0.55 && accurate > 0.55 && incons < 0.55){
+      best = loud > 0.45 ? "きらきら" : "まじめ";
+    }
+let reason = "バランス型";
+    if (best === "ひかえめ") reason = "音が小さめ";
+    else if (best === "まじめ") reason = (hasDrift || hasJitter) ? "落ちついているけど、少しズレ/ゆれが出る" : "ゆれが少なめ・ズレも少なめ";
+    else if (best === "きらきら") reason = (hasDrift || hasJitter) ? "音がしっかり（でも今日は少しゆれやすい）" : "音がしっかり・ズレ少なめ";
+    else if (best === "げんき") reason = "音が大きめ";
+    else if (best === "のびのび") reason = "音がのびてる";
+    else if (best === "きまぐれ") reason = "ゆれたりズレたりが出やすい";
+
+    if (isLowEnergy && (best === "まじめ" || best === "ひかえめ")){
+      reason = (best === "まじめ") ? "音はおちついてる（でも今は元気少なめ）" : "音が小さめ（今は元気少なめ）";
+    }
+
+    window.__personalityReason = reason;
+    return "この子は、" + best + "です。";
+  }catch(e){
+    window.__personalityReason = "判定できなかったよ。";
+    return "この子は、まじめです。";
+  }
+}
+
+
+
+
+
+
+function computeUkuleleBodyDiagnosis(diag, summary){
+  // D-4 (B-UK) simplified: kid-level, but clear.
+  try{
+    const done = (diag?.strings || []).filter(s => s && s.okRelDiff != null);
+    if (!done.length) return null;
+
+    // Parse summary scores if available (from buildDiagnosis condition text)
+    const condText = String(summary?.condition || "");
+    const accM = condText.match(/精度(\d+)/);
+    const stabM = condText.match(/安定(\d+)/);
+    const speedM = condText.match(/速さ(\d+)/);
+    const controlM = condText.match(/操作(\d+)/);
+
+    const acc = accM ? Number(accM[1]) : null;
+    const stab = stabM ? Number(stabM[1]) : null;
+    const speed = speedM ? Number(speedM[1]) : null;
+    const control = controlM ? Number(controlM[1]) : null;
+
+    const avgStd  = done.reduce((a,s)=>a+(Number(s.hzStd)||0),0)/done.length;
+    const stds = done.map(s => Number(s.hzStd)||0);
+    const stdVar = (Math.max(...stds) - Math.min(...stds));
+
+    // player-likely (avoid blaming instrument)
+    const playerLikely = (control != null && control < 60) || (speed != null && speed < 55);
+
+    // 1) 元気がない（揺れが強い／差が大きい）
+    if (!playerLikely && (avgStd > 5.0 || stdVar > 4.0)){
+      return "すこし元気がないみたいです。";
+    }
+
+    // 2) ひき方
+    if (playerLikely){
+      return "ウクレレは大丈夫。ひき方で音がかわっています。";
+    }
+
+    // 3) 声が出ている（強い条件を先）
+    if (acc != null && stab != null && acc >= 85 && stab >= 85){
+      return "このウクレレの「声」が、ちゃんと出ています。 この音が、この子のいちばんいい音です。";
+    }
+
+    // 4) 育っている
+    if (acc != null && stab != null && acc >= 80 && stab >= 80){
+      return "このウクレレ、いい音になってきています。";
+    }
+
+    // 5) まだ本気
+    if (stab != null && stab < 55){
+      return "このウクレレ、まだ本気を出していません。";
+    }
+
+    // 6) これから良くなる
+    if (stab != null && stab < 75){
+      return "このウクレレは、これから音がよくなります。";
+    }
+
+    // 7) 問題なし
+    return "ウクレレは、ちゃんとしています。";
+  }catch(e){
+    return null;
+  }
+}
+
+
+function toGenLabel(code){
+  const s = String(code||"").trim();
+  if (!s) return "";
+  // accept "1A" "2E" "3C" "4G" or reversed "A1" "E2" ...
+  let m = s.match(/^([1-4])[AECG]$/);
+  if (m) return `${m[1]}げん`;
+  m = s.match(/^[AECG]([1-4])$/);
+  if (m) return `${m[1]}げん`;
+  // accept like "1げん" etc
+  m = s.match(/^([1-4])\s*げん/);
+  if (m) return `${m[1]}げん`;
+  return s;
+}
+function convertCodesToGen(text){
+  return String(text||"").replace(/\b([1-4])[AECG]\b/g, (s)=>toGenLabel(s));
+}
+
+
+function idxToGen(idx){
+  const n = Number(idx) + 1;
+  if (n >= 1 && n <= 4) return `${n}げん`;
+  return `${idx}`;
+}
+
+function makeStringInsights(diag, d){
+  // kid-level: short, but informative. Use "かも" to avoid overclaim.
+  try{
+    const ss = (diag?.strings || []);
+    const done = ss.filter(s => s && s.okRelDiff != null);
+
+    if (!done.length) return "まだデータがたりないよ。";
+
+    // most shaky / quiet
+    const maxStdS = done.reduce((best,s)=> (best==null || (s.hzStd||0)>(best.hzStd||0)) ? s : best, null);
+    const minRmsS = done.reduce((best,s)=> (best==null || (s.rmsAvg||0)<(best.rmsAvg||0)) ? s : best, null);
+
+    const maxStd = Number(maxStdS?.hzStd||0);
+    const minRms = Number(minRmsS?.rmsAvg||0);
+
+    // read "ズレやすい/揺れやすい" from condition text (already kid-level in details, but we can reuse)
+    const condText = String(d?.condition || "");
+    const zM = condText.match(/ズレやすい.*?:\s*([1-4])[AECG]\b/);
+    const yM = condText.match(/揺れやすい.*?:\s*([1-4])[AECG]\b/);
+
+    const zGen = zM ? `${zM[1]}げん` : null;
+    const yGen = yM ? `${yM[1]}げん` : null;
+
+    const lines = [];
+
+    if (zGen) lines.push(`${zGen}は、のびたり ゆるんだり しやすいかも。`);
+    if (yGen) lines.push(`${yGen}は、ふらふら しやすいかも。`);
+
+    // "old string" heuristic
+    // If one string is very shaky AND very quiet => likely old / worn / high friction nut/bridge, etc.
+    if (maxStd >= 5.0 && minRms <= 0.012){
+      const sGen = idxToGen(minRmsS.idx);
+      lines.push(`${sGen}の げんが ふるいかも。できたら こうかんしよう。`);
+    } else if (maxStd >= 5.0){
+      const sGen = idxToGen(maxStdS.idx);
+      lines.push(`${sGen}は ゆれが大きいよ（${maxStd.toFixed(1)}Hz）。`);
+    }
+
+    if (!lines.length){
+      // If no issue detected, still give a useful tip
+      lines.push("げんは だいたい OK だよ。");
+    }
+
+    // keep it short (max 3 short sentences)
+    return lines.slice(0,3).join(" ");
+  }catch(e){
+    return "";
+  }
+}
+
+function makeKidCondition(d){
+  // コンディション = 「今日のチューニングのむずかしさ（全体）」だけを言う
+  // ※ 何げんが〜 は「げんのようす」に集約して、内容のかぶりをなくす
+  try{
+    const score = Number(d?.score || d?.total || d?.totalScore || 0);
+
+    let main = "";
+    if (score >= 90) main = "すごくいい感じ！";
+    else if (score >= 80) main = "いい感じ！";
+    else if (score >= 70) main = "あと少しで もっとよくなるよ。";
+    else main = "今日は合わせにくい日。あわてないでOK。";
+
+    // 追加の一言（具体的な行動）
+    // ここでは 1げん/2げん などは言わない（げんのようすへ）
+    const s = String(d?.condition || "");
+    const hasDrift = s.includes("ズレ") || s.includes("ずれ");
+    const hasJitter = s.includes("ゆれ") || s.includes("揺れ");
+
+    let tip = "";
+    if (hasDrift && hasJitter){
+      tip = "ズレとゆれが出やすいよ。1げんずつ、短く1回で合わせよう。";
+    }else if (hasDrift){
+      tip = "ズレが出やすいよ。最後は短く1回で合わせよう。";
+    }else if (hasJitter){
+      tip = "ゆれが出やすいよ。強く弾きすぎないでね。";
+    }
+
+    return tip ? `${main}\n${tip}` : `${main}`;
+  }catch(e){
+    return "今日は合わせにくい日。あわてないでOK。";
+  }
+}
+
+function makeKidMaintenance(diag){
+  try{
+    const done = (diag?.strings || []).filter(s => s && (s.okRelDiff != null || s.hzStd != null));
+    if (!done.length) return "ゆっくりでいいよ。1げんずつ合わせよう。";
+
+    const drift = [...done].sort((a,b)=> (Math.abs(b.okRelDiff||0))-(Math.abs(a.okRelDiff||0)))[0];
+    const jitter = [...done].sort((a,b)=> (b.hzStd||0)-(a.hzStd||0))[0];
+
+    if (drift && Math.abs(drift.okRelDiff||0) >= 0.9){
+      return "最後は短く1回だけ弾いて、数字が止まったら合わせよう。";
+    }
+    if (jitter && (jitter.hzStd||0) >= 10){
+      return "強く弾きすぎないで、1回だけポンと弾いてね。";
+    }
+    return "1げんずつ、1回だけ弾いて合わせよう。";
+  }catch(e){
+    return "1げんずつ、1回だけ弾いて合わせよう。";
+  }
+}
+
+
+function toggleDetailsPanel(forceOpen=null){
+  const panel = document.getElementById('detail-panel');
+  const btn = document.getElementById('btn-details');
+  if (!panel || !btn) return;
+  const nowOpen = (forceOpen===null) ? (panel.style.display !== 'none') : (!forceOpen);
+  const nextOpen = (forceOpen===null) ? !nowOpen : forceOpen;
+  panel.style.display = nextOpen ? 'block' : 'none';
+  btn.innerText = nextOpen ? 'とじる' : 'くわしく';
+}
+
+
+function makeStringState(diag){
+  // げんのようす = 「どのげんが、どうなりがち？」（原因のヒント）
+  // コンディションと重ならないように、ズレ/ゆれ という言葉はここでは使わない
+  try{
+    const done = (diag?.strings || []).filter(s => s && (s.okRelDiff != null || s.hzStd != null || s.rmsAvg != null));
+    if (!done.length) return "まだ はっきりわからないよ。";
+
+    const drift = [...done].sort((a,b)=> (Math.abs(b.okRelDiff||0))-(Math.abs(a.okRelDiff||0)))[0];
+    const jitter = [...done].sort((a,b)=> (b.hzStd||0)-(a.hzStd||0))[0];
+
+    const parts = [];
+    const driftVal = drift ? Math.abs(Number(drift.okRelDiff||0)) : 0; // rel diff (e.g., 0.009 = 0.9%)
+    const jitterVal = jitter ? Number(jitter.hzStd||0) : 0;           // Hz
+
+    if (drift && driftVal >= 0.009){
+      const gen = toGenLabel(drift.label || drift.stringLabel || drift.string || drift.name || "");
+      if (gen) parts.push(`${gen}は、ゆるみやすいかも。`);
+    }
+
+    if (jitter && jitterVal >= 8){
+      const gen = toGenLabel(jitter.label || jitter.stringLabel || jitter.string || jitter.name || "");
+      const rms = (jitter.rmsAvg != null) ? Number(jitter.rmsAvg||0) : null;
+      if (gen){
+        if (rms != null && rms < 0.012) parts.push(`${gen}の げんが ふるいかも。`);
+        else parts.push(`${gen}は、つよく弾くと ふらつきやすいよ。`);
+      }
+    }
+
+    if (!parts.length) return "げんは大丈夫そう。";
+    return "原因のヒント： " + parts.slice(0,2).join(" ");
+  }catch(e){
+    return "まだ はっきりわからないよ。";
+  }
+}
+
+
+
+
+function makeAdvice(personalityText, ukuleleDiagText, stringStateText){
+  const u = String(ukuleleDiagText||"");
+  const s = String(stringStateText||"");
+
+  if (u.includes("元気がない")){
+    let out = "まずは 1分だけ やさしく弾いて、あたためよう。";
+    if (s.includes("ふるいかも")) out += " げんを新しくすると、もっと安定するよ。";
+    return out;
+  }
+  if (u.includes("まだ本気")){
+    return "ゆっくり、やさしく。毎日ちょっとずつ弾くと音が育つよ。";
+  }
+  if (u.includes("これから") || u.includes("よくなります")){
+    return "毎日ちょっと弾こう。音がだんだん ひびくよ。";
+  }
+  if (u.includes("声") && u.includes("いちばん")){
+    return "いまの音が、この子のベスト。今の合わせ方を大事にしよう。";
+  }
+  if (u.includes("ちゃんとして")){
+    if (s.includes("ふるいかも")) return "ウクレレはOK。げんが古いかもだから、こうかんすると安定するよ。";
+    return "このままでOK。最後は短く弾いて、止まったところで合わせよう。";
+  }
+  return "ゆっくりでいいよ。少しずつ合わせていこう。";
+}
+
+
+function doDiagnosis() {
+  let d;
+  try {
+    d = buildDiagnosis();
+  } catch (e) {
+    d = {
+      title: "診断エラー",
+      meaning: "もう一度チューニングしてみてね。",
+      scoreline: "",
+      condition: "診断の計算中にエラーが出たみたい…（画面を更新して再チャレンジ！）",
+      maintenance: ""
+    };
+  }
+
+  // まずワクワク演出（ドラムロール→結果を見るボタン）
+  const splash = document.getElementById('diagnosis-splash');
+  const pop = document.getElementById('splash-pop');
+  splash.classList.add('show');
+
+  // ボタンを一度クローンしてイベントをリセット（二重登録防止）
+  const btnOld = document.getElementById('btn-show-result');
+  btnOld.replaceWith(btnOld.cloneNode(true));
+  const btn = document.getElementById('btn-show-result');
+
+  btn.disabled = true;
+  btn.innerText = "まもなく…";
+  pop.classList.add('blink');
+
+  // ドラムロールSE（約1.2秒）
+  let ticks = 0;
+  const roll = setInterval(() => {
+    playTick();
+    ticks++;
+    if (ticks >= 10) {
+      clearInterval(roll);
+      pop.classList.remove('blink');
+      btn.disabled = false;
+      btn.innerText = "結果を見る";
+      playTaDa();
+    }
+  }, 120);
+
+  const showResult = () => {
+    // ここが結果表示の根幹。DIAG から1回でまとめて作って、矛盾しないように出す。
+    splash.classList.remove('show');
+
+    // card show
+    const card = document.getElementById('diagnosis-card');
+    if (card) card.classList.add('show');
+
+    const titleEl = document.getElementById('diag-title');
+    if (titleEl) titleEl.innerText = "";
+
+    // --- Base summary from the SAME DIAG (buildDiagnosis already uses DIAG) ---
+    const base = d || { meaning:"", scoreline:"", condition:"", maintenance:"" };
+
+    // コンディション（小学生版）: buildDiagnosis.condition -> makeKidCondition -> コードを 1げん/2げん に変換
+    const condKidRaw = makeKidCondition(base);
+    const condKid = convertCodesToGen(condKidRaw);
+
+    // げんのようす: DIAGから（コンディションと矛盾しない “やさしめ” 文言）
+    const stringState = makeStringState(DIAG);
+
+    // 今日のウクレレ診断（B-UK）: conditionの数値（精度/安定/速さ/操作）＋揺れ具合から判断
+    const uk = computeUkuleleBodyDiagnosis(DIAG, { condition: String(base.condition||""), maintenance: String(base.maintenance||""), stringState }) || "";
+
+    // 性格（顔と連動）: uk と condKid を渡して、矛盾を避ける
+    const pText = computeUkulelePersonality(DIAG, uk, condKid);
+
+    // メンテナンス（小学生版）: buildDiagnosis.maintenance2 をそのまま表示（コードだけ変換）
+    const maintKid = convertCodesToGen(String(base.maintenance||""));
+
+    // アドバイス: 性格 + B-UK + げんのようす から
+    const adviceText = makeAdvice(pText, uk, stringState);
+
+    // --- Apply to UI ---
+    const pEl = document.getElementById('diag-personality');
+    if (pEl) pEl.innerText = pText;
+
+    const pr = document.getElementById('diag-personality-reason');
+    if (pr) pr.innerText = (window.__personalityReason || "");
+
+    const ukEl = document.getElementById('diag-ukulele');
+    if (ukEl) ukEl.innerText = uk; // 見出しが「今日のウクレレ診断」なので、接頭語は付けない
+
+    const meaningEl = document.getElementById('diag-meaning');
+    if (meaningEl) meaningEl.innerText = String(base.meaning||"");
+
+    const scoreEl = document.getElementById('diag-scoreline');
+    if (scoreEl) scoreEl.innerText = String(base.scoreline||"");
+
+    const condEl = document.getElementById('diag-cond');
+    if (condEl) condEl.innerText = condKid;
+
+    const maintEl = document.getElementById('diag-maint');
+    if (maintEl) maintEl.innerText = maintKid;
+
+    const strEl = document.getElementById('diag-string-state');
+    if (strEl) strEl.innerText = stringState;
+
+    const advEl = document.getElementById('diag-advice');
+    if (advEl) advEl.innerText = adviceText;
+
+    // details panel
+    toggleDetailsPanel(false);
+    const btnDetails = document.getElementById('btn-details');
+    if (btnDetails) btnDetails.onclick = () => toggleDetailsPanel();
+
+    btn.removeEventListener('click', showResult);
+  };
+
+  btn.addEventListener('click', showResult);
+}
+function applyViewportSize(){
+  const vv = window.visualViewport;
+  const h = vv ? vv.height : (document.documentElement.clientHeight || window.innerHeight);
+  const w = vv ? vv.width  : (document.documentElement.clientWidth  || window.innerWidth);
+  // expose CSS vh unit (for iPhone Safari 100vh issue)
+  document.documentElement.style.setProperty('--vh', (h * 0.01) + 'px');
+  canvas.width = Math.floor(w);
+  canvas.height = Math.floor(h);
+}
+applyViewportSize();
+if (window.visualViewport){
+  window.visualViewport.addEventListener('resize', () => { applyViewportSize(); draw(); });
+}
+window.addEventListener('resize', () => { applyViewportSize(); draw(); });
+window.addEventListener('orientationchange', () => { setTimeout(() => { applyViewportSize(); draw(); }, 250); });
+draw();
+
+
+
+
+/* === PAGE_FLIP_TRANSITION v1 (shared) === */
+let __navLock = false;
+function goFlip(url){
+  if(__navLock) return;
+  __navLock = true;
+  const ov = document.getElementById('pageFlip');
+  if(!ov){ location.href = url; return; }
+  ov.style.display = 'block';
+  ov.classList.remove('run');
+  void ov.offsetWidth;
+  ov.classList.add('run');
+  setTimeout(()=>{ location.href = url; }, 260);
+}
+window.addEventListener('pageshow', ()=>{
+  __navLock = false;
+  const ov = document.getElementById('pageFlip');
+  if(ov){ ov.classList.remove('run'); ov.style.display='none'; }
+});
+
+</script>
+
+<div style="position:fixed;right:10px;bottom:10px;z-index:9999;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,0.9);color:#111;font-size:12px;font-weight:900;">
+Ver.0.1
+</div>
+
+<div id="pageFlip" aria-hidden="true"></div>
+
+</body>
+</html>

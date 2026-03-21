@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>ウクレレであそぶ</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --vh: 1vh;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    position: fixed;
+    font-family: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
+    /* ここから変更 */
+    background-color: #ffde59;
+    background-image: radial-gradient(#ffaa00 15%, transparent 15%);
+    background-size: 30px 30px;
+  }
+
+  /* === メインレイアウト（TOPと同じ） === */
+  .app-container {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 10px 20px calc(16px + env(safe-area-inset-bottom)) 20px;
+    z-index: 10;
+  }
+
+  /* タイトル */
+  .title-area {
+    margin-top: 2vh;
+    text-align: center;
+    position: relative;
+    z-index: 20;
+    filter: drop-shadow(0 4px 0 rgba(0,0,0,0.1));
+  }
+ .game-title {
+    font-size: clamp(30px, 6.4vw, 60px);
+    margin: 0;
+    color: #ff3d3d; /* ビビッドな赤に変更 */
+    -webkit-text-stroke: 4px #111; /* 太い黒フチ */
+    paint-order: stroke fill;
+    text-shadow: 8px 8px 0px #111; /* くっきりした黒い影 */
+    transform: rotate(-3deg);
+    animation: titleFloat 2s ease-in-out infinite alternate;
+  }
+  @keyframes titleFloat {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-10px) rotate(-1deg); }
+  }
+  .sub-title {
+    display: inline-block;
+    margin-top: -2px;
+    margin-bottom: 8px;
+    font-size: clamp(14px, 2vw, 18px);
+    color: #111;
+    background: #5ce1e6;
+    padding: 6px 20px;
+    border-radius: 20px;
+    border: 3px solid #111; /* 黒フチ追加 */
+    font-weight: 900;
+    box-shadow: 4px 4px 0 #111; /* 黒影追加 */
+  }
+  /* 背景イラスト（ヤシ＋ウクレレ） */
+  .center-illustration {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(800px, 90vw);
+    height: min(600px, 70vh);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .center-illustration svg {
+    width: 100%; height: 100%;
+    animation: illustrationSway 4.2s ease-in-out infinite;
+  }
+  @keyframes illustrationSway {
+    0%,100%{ transform: rotate(-2.0deg) translateY(0); }
+    50%{ transform: rotate(2.4deg) translateY(-5px); }
+  }
+
+  /* 先生（ガイド） */
+ .guide-bubble {
+    background: #fff;
+    padding: 6px 18px;
+    border-radius: 50px;
+    border: 3px solid #111; /* 追加: 黒フチ */
+    box-shadow: 6px 8px 0 #111; /* 追加: くっきりした影 */
+    display: flex;
+    /* 以降の align-items: center; などはそのまま残します */    align-items: center;
+    gap: 10px;
+    z-index: 25;
+    animation: popIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity .22s ease, transform .22s ease;
+
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0) scale(1);
+  max-width: min(92vw, 420px);
+  pointer-events: none;
+  will-change: transform, top, left;
+}
+.guide-bubble .bunny { font-size: 24px; line-height: 1; }
+  .guide-bubble .text {
+    font-size: 14px;
+    font-weight: 900;
+    color: #555;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .guide-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: var(--tail-left, 50%);
+    transform: translateX(-50%);
+    border-width: 8px 8px 0;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+  }
+  .guide-bubble.fade {
+    opacity: 0;
+    transform: translate(-50%, -4px) scale(0.98);
+  }
+
+  /* どっちのボタンか分かるように（吹き出し位置と尻尾を動かす） */
+  .guide-bubble.point-left  { left: 33%; }
+  .guide-bubble.point-right { left: 67%; }
+  .guide-bubble.point-center{ left: var(--tail-left, 50%); }
+  .guide-bubble.point-left::after  { left: 30%; }
+  .guide-bubble.point-right::after { left: 70%; }
+  .guide-bubble.point-center::after{ left: var(--tail-left, 50%); }
+
+  @keyframes popIn {
+    from { transform: translate(-50%, -14px) scale(0.6); opacity: 0; }
+    to   { transform: translate(-50%, 0)      scale(1);   opacity: 1; }
+  }
+
+  /* ボタン（TOPと同じ形/フォント/サイズ感） */
+  .menu-area {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .menu-row {
+    display: flex;
+    gap: clamp(180px, 30vw, 400px); /* TOPに合わせて間隔をあける */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 14px;
+  }
+  .menu-row.back-row {
+    gap: 14px;
+    margin-bottom: 0;
+  }
+
+.play-btn {
+    position: relative;
+    width: min(220px, 30vw);
+    padding: 12px 10px;
+    background: #fff;
+    border-radius: 24px;
+    border: 4px solid #111; /* 黒フチ */
+    box-shadow: 8px 12px 0 #111; /* くっきりした影 */
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+    opacity: 0.92;
+  }
+  .play-btn:active {
+    transform: translate(4px, 6px); /* 斜め右下に沈み込む */
+    box-shadow: 0px 0px 0 #111;
+  }
+  .btn-icon {
+    font-size: 32px;
+    margin-bottom: 4px;
+    display: block;
+    /* filter: drop-shadow(...) は削除してスッキリさせます */
+  }
+  .btn-title {
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: #111; /* 文字を黒に */
+    margin: 0;
+    line-height: 1.2;
+    font-weight: 900;
+  }
+  .btn-desc {
+    font-size: 12px;
+    color: #333; /* 文字を濃いグレーに */
+    font-weight: 900;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* それぞれの色（グラデーションをやめて、絵本のようなベタ塗りに） */
+  .btn-tune { background: #FFB300; }
+  .btn-game { background: #5ce1e6; }
+  .btn-back { background: #ff914d; width: min(220px, 28vw); }
+  /* どっちが指示対象か “光らせる” */
+  .play-btn.hint {
+    animation: hintPulse 1.15s ease-in-out infinite;
+  }
+  @keyframes hintPulse{
+    0%,100%{
+      box-shadow:
+        0 10px 0 rgba(0,0,0,0.10),
+        0 20px 30px rgba(0,0,0,0.15);
+    }
+    50%{
+      box-shadow:
+        0 10px 0 rgba(0,0,0,0.10),
+        0 20px 30px rgba(0,0,0,0.15),
+        0 0 0 7px rgba(255,255,255,0.50),
+        0 0 26px rgba(255,255,255,0.45);
+    }
+  }
+50%    { transform: translateZ(0) scale(1.03); }
+  }
+
+  @media (max-width: 700px) {
+    .menu-row { gap: 20px; }
+    .play-btn { width: min(210px, 46vw); }
+    .btn-back { width: min(210px, 46vw); }
+  }
+  @media (max-height: 430px) {
+    .guide-bubble { top: clamp(130px, 30vh, 230px); }
+  }
+
+  /* ページめくり */
+  #pageFlip {
+    position: fixed; inset: 0; z-index: 9999;
+    display: none; background: #fff;
+  }
+  #pageFlip.run {
+    display: block;
+    animation: pageFlipGo .32s ease-in forwards;
+    transform-origin: left center;
+  }
+  @keyframes pageFlipGo {
+    0%{ opacity: 1; transform: perspective(900px) rotateY(0deg); }
+    100%{ opacity: .18; transform: perspective(900px) rotateY(-78deg); }
+  }
+
+  /* 横画面ロック（縦のときブロック） */
+  #landscapeLock {
+    position: fixed; inset: 0; display: none; z-index: 99999;
+    background: rgba(40,40,40,0.95); color: #fff;
+    align-items: center; justify-content: center; flex-direction: column;
+    text-align: center; padding: 20px;
+  }
+  body.needLandscape #landscapeLock { display: flex; }
+  #landscapeLock .big { font-size: 44px; }
+  #landscapeLock .t1 { margin-top: 10px; font-size: 22px; font-weight: 1000; }
+  #landscapeLock .t2 { margin-top: 6px; font-size: 14px; opacity: .9; font-weight: 900; }
+
+
+  /* TOPへもどる：右下に小さく固定 */
+  .btn-back{
+    position: fixed;
+    right: calc(14px + env(safe-area-inset-right));
+    top: calc(14px + env(safe-area-inset-top));
+    width: auto !important;
+    padding: 9px 12px !important;
+    border-radius: 16px !important;
+    box-shadow:
+      0 6px 0 rgba(0,0,0,0.10),
+      0 14px 18px rgba(0,0,0,0.14) !important;
+    z-index: 30;
+  }
+  .btn-back .btn-icon{ font-size: 18px; margin-bottom: 0; display:inline-block; margin-right: 8px; }
+  .btn-back .btn-title{ font-size: 13px; display:inline-block; -webkit-text-stroke: 0; }
+  .btn-back .btn-desc{ display:none; }
+
+  /* 先生が邪魔にならない余白 */
+  .menu-area{ padding-top: 8px; }
+  @media (max-height: 430px){
+    .guide-bubble{ top: clamp(42px, 10vh, 86px); }
+  }
+
+  /* === BUBBLE_ANCHOR_V2: 端末差で吹き出しが離れないよう、ボタン基準で配置（iPad対応） === */
+  .guide-bubble{
+    will-change: transform, top, left;
+  }
+  .guide-bubble.tail-up::after{
+    top: -8px;
+    bottom: auto;
+    border-width: 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent #fff;
+  }
+
+  /* === BUBBLE_ANCHOR_V3: ボタン基準＋衝突回避（iPhone/iPad/PCで同じ感じ） === */
+  .guide-bubble{
+    will-change: transform, top, left;
+  }
+  .guide-bubble.tail-up::after{
+    top: -8px;
+    bottom: auto;
+    border-width: 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent #fff;
+  }
+  /* 低い画面では少しだけ小さくして被り回避 */
+  @media (max-height: 420px){
+    .guide-bubble{ transform: translate(-50%, 0) scale(0.94); }
+  }
+
+  /* === BUBBLE_ANCHOR_V4: 被り回避（吹き出しは“ボタンの上”に基本配置） === */
+  .guide-bubble.tail-up::after{
+    top: -8px;
+    bottom: auto;
+    border-width: 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent #fff;
+  }
+
+  /* === BUBBLE_ANCHOR_V5: “帯”に収める＋縮小で被り防止（iPhone/iPad/PC統一） === */
+  .guide-bubble{
+    will-change: transform, top, left;
+  }
+  .guide-bubble{
+    /* translate はJSで入れる。scale は var で制御 */
+    --bubble-scale: 1;
+  }
+  .guide-bubble.tail-up::after{
+    top: -8px;
+    bottom: auto;
+    border-width: 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent #fff;
+  }
+
+/* VERSION BADGE */
+.ver-badge{
+  position: fixed;
+  right: 12px;
+  bottom: 10px;
+  padding: 6px 10px;
+  font-weight: 900;
+  font-size: 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  z-index: 9999;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* BUBBLE_TAIL_SIDE_UKE_V11: トンガリを左右/上/下で切替 */
+.guide-bubble::after{ /* default (下) */
+  content:"";
+  position:absolute;
+  bottom:-8px;
+  left: var(--tail-left, 50%);
+  transform: translateX(-50%);
+  width:0;height:0;
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+.guide-bubble.tail-left::after{
+  bottom:auto; top:50%;
+  left:-10px; right:auto;
+  transform: translateY(-50%);
+  border-width: 10px 10px 10px 0;
+  border-style: solid;
+  border-color: transparent #fff transparent transparent;
+}
+.guide-bubble.tail-right::after{
+  bottom:auto; top:50%;
+  right:-10px; left:auto;
+  transform: translateY(-50%);
+  border-width: 10px 0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent #fff;
+}
+.guide-bubble.tail-up::after{
+  top:-8px; bottom:auto;
+  left: var(--tail-left, 50%);
+  transform: translateX(-50%);
+  border-width: 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+/* BTN_FOCUS_UKE_V11: どっちが主役か一瞬で分かる */
+.play-btn{ will-change: transform; }
+.play-btn.is-focus{
+  outline: 5px solid rgba(255,255,255,0.85);
+  outline-offset: -5px;
+}
+.play-btn.is-focus::after{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius: 28px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.35), rgba(255,255,255,0.0) 65%);
+  pointer-events:none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.play-btn.is-focus::after{
+  opacity: 1;
+  transform: scale(1);
+}
+</style>
+</head>
+<body>
+  <div class="app-container">
+<div class="center-illustration">
+    <svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 600">
+      <g transform="translate(0, 20)"> <ellipse cx="400" cy="500" fill="#cfeeb0" rx="260" ry="60"></ellipse>
+        <path d="M360 480 C300 360, 340 260, 330 160 C320 80, 300 40, 280 20 L320 20 C360 60, 380 120, 390 200 C400 300, 380 380, 420 480 Z" fill="#7a4a21"></path>
+        <path d="M310 350 Q350 340 380 330" fill="none" stroke="#d8b04c" stroke-width="8"></path>
+        <path d="M300 300 Q340 290 370 280" fill="none" stroke="#d8b04c" stroke-width="8"></path>
+        <path d="M295 250 Q330 240 360 230" fill="none" stroke="#d8b04c" stroke-width="8"></path>
+        
+        <g fill="#6aaa1f">
+          <path d="M330 40 C180 20, 60 120, 40 200"></path>
+          <path d="M330 40 C200 0, 120 40, 90 100"></path>
+          <path d="M330 40 C460 20, 580 120, 620 220"></path>
+          <path d="M330 40 C480 0, 620 40, 660 120"></path>
+          <path d="M330 50 C310 10, 330 0, 350 -20"></path>
+        </g>
+        <circle cx="340" cy="60" fill="#c8b04a" r="18"></circle>
+        <circle cx="365" cy="65" fill="#c8b04a" r="18"></circle>
+
+        <g transform="translate(440 420) rotate(-15)">
+          <ellipse cx="50" cy="80" fill="#c68642" rx="45" ry="60"></ellipse>
+          <ellipse cx="50" cy="80" fill="#5a3a1a" rx="12" ry="16"></ellipse>
+          <rect fill="#b5651d" height="70" width="12" x="44" y="10"></rect>
+          <rect fill="#d79a3a" height="20" rx="5" width="40" x="30" y="-20"></rect>
+          <line stroke="#ffffff" stroke-width="2" x1="48" x2="48" y1="10" y2="150"></line>
+          <line stroke="#ffffff" stroke-width="2" x1="52" x2="52" y1="10" y2="150"></line>
+        </g>
+        
+        <g class="notes-burst" transform="translate(480 400)">
+           <text x="0" y="0" font-size="40" fill="#333" style="animation: flyNote 2s infinite">♪</text>
+           <text x="20" y="-20" font-size="30" fill="#333" style="animation: flyNote 2.5s infinite 0.5s">♫</text>
+        </g>
+      </g>
+      <style>
+        @keyframes flyNote {
+          0%{ opacity:0; transform: translate(0,0) rotate(0deg); }
+          50%{ opacity:1; }
+          100%{ opacity:0; transform: translate(30px, -80px) rotate(20deg); }
+        }
+      </style>
+    </svg>
+  </div>
+
+    <div class="guide-bubble point-left" aria-hidden="false">
+      <div class="bunny">🐰</div>
+      <div class="text" id="teacherText">まずは チューニング！</div>
+    </div>
+
+    <div class="menu-area">
+      <div class="menu-row">
+        <div id="btnTune" class="play-btn btn-tune" onclick="goFlip('tuning.html')">
+          <span class="btn-icon">🎵</span>
+          <h2 class="btn-title">チューニング</h2>
+          <span class="btn-desc">おとを あわせる</span>
+        </div>
+
+        <div id="btnGame" class="play-btn btn-game" onclick="goFlip('game.html?mode=WAIT')">
+          <span class="btn-icon">🎮</span>
+          <h2 class="btn-title">ゲーム</h2>
+          <span class="btn-desc">ウクレレで あそぶ</span>
+        </div>
+      </div>
+
+          <div id="btnTop" class="play-btn btn-back" onclick="goFlip('index.html')">
+          <span class="btn-icon">🏝️</span>
+          <h2 class="btn-title">TOPへもどる</h2>
+          <span class="btn-desc">メニューにもどる</span>
+    </div>
+  </div>
+
+  <div id="pageFlip"></div>
+
+  <div id="landscapeLock">
+    <div class="big">📱↔️</div>
+    <div class="t1">よこがめんに してね！</div>
+    <div class="t2">（iPhoneは 画面回転ロックをOFF にしてね）</div>
+  </div>
+
+<script>
+  // iOS 高さ対策
+  (function setVH(){
+    function apply(){
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    window.addEventListener('resize', apply);
+    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60));
+    apply();
+  })();
+
+  // ページめくり
+  let __navLock = false;
+  function goFlip(url){
+    if(__navLock) return;
+    __navLock = true;
+    const pf = document.getElementById('pageFlip');
+    pf.classList.add('run');
+    setTimeout(()=>{ location.href = url; }, 300);
+  }
+  window.addEventListener('pageshow', ()=>{
+    __navLock = false;
+    document.getElementById('pageFlip').classList.remove('run');
+  });
+
+  // 横画面ロック（縦ならブロック）
+  (function(){
+    function apply(){
+      var portrait = window.innerHeight > window.innerWidth;
+      document.body.classList.toggle('needLandscape', portrait);
+    }
+    window.addEventListener('resize', apply);
+    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60));
+    apply();
+  })();
+
+
+  // BUBBLE_ANCHOR_UKE v11: 真ん中固定 + トンガリ左右 + ボタンを派手にヌルッ
+  (function(){
+    const bubble = document.querySelector('.guide-bubble');
+    const textEl = document.getElementById('teacherText');
+    const btnTune = document.getElementById('btnTune');
+    const btnGame = document.getElementById('btnGame');
+    const btnTop  = document.getElementById('btnTop');
+
+    if(!bubble || !textEl || !btnTune || !btnGame) return;
+
+    const msgs = [
+      { text: "まずは チューニング！", target: "tune" },
+      { text: "あわせたら ゲームへ！", target: "game" },
+      { text: "TOPへ もどれるよ", target: "top" }
+    ];
+    let cur = 0;
+
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+    function setFocus(t){
+      btnTune.classList.toggle('is-focus', t === 'tune');
+      btnGame.classList.toggle('is-focus', t === 'game');
+    }
+
+    function runAnim(el, kf, dur=980){
+      if(!el) return;
+      try{ el.getAnimations().forEach(a=>a.cancel()); }catch(e){}
+      el.animate(kf, { duration: dur, easing: 'cubic-bezier(0.18, 1.35, 0.22, 1)', fill: 'none' });
+    }
+
+    function playBtnAnim(t){
+      // “主役は中央へ寄って拡大 / 脇役は逃げて少し縮小”
+      const kTuneMain = [
+        { transform:'translate3d(0,0,0) scale(1)', offset:0 },
+        { transform:'translate3d(54px,-18px,0) scale(1.18)', offset:0.40 },
+        { transform:'translate3d(26px,-10px,0) scale(1.10)', offset:0.70 },
+        { transform:'translate3d(0,0,0) scale(1)', offset:1 }
+      ];
+      const kGameMain = [
+        { transform:'translate3d(0,0,0) scale(1)', offset:0 },
+        { transform:'translate3d(-54px,-18px,0) scale(1.18)', offset:0.40 },
+        { transform:'translate3d(-26px,-10px,0) scale(1.10)', offset:0.70 },
+        { transform:'translate3d(0,0,0) scale(1)', offset:1 }
+      ];
+      const kSideAwayL = [
+        { transform:'translate3d(0,0,0) scale(1)', offset:0 },
+        { transform:'translate3d(-14px,6px,0) scale(0.96)', offset:0.45 },
+        { transform:'translate3d(-6px,2px,0) scale(0.98)', offset:0.75 },
+        { transform:'translate3d(0,0,0) scale(1)', offset:1 }
+      ];
+      const kSideAwayR = [
+        { transform:'translate3d(0,0,0) scale(1)', offset:0 },
+        { transform:'translate3d(14px,6px,0) scale(0.96)', offset:0.45 },
+        { transform:'translate3d(6px,2px,0) scale(0.98)', offset:0.75 },
+        { transform:'translate3d(0,0,0) scale(1)', offset:1 }
+      ];
+      const kTop = [
+        { transform:'translate3d(0,0,0) scale(1)', offset:0 },
+        { transform:'translate3d(0,-8px,0) scale(1.08)', offset:0.45 },
+        { transform:'translate3d(0,0,0) scale(1)', offset:1 }
+      ];
+
+      if(t === 'tune'){
+        runAnim(btnTune, kTuneMain);
+        runAnim(btnGame, kSideAwayR, 820);
+      }else if(t === 'game'){
+        runAnim(btnGame, kGameMain);
+        runAnim(btnTune, kSideAwayL, 820);
+      }else{
+        if(btnTop) runAnim(btnTop, kTop, 720);
+      }
+    }
+
+    function computeBand(){
+      // 上：TOPボタンの下（ある場合）を優先
+      let top = 12;
+      if(btnTop){
+        const r = btnTop.getBoundingClientRect();
+        top = Math.max(top, r.bottom + 12);
+      }
+      // 下：大ボタンの上端
+      const rt = btnTune.getBoundingClientRect();
+      const rg = btnGame.getBoundingClientRect();
+      let bottom = Math.min(rt.top, rg.top) - 10;
+      bottom = Math.max(bottom, top + 18);
+      return { top, bottom };
+    }
+
+    function measure(){
+      bubble.style.transform = 'translate(-50%, 0) scale(1)';
+      const r = bubble.getBoundingClientRect();
+      return { w:r.width, h:r.height };
+    }
+
+    function layout(t){
+      setFocus(t);
+
+      const band = computeBand();
+      const availH = Math.max(1, band.bottom - band.top);
+
+      const m = measure();
+      let scale = 1;
+      if(m.h > availH) scale = clamp(availH / m.h, 0.52, 1);
+
+      const w = m.w * scale;
+      const h = m.h * scale;
+
+      // 中央固定（端切れ防止）
+      const x0 = window.innerWidth * 0.5;
+      const x  = clamp(x0, 12 + w/2, window.innerWidth - 12 - w/2);
+
+      let y = band.top + (availH - h)/2;
+      y = clamp(y, band.top, band.bottom - h);
+
+      bubble.style.left = x + 'px';
+      bubble.style.top  = y + 'px';
+      bubble.style.transform = 'translate(-50%, 0) scale(' + scale.toFixed(3) + ')';
+
+      // トンガリ
+      bubble.classList.remove('tail-left','tail-right','tail-up');
+      if(t === 'tune'){
+        bubble.classList.add('tail-left');
+      }else if(t === 'game'){
+        bubble.classList.add('tail-right');
+      }else{
+        bubble.classList.add('tail-up');
+        bubble.style.setProperty('--tail-left', (w * 0.72) + 'px'); // 右上TOP寄り
+      }
+
+      playBtnAnim(t);
+    }
+
+    function show(i){
+      const msg = msgs[i];
+      bubble.classList.add('fade');
+      setTimeout(()=>{
+        textEl.textContent = msg.text;
+        requestAnimationFrame(()=>{
+          layout(msg.target);
+          bubble.classList.remove('fade');
+        });
+      }, 160);
+    }
+
+    function relayout(){ layout(msgs[cur].target); }
+
+    requestAnimationFrame(()=>layout(msgs[0].target));
+
+    window.addEventListener('resize', relayout);
+    window.addEventListener('orientationchange', ()=>setTimeout(relayout, 120));
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', relayout);
+      window.visualViewport.addEventListener('scroll', relayout);
+    }
+
+    setInterval(()=>{
+      cur = (cur + 1) % msgs.length;
+      show(cur);
+    }, 3000);
+  })();
+
+</script>
+
+  <div class="ver-badge">v11</div>
+</body>
+</html>
