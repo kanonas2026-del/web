@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>ウクレレであそぶ</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -418,21 +418,20 @@
   opacity: 1;
   transform: scale(1);
 }
-</style>
-<style id="viewport-fit-browser-v2">
-  /* browser viewport fit: only shrink when visible viewport is smaller */
-  #viewportFitRoot{
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    transform-origin: top left;
-    will-change: transform;
-    overflow: hidden;
-  }
+
+/* viewport-fit-v3 */
+#viewportFitShell{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  transform-origin: top left;
+  will-change: transform;
+}
+
 </style>
 </head>
 <body>
+  <div id="viewportFitShell">
   <div class="app-container">
 <div class="center-illustration">
     <svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 600">
@@ -501,6 +500,7 @@
           <h2 class="btn-title">TOPへもどる</h2>
           <span class="btn-desc">メニューにもどる</span>
     </div>
+  </div>
   </div>
 
   <div id="pageFlip"></div>
@@ -713,62 +713,99 @@
 </script>
 
   <div class="ver-badge">v11</div>
-<script id="viewport-fit-browser-js-v2">
+
+<script>
+/* viewport-fit-v3: shrink only when bottom browser UI reduces visible area */
 (function(){
-  if (window.__viewportFitBrowserV2) return;
-  window.__viewportFitBrowserV2 = true;
+  const shell = document.getElementById('viewportFitShell');
+  if(!shell) return;
+  const selectors = ['.menu-area', '.guide-bubble'];
+  let rafId = 0;
 
-  function setup(){
-    var body = document.body;
-    if (!body) return;
-    var root = document.getElementById('viewportFitRoot');
-    if (!root){
-      root = document.createElement('div');
-      root.id = 'viewportFitRoot';
-      var nodes = Array.prototype.slice.call(body.childNodes);
-      for (var i = 0; i < nodes.length; i++){
-        var n = nodes[i];
-        if (n.nodeType === 1 && n.tagName === 'SCRIPT') continue;
-        root.appendChild(n);
-      }
-      body.insertBefore(root, body.firstChild);
-    }
-
-    function fit(){
-      var vv = window.visualViewport;
-      var visW = vv && vv.width ? vv.width : window.innerWidth;
-      var visH = vv && vv.height ? vv.height : window.innerHeight;
-      var offL = vv && typeof vv.offsetLeft === 'number' ? vv.offsetLeft : 0;
-      var offT = vv && typeof vv.offsetTop === 'number' ? vv.offsetTop : 0;
-      var layW = document.documentElement.clientWidth || window.innerWidth || visW;
-      var layH = window.innerHeight || document.documentElement.clientHeight || visH;
-
-      var scale = Math.min(1, visW / layW, visH / layH);
-      if (!isFinite(scale) || scale <= 0) scale = 1;
-
-      var tx = offL + Math.max(0, (visW - (layW * scale)) / 2);
-      var ty = offT + Math.max(0, (visH - (layH * scale)) / 2);
-
-      root.style.width = layW + 'px';
-      root.style.height = layH + 'px';
-      root.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
-    }
-
-    fit();
-    window.addEventListener('resize', fit, { passive:true });
-    window.addEventListener('orientationchange', function(){ setTimeout(fit, 80); }, { passive:true });
-    if (window.visualViewport){
-      window.visualViewport.addEventListener('resize', fit, { passive:true });
-      window.visualViewport.addEventListener('scroll', fit, { passive:true });
-    }
+  function viewportSize(){
+    const vv = window.visualViewport;
+    return {
+      w: Math.max(1, (vv && vv.width) ? vv.width : (window.innerWidth || document.documentElement.clientWidth || 1)),
+      h: Math.max(1, (vv && vv.height) ? vv.height : (window.innerHeight || document.documentElement.clientHeight || 1))
+    };
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', setup, { once:true });
-  }else{
-    setup();
+  function collectRects(){
+    const rects = [];
+    selectors.forEach((sel) => {
+      document.querySelectorAll(sel).forEach((el) => {
+        const cs = window.getComputedStyle(el);
+        if(cs.display === 'none' || cs.visibility === 'hidden') return;
+        const r = el.getBoundingClientRect();
+        if((r.width <= 0 && r.height <= 0) || !isFinite(r.left) || !isFinite(r.right) || !isFinite(r.bottom)) return;
+        rects.push(r);
+      });
+    });
+    return rects;
   }
+
+  function applyFit(){
+    rafId = 0;
+    shell.style.transform = 'translate3d(0,0,0) scale(1)';
+
+    const vp = viewportSize();
+    const rects = collectRects();
+    if(!rects.length){
+      document.documentElement.style.setProperty('--viewport-fit-scale', '1');
+      return;
+    }
+
+    let left = Infinity;
+    let right = -Infinity;
+    let bottom = -Infinity;
+    rects.forEach((r) => {
+      left = Math.min(left, r.left);
+      right = Math.max(right, r.right);
+      bottom = Math.max(bottom, r.bottom);
+    });
+
+    const cx = vp.w * 0.5;
+    const requiredHalf = Math.max(cx - left, right - cx, vp.w * 0.5);
+    const requiredWidth = requiredHalf * 2;
+    let scaleW = requiredWidth > vp.w ? (vp.w / requiredWidth) : 1;
+    let scaleH = bottom > vp.h ? (vp.h / bottom) : 1;
+    let scale = Math.min(1, scaleW, scaleH);
+    if(!isFinite(scale) || scale <= 0) scale = 1;
+    if(scale < 0.999){
+      scale = Math.max(0.84, scale * 0.985);
+    }else{
+      scale = 1;
+    }
+
+    const tx = (vp.w - (vp.w * scale)) * 0.5;
+    shell.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,0,0) scale(' + scale.toFixed(4) + ')';
+    document.documentElement.style.setProperty('--viewport-fit-scale', scale.toFixed(4));
+  }
+
+  function scheduleFit(){
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => requestAnimationFrame(applyFit));
+  }
+
+  window.addEventListener('load', scheduleFit);
+  window.addEventListener('pageshow', scheduleFit);
+  window.addEventListener('resize', scheduleFit, { passive: true });
+  window.addEventListener('orientationchange', function(){
+    setTimeout(scheduleFit, 120);
+    setTimeout(scheduleFit, 380);
+  }, { passive: true });
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', scheduleFit, { passive: true });
+    window.visualViewport.addEventListener('scroll', scheduleFit, { passive: true });
+  }
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(scheduleFit).catch(function(){});
+  }
+  setTimeout(scheduleFit, 0);
+  setTimeout(scheduleFit, 300);
+  setTimeout(scheduleFit, 900);
 })();
 </script>
+
 </body>
 </html>
