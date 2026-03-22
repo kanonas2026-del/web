@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>ウクレレであそぼう</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,18 +12,13 @@
 <style>
   :root {
     --vh: 1vh;
-    --app-vh: 100vh;
-    --app-vw: 100vw;
   }
   
   html, body {
     margin: 0; padding: 0;
-    width: var(--app-vw); height: var(--app-vh);
-    min-width: var(--app-vw); min-height: var(--app-vh);
-    max-width: var(--app-vw); max-height: var(--app-vh);
+    width: 100%; height: 100%;
     overflow: hidden;
     position: fixed;
-    inset: 0;
     font-family: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
     /* ポップなドット柄背景に変更 */
     background-color: #ffde59;
@@ -46,18 +41,10 @@
   /* === メインレイアウト === */
   .app-container {
     position: absolute; inset: 0;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
     display: flex; flex-direction: column;
     align-items: center; justify-content: space-between;
-    padding: env(safe-area-inset-top) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+    padding: env(safe-area-inset-top) 20px 20px 20px;
     z-index: 10;
-  }
-
-  body.is-compact-height .app-container{
-    padding-top: max(env(safe-area-inset-top), 8px);
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 
   /* === タイトルロゴ === */
@@ -439,6 +426,20 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
   outline: 6px solid rgba(255,255,255,0.70);
   outline-offset: 2px;
 }
+
+  /* viewport fit v5: 実表示領域が小さい端末だけ全体を等比縮小 */
+  #viewportScaleRoot{
+    position: fixed;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%) scale(1);
+    transform-origin: top center;
+    will-change: transform;
+    z-index: 10;
+  }
+
 </style>
 </head>
 
@@ -489,7 +490,21 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
           50%{ opacity:1; }
           100%{ opacity:0; transform: translate(30px, -80px) rotate(20deg); }
         }
-      </style>
+      
+  /* viewport fit v5: 実表示領域が小さい端末だけ全体を等比縮小 */
+  #viewportScaleRoot{
+    position: fixed;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%) scale(1);
+    transform-origin: top center;
+    will-change: transform;
+    z-index: 10;
+  }
+
+</style>
     </svg>
   </div>
 
@@ -534,21 +549,57 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
 <script>
 // === スクリプト（機能は元のまま維持） ===
 function setVh(){
-  const vv = window.visualViewport;
-  const h = Math.round(vv ? vv.height : window.innerHeight);
-  const w = Math.round(vv ? vv.width : window.innerWidth);
+  const h = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
   document.documentElement.style.setProperty('--vh', (h*0.01)+'px');
-  document.documentElement.style.setProperty('--app-vh', h+'px');
-  document.documentElement.style.setProperty('--app-vw', w+'px');
-  document.body.classList.toggle('is-compact-height', h <= 430);
 }
-window.addEventListener('resize', setVh, { passive:true });
-window.addEventListener('orientationchange', ()=>setTimeout(setVh, 250), { passive:true });
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', setVh, { passive:true });
-  window.visualViewport.addEventListener('scroll', setVh, { passive:true });
-}
+window.addEventListener('resize', setVh);
+window.addEventListener('orientationchange', ()=>setTimeout(setVh, 250));
 setVh();
+
+
+// viewport fit v5: 下バー等で visualViewport が小さい時だけ全体を等比縮小
+(function initViewportScaleFit(){
+  const app = document.querySelector('.app-container');
+  if(!app) return;
+  const badge = document.querySelector('.ver-badge');
+  let root = document.getElementById('viewportScaleRoot');
+  if(!root){
+    root = document.createElement('div');
+    root.id = 'viewportScaleRoot';
+    app.parentNode.insertBefore(root, app);
+    root.appendChild(app);
+    if(badge) root.appendChild(badge);
+  }
+
+  function fitViewportScale(){
+    const vv = window.visualViewport;
+    const visW = vv ? vv.width : window.innerWidth;
+    const visH = vv ? vv.height : window.innerHeight;
+
+    root.style.transform = 'translateX(-50%) scale(1)';
+    const rect = root.getBoundingClientRect();
+    const baseW = rect.width || window.innerWidth || 1;
+    const baseH = rect.height || window.innerHeight || 1;
+
+    let scale = Math.min(1, visW / baseW, visH / baseH);
+    if(!Number.isFinite(scale) || scale <= 0) scale = 1;
+    if(Math.abs(1 - scale) < 0.015) scale = 1;
+
+    root.style.transform = 'translateX(-50%) scale(' + scale.toFixed(4) + ')';
+    document.documentElement.style.setProperty('--viewport-scale', scale.toFixed(4));
+    document.documentElement.style.setProperty('--app-vv-width', visW + 'px');
+    document.documentElement.style.setProperty('--app-vv-height', visH + 'px');
+  }
+
+  fitViewportScale();
+  window.addEventListener('resize', fitViewportScale, { passive:true });
+  window.addEventListener('orientationchange', function(){ setTimeout(fitViewportScale, 180); }, { passive:true });
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', fitViewportScale, { passive:true });
+    window.visualViewport.addEventListener('scroll', fitViewportScale, { passive:true });
+  }
+})();
+
 
 let __navLock = false;
 function goFlip(url){

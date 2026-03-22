@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>ウクレレであそぶ</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,18 +12,13 @@
 <style>
   :root {
     --vh: 1vh;
-    --app-vh: 100vh;
-    --app-vw: 100vw;
   }
 
   html, body {
     margin: 0; padding: 0;
-    width: var(--app-vw); height: var(--app-vh);
-    min-width: var(--app-vw); min-height: var(--app-vh);
-    max-width: var(--app-vw); max-height: var(--app-vh);
+    width: 100%; height: 100%;
     overflow: hidden;
     position: fixed;
-    inset: 0;
     font-family: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
     /* ここから変更 */
     background-color: #ffde59;
@@ -34,18 +29,10 @@
   /* === メインレイアウト（TOPと同じ） === */
   .app-container {
     position: absolute; inset: 0;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: max(env(safe-area-inset-top), 10px) calc(20px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+    padding: 10px 20px calc(16px + env(safe-area-inset-bottom)) 20px;
     z-index: 10;
-  }
-
-  body.is-compact-height .app-container{
-    padding-top: max(env(safe-area-inset-top), 8px);
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 
   /* タイトル */
@@ -253,53 +240,6 @@
     .guide-bubble { top: clamp(130px, 30vh, 230px); }
   }
 
-  body.is-compact-height .title-area{
-    margin-top: 0.4vh;
-  }
-  body.is-compact-height .game-title{
-    font-size: clamp(28px, 5.1vw, 50px);
-    -webkit-text-stroke: 3px #111;
-    text-shadow: 6px 6px 0px #111;
-  }
-  body.is-compact-height .sub-title{
-    margin-bottom: 6px;
-    padding: 4px 14px;
-    font-size: clamp(12px, 1.7vw, 16px);
-    box-shadow: 3px 3px 0 #111;
-  }
-  body.is-compact-height .center-illustration{
-    width: min(720px, 84vw);
-    height: min(500px, 58vh);
-    top: 52%;
-  }
-  body.is-compact-height .guide-bubble{
-    max-width: min(88vw, 360px);
-  }
-  body.is-compact-height .guide-bubble .bunny{ font-size: 22px; }
-  body.is-compact-height .guide-bubble .text{ font-size: 13px; }
-  body.is-compact-height .menu-row{
-    gap: clamp(90px, 14vw, 220px);
-    margin-bottom: 10px;
-  }
-  body.is-compact-height .play-btn{
-    width: min(196px, 27vw);
-    padding: 10px 8px;
-    border-radius: 20px;
-    box-shadow: 6px 9px 0 #111;
-  }
-  body.is-compact-height .btn-back{
-    width: min(196px, 27vw);
-  }
-  body.is-compact-height .btn-icon{ font-size: 28px; }
-  body.is-compact-height .btn-title{ font-size: clamp(15px, 2.1vw, 20px); }
-  body.is-compact-height .btn-desc{ font-size: 11px; }
-  body.is-compact-height .ver-badge{
-    right: 10px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    font-size: 13px;
-    padding: 5px 9px;
-  }
-
   /* ページめくり */
   #pageFlip {
     position: fixed; inset: 0; z-index: 9999;
@@ -478,6 +418,20 @@
   opacity: 1;
   transform: scale(1);
 }
+
+  /* viewport fit v5: 実表示領域が小さい端末だけ全体を等比縮小 */
+  #viewportScaleRoot{
+    position: fixed;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%) scale(1);
+    transform-origin: top center;
+    will-change: transform;
+    z-index: 10;
+  }
+
 </style>
 </head>
 <body>
@@ -520,7 +474,21 @@
           50%{ opacity:1; }
           100%{ opacity:0; transform: translate(30px, -80px) rotate(20deg); }
         }
-      </style>
+      
+  /* viewport fit v5: 実表示領域が小さい端末だけ全体を等比縮小 */
+  #viewportScaleRoot{
+    position: fixed;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%) scale(1);
+    transform-origin: top center;
+    will-change: transform;
+    z-index: 10;
+  }
+
+</style>
     </svg>
   </div>
 
@@ -560,23 +528,14 @@
   </div>
 
 <script>
-  // iOS / Android 高さ対策
+  // iOS 高さ対策
   (function setVH(){
     function apply(){
-      const vv = window.visualViewport;
-      const h = Math.round(vv ? vv.height : window.innerHeight);
-      const w = Math.round(vv ? vv.width : window.innerWidth);
-      document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
-      document.documentElement.style.setProperty('--app-vh', `${h}px`);
-      document.documentElement.style.setProperty('--app-vw', `${w}px`);
-      document.body.classList.toggle('is-compact-height', h <= 430);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
-    window.addEventListener('resize', apply, { passive:true });
-    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60), { passive:true });
-    if(window.visualViewport){
-      window.visualViewport.addEventListener('resize', apply, { passive:true });
-      window.visualViewport.addEventListener('scroll', apply, { passive:true });
-    }
+    window.addEventListener('resize', apply);
+    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60));
     apply();
   })();
 
