@@ -2435,6 +2435,37 @@ const TAP_GAIN_LIMIT = 3.20;
 const TAP_POST_GAIN = 1.10;
 const TAP_VOL_KEY = 'uk_tap_vol_v1';
 const FIXED_APP_VOLUME = 1.0; // v18: in-app slider removed; use device volume
+
+function getDeviceOutputCompensation(){
+  try{
+    const ua = navigator.userAgent || '';
+    const isiPhone = /iPhone|iPod/i.test(ua);
+    const isiPad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(ua) && !/Tablet|Pixel C/i.test(ua);
+    const vv = window.visualViewport;
+    const cssW = vv && vv.width ? vv.width : (window.innerWidth || screen.width || 0);
+    const cssH = vv && vv.height ? vv.height : (window.innerHeight || screen.height || 0);
+    const cssMin = Math.min(cssW || 0, cssH || 0);
+    const dpr = Math.max(1, Number(window.devicePixelRatio) || 1);
+    const shortPx = Math.min(screen.width || 0, screen.height || 0) * dpr;
+
+    if(isiPad) return 1.00;
+    if(isiPhone){
+      if(cssMin <= 390 || shortPx <= 1179) return 1.18;  // compact / older / mini / SE class
+      if(cssMin <= 430 || shortPx <= 1284) return 1.10;  // standard iPhone class
+      return 1.04;
+    }
+    if(isAndroid){
+      if(cssMin && cssMin <= 412) return 1.08;           // compact Android phones
+      return 1.03;                                       // mild Android phone compensation
+    }
+    return 1.00;
+  }catch(e){
+    return 1.00;
+  }
+}
+const DEVICE_OUTPUT_COMP = getDeviceOutputCompensation();
+
 let tapVol = FIXED_APP_VOLUME;
 let tapAudioCtx = null;
 let tapMaster = null;
@@ -2469,7 +2500,7 @@ function ensureTapAudio(){
       tapCompressor.release.setValueAtTime(0.18, tapAudioCtx.currentTime);
 
       tapPostGain = tapAudioCtx.createGain();
-      tapPostGain.gain.value = TAP_POST_GAIN;
+      tapPostGain.gain.value = TAP_POST_GAIN * DEVICE_OUTPUT_COMP;
 
       tapLimiter = tapAudioCtx.createDynamicsCompressor();
       tapLimiter.threshold.setValueAtTime(-14, tapAudioCtx.currentTime);
@@ -2493,7 +2524,7 @@ function ensureTapAudio(){
       applyTapVolumeToGain();
     } else {
       tapMaster.gain.value = Math.min(TAP_GAIN_LIMIT, tapVol * OUTPUT_BOOST);
-      if(tapPostGain) tapPostGain.gain.value = TAP_POST_GAIN;
+      if(tapPostGain) tapPostGain.gain.value = TAP_POST_GAIN * DEVICE_OUTPUT_COMP;
       if(tapFinalGain) tapFinalGain.gain.value = 0.90;
     }
   }catch(e){}
@@ -4518,6 +4549,9 @@ window.addEventListener('pageshow', ()=>{
       const g = 0.34 + 0.78 * Math.pow(v, 0.82);
       if(typeof tapMaster !== 'undefined' && tapMaster && typeof tapAudioCtx !== 'undefined' && tapAudioCtx){
         tapMaster.gain.setTargetAtTime(Math.min(TAP_GAIN_LIMIT, g * OUTPUT_BOOST), tapAudioCtx.currentTime, 0.012);
+      }
+      if(typeof tapPostGain !== 'undefined' && tapPostGain){
+        tapPostGain.gain.setTargetAtTime(TAP_POST_GAIN * DEVICE_OUTPUT_COMP, tapAudioCtx.currentTime, 0.012);
       }
     }catch(e){}
   };
