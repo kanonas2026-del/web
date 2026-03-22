@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>ウクレレであそぶ</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,13 +12,18 @@
 <style>
   :root {
     --vh: 1vh;
+    --app-vh: 100vh;
+    --app-vw: 100vw;
   }
 
   html, body {
     margin: 0; padding: 0;
-    width: 100%; height: 100%;
+    width: var(--app-vw); height: var(--app-vh);
+    min-width: var(--app-vw); min-height: var(--app-vh);
+    max-width: var(--app-vw); max-height: var(--app-vh);
     overflow: hidden;
     position: fixed;
+    inset: 0;
     font-family: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
     /* ここから変更 */
     background-color: #ffde59;
@@ -29,10 +34,18 @@
   /* === メインレイアウト（TOPと同じ） === */
   .app-container {
     position: absolute; inset: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 10px 20px calc(16px + env(safe-area-inset-bottom)) 20px;
+    padding: max(env(safe-area-inset-top), 10px) calc(20px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
     z-index: 10;
+  }
+
+  body.is-compact-height .app-container{
+    padding-top: max(env(safe-area-inset-top), 8px);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 
   /* タイトル */
@@ -240,6 +253,53 @@
     .guide-bubble { top: clamp(130px, 30vh, 230px); }
   }
 
+  body.is-compact-height .title-area{
+    margin-top: 0.4vh;
+  }
+  body.is-compact-height .game-title{
+    font-size: clamp(28px, 5.1vw, 50px);
+    -webkit-text-stroke: 3px #111;
+    text-shadow: 6px 6px 0px #111;
+  }
+  body.is-compact-height .sub-title{
+    margin-bottom: 6px;
+    padding: 4px 14px;
+    font-size: clamp(12px, 1.7vw, 16px);
+    box-shadow: 3px 3px 0 #111;
+  }
+  body.is-compact-height .center-illustration{
+    width: min(720px, 84vw);
+    height: min(500px, 58vh);
+    top: 52%;
+  }
+  body.is-compact-height .guide-bubble{
+    max-width: min(88vw, 360px);
+  }
+  body.is-compact-height .guide-bubble .bunny{ font-size: 22px; }
+  body.is-compact-height .guide-bubble .text{ font-size: 13px; }
+  body.is-compact-height .menu-row{
+    gap: clamp(90px, 14vw, 220px);
+    margin-bottom: 10px;
+  }
+  body.is-compact-height .play-btn{
+    width: min(196px, 27vw);
+    padding: 10px 8px;
+    border-radius: 20px;
+    box-shadow: 6px 9px 0 #111;
+  }
+  body.is-compact-height .btn-back{
+    width: min(196px, 27vw);
+  }
+  body.is-compact-height .btn-icon{ font-size: 28px; }
+  body.is-compact-height .btn-title{ font-size: clamp(15px, 2.1vw, 20px); }
+  body.is-compact-height .btn-desc{ font-size: 11px; }
+  body.is-compact-height .ver-badge{
+    right: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    font-size: 13px;
+    padding: 5px 9px;
+  }
+
   /* ページめくり */
   #pageFlip {
     position: fixed; inset: 0; z-index: 9999;
@@ -418,20 +478,9 @@
   opacity: 1;
   transform: scale(1);
 }
-
-/* viewport-fit-v3 */
-#viewportFitShell{
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  transform-origin: top left;
-  will-change: transform;
-}
-
 </style>
 </head>
 <body>
-  <div id="viewportFitShell">
   <div class="app-container">
 <div class="center-illustration">
     <svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 600">
@@ -501,7 +550,6 @@
           <span class="btn-desc">メニューにもどる</span>
     </div>
   </div>
-  </div>
 
   <div id="pageFlip"></div>
 
@@ -512,14 +560,23 @@
   </div>
 
 <script>
-  // iOS 高さ対策
+  // iOS / Android 高さ対策
   (function setVH(){
     function apply(){
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      const vv = window.visualViewport;
+      const h = Math.round(vv ? vv.height : window.innerHeight);
+      const w = Math.round(vv ? vv.width : window.innerWidth);
+      document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+      document.documentElement.style.setProperty('--app-vh', `${h}px`);
+      document.documentElement.style.setProperty('--app-vw', `${w}px`);
+      document.body.classList.toggle('is-compact-height', h <= 430);
     }
-    window.addEventListener('resize', apply);
-    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60));
+    window.addEventListener('resize', apply, { passive:true });
+    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60), { passive:true });
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', apply, { passive:true });
+      window.visualViewport.addEventListener('scroll', apply, { passive:true });
+    }
     apply();
   })();
 
@@ -713,99 +770,5 @@
 </script>
 
   <div class="ver-badge">v11</div>
-
-<script>
-/* viewport-fit-v3: shrink only when bottom browser UI reduces visible area */
-(function(){
-  const shell = document.getElementById('viewportFitShell');
-  if(!shell) return;
-  const selectors = ['.menu-area', '.guide-bubble'];
-  let rafId = 0;
-
-  function viewportSize(){
-    const vv = window.visualViewport;
-    return {
-      w: Math.max(1, (vv && vv.width) ? vv.width : (window.innerWidth || document.documentElement.clientWidth || 1)),
-      h: Math.max(1, (vv && vv.height) ? vv.height : (window.innerHeight || document.documentElement.clientHeight || 1))
-    };
-  }
-
-  function collectRects(){
-    const rects = [];
-    selectors.forEach((sel) => {
-      document.querySelectorAll(sel).forEach((el) => {
-        const cs = window.getComputedStyle(el);
-        if(cs.display === 'none' || cs.visibility === 'hidden') return;
-        const r = el.getBoundingClientRect();
-        if((r.width <= 0 && r.height <= 0) || !isFinite(r.left) || !isFinite(r.right) || !isFinite(r.bottom)) return;
-        rects.push(r);
-      });
-    });
-    return rects;
-  }
-
-  function applyFit(){
-    rafId = 0;
-    shell.style.transform = 'translate3d(0,0,0) scale(1)';
-
-    const vp = viewportSize();
-    const rects = collectRects();
-    if(!rects.length){
-      document.documentElement.style.setProperty('--viewport-fit-scale', '1');
-      return;
-    }
-
-    let left = Infinity;
-    let right = -Infinity;
-    let bottom = -Infinity;
-    rects.forEach((r) => {
-      left = Math.min(left, r.left);
-      right = Math.max(right, r.right);
-      bottom = Math.max(bottom, r.bottom);
-    });
-
-    const cx = vp.w * 0.5;
-    const requiredHalf = Math.max(cx - left, right - cx, vp.w * 0.5);
-    const requiredWidth = requiredHalf * 2;
-    let scaleW = requiredWidth > vp.w ? (vp.w / requiredWidth) : 1;
-    let scaleH = bottom > vp.h ? (vp.h / bottom) : 1;
-    let scale = Math.min(1, scaleW, scaleH);
-    if(!isFinite(scale) || scale <= 0) scale = 1;
-    if(scale < 0.999){
-      scale = Math.max(0.84, scale * 0.985);
-    }else{
-      scale = 1;
-    }
-
-    const tx = (vp.w - (vp.w * scale)) * 0.5;
-    shell.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,0,0) scale(' + scale.toFixed(4) + ')';
-    document.documentElement.style.setProperty('--viewport-fit-scale', scale.toFixed(4));
-  }
-
-  function scheduleFit(){
-    if(rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => requestAnimationFrame(applyFit));
-  }
-
-  window.addEventListener('load', scheduleFit);
-  window.addEventListener('pageshow', scheduleFit);
-  window.addEventListener('resize', scheduleFit, { passive: true });
-  window.addEventListener('orientationchange', function(){
-    setTimeout(scheduleFit, 120);
-    setTimeout(scheduleFit, 380);
-  }, { passive: true });
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', scheduleFit, { passive: true });
-    window.visualViewport.addEventListener('scroll', scheduleFit, { passive: true });
-  }
-  if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(scheduleFit).catch(function(){});
-  }
-  setTimeout(scheduleFit, 0);
-  setTimeout(scheduleFit, 300);
-  setTimeout(scheduleFit, 900);
-})();
-</script>
-
 </body>
 </html>

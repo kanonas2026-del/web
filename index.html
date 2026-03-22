@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
 <title>ウクレレであそぼう</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,13 +12,18 @@
 <style>
   :root {
     --vh: 1vh;
+    --app-vh: 100vh;
+    --app-vw: 100vw;
   }
   
   html, body {
     margin: 0; padding: 0;
-    width: 100%; height: 100%;
+    width: var(--app-vw); height: var(--app-vh);
+    min-width: var(--app-vw); min-height: var(--app-vh);
+    max-width: var(--app-vw); max-height: var(--app-vh);
     overflow: hidden;
     position: fixed;
+    inset: 0;
     font-family: "Mochiy Pop One", "Zen Maru Gothic", sans-serif;
     /* ポップなドット柄背景に変更 */
     background-color: #ffde59;
@@ -26,17 +31,6 @@
     background-size: 30px 30px;
     user-select: none;
   }
-
-  /* viewport-fit-v3 */
-  #viewportFitShell {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    transform-origin: top left;
-    will-change: transform;
-    z-index: 10;
-  }
-
 
   /* 雲のような背景装飾（動く） */
   body::before {
@@ -52,10 +46,18 @@
   /* === メインレイアウト === */
   .app-container {
     position: absolute; inset: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     display: flex; flex-direction: column;
     align-items: center; justify-content: space-between;
-    padding: env(safe-area-inset-top) 20px 20px 20px;
+    padding: env(safe-area-inset-top) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
     z-index: 10;
+  }
+
+  body.is-compact-height .app-container{
+    padding-top: max(env(safe-area-inset-top), 8px);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 
   /* === タイトルロゴ === */
@@ -442,7 +444,6 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
 
 <body>
 
-<div id="viewportFitShell">
 <div class="app-container">
   
   <header class="title-area">
@@ -521,7 +522,6 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
   </div>
 
 </div>
-</div>
   <div class="ver-badge">v21</div>
 
 <div id="pageFlip"></div>
@@ -534,11 +534,20 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
 <script>
 // === スクリプト（機能は元のまま維持） ===
 function setVh(){
-  const h = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+  const vv = window.visualViewport;
+  const h = Math.round(vv ? vv.height : window.innerHeight);
+  const w = Math.round(vv ? vv.width : window.innerWidth);
   document.documentElement.style.setProperty('--vh', (h*0.01)+'px');
+  document.documentElement.style.setProperty('--app-vh', h+'px');
+  document.documentElement.style.setProperty('--app-vw', w+'px');
+  document.body.classList.toggle('is-compact-height', h <= 430);
 }
-window.addEventListener('resize', setVh);
-window.addEventListener('orientationchange', ()=>setTimeout(setVh, 250));
+window.addEventListener('resize', setVh, { passive:true });
+window.addEventListener('orientationchange', ()=>setTimeout(setVh, 250), { passive:true });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', setVh, { passive:true });
+  window.visualViewport.addEventListener('scroll', setVh, { passive:true });
+}
 setVh();
 
 let __navLock = false;
@@ -771,99 +780,6 @@ window.addEventListener('pageshow', ()=>{
 
 ;
 
-</script>
-
-<script>
-/* viewport-fit-v3: shrink only when bottom browser UI reduces visible area */
-(function(){
-  const shell = document.getElementById('viewportFitShell');
-  if(!shell) return;
-  const selectors = ['.title-area', '.menu-row', '.guide-bubble'];
-  let rafId = 0;
-
-  function viewportSize(){
-    const vv = window.visualViewport;
-    return {
-      w: Math.max(1, (vv && vv.width) ? vv.width : (window.innerWidth || document.documentElement.clientWidth || 1)),
-      h: Math.max(1, (vv && vv.height) ? vv.height : (window.innerHeight || document.documentElement.clientHeight || 1))
-    };
-  }
-
-  function collectRects(){
-    const rects = [];
-    selectors.forEach((sel) => {
-      document.querySelectorAll(sel).forEach((el) => {
-        const cs = window.getComputedStyle(el);
-        if(cs.display === 'none' || cs.visibility === 'hidden') return;
-        const r = el.getBoundingClientRect();
-        if((r.width <= 0 && r.height <= 0) || !isFinite(r.left) || !isFinite(r.right) || !isFinite(r.bottom)) return;
-        rects.push(r);
-      });
-    });
-    return rects;
-  }
-
-  function applyFit(){
-    rafId = 0;
-    shell.style.transform = 'translate3d(0,0,0) scale(1)';
-
-    const vp = viewportSize();
-    const rects = collectRects();
-    if(!rects.length){
-      document.documentElement.style.setProperty('--viewport-fit-scale', '1');
-      return;
-    }
-
-    let left = Infinity;
-    let right = -Infinity;
-    let bottom = -Infinity;
-    rects.forEach((r) => {
-      left = Math.min(left, r.left);
-      right = Math.max(right, r.right);
-      bottom = Math.max(bottom, r.bottom);
-    });
-
-    const cx = vp.w * 0.5;
-    const requiredHalf = Math.max(cx - left, right - cx, vp.w * 0.5);
-    const requiredWidth = requiredHalf * 2;
-    let scaleW = requiredWidth > vp.w ? (vp.w / requiredWidth) : 1;
-    let scaleH = bottom > vp.h ? (vp.h / bottom) : 1;
-    let scale = Math.min(1, scaleW, scaleH);
-    if(!isFinite(scale) || scale <= 0) scale = 1;
-    if(scale < 0.999){
-      scale = Math.max(0.84, scale * 0.985);
-    }else{
-      scale = 1;
-    }
-
-    const tx = (vp.w - (vp.w * scale)) * 0.5;
-    shell.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,0,0) scale(' + scale.toFixed(4) + ')';
-    document.documentElement.style.setProperty('--viewport-fit-scale', scale.toFixed(4));
-  }
-
-  function scheduleFit(){
-    if(rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => requestAnimationFrame(applyFit));
-  }
-
-  window.addEventListener('load', scheduleFit);
-  window.addEventListener('pageshow', scheduleFit);
-  window.addEventListener('resize', scheduleFit, { passive: true });
-  window.addEventListener('orientationchange', function(){
-    setTimeout(scheduleFit, 120);
-    setTimeout(scheduleFit, 380);
-  }, { passive: true });
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', scheduleFit, { passive: true });
-    window.visualViewport.addEventListener('scroll', scheduleFit, { passive: true });
-  }
-  if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(scheduleFit).catch(function(){});
-  }
-  setTimeout(scheduleFit, 0);
-  setTimeout(scheduleFit, 300);
-  setTimeout(scheduleFit, 900);
-})();
 </script>
 
 </body>
