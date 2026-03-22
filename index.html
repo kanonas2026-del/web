@@ -427,106 +427,16 @@ top: clamp(138px, 26vh, 210px); /* 画面サイズに応じて上下 */
   outline-offset: 2px;
 }
 
-
-/* viewport fit v6: 低い横画面では全体を少し詰めて、下バーに隠れにくくする */
-body.compact-landscape .app-container{
-  padding-top: max(env(safe-area-inset-top), 8px);
-  padding-bottom: calc(74px + env(safe-area-inset-bottom));
-}
-body.compact-landscape .title-area{
-  margin-top: 4px;
-  margin-bottom: 2px;
-  transform: scale(.90);
+/* VIEWPORT_FIT_V7 */
+#viewportFitRoot{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
   transform-origin: top center;
+  will-change: transform;
 }
-body.compact-landscape .sub-title{
-  margin-bottom: 4px;
-}
-body.compact-landscape .menu-row{
-  gap: clamp(28px, 7vw, 84px);
-  margin-bottom: 0;
-}
-body.compact-landscape .play-btn{
-  width: min(200px, 34vw);
-  padding: 9px 8px;
-}
-body.compact-landscape .btn-icon{
-  font-size: 28px;
-  margin-bottom: 2px;
-}
-body.compact-landscape .btn-title{
-  font-size: clamp(15px, 2.2vw, 20px);
-}
-body.compact-landscape .btn-desc{
-  font-size: 10px;
-  margin-top: 2px;
-}
-body.compact-landscape .guide-bubble{
-  top: clamp(96px, 22vh, 140px);
-  padding: 8px 18px;
-}
-body.compact-landscape .guide-bubble .bunny{
-  font-size: 26px;
-}
-body.compact-landscape .guide-bubble .text{
-  font-size: 18px;
-}
-body.compact-landscape .center-illustration{
-  transform: translate(-50%, -50%) scale(0.84);
-  opacity: 0.9;
-}
-body.compact-landscape .ver-badge{
-  bottom: calc(74px + env(safe-area-inset-bottom));
-}
-
-body.extra-compact-landscape .app-container{
-  padding-bottom: calc(88px + env(safe-area-inset-bottom));
-}
-body.extra-compact-landscape .title-area{
-  transform: scale(.82);
-  margin-top: 0;
-}
-body.extra-compact-landscape .game-title{
-  -webkit-text-stroke: 3px #111;
-  text-shadow: 6px 6px 0px #111;
-}
-body.extra-compact-landscape .sub-title{
-  font-size: clamp(12px, 1.8vw, 15px);
-  padding: 3px 12px;
-}
-body.extra-compact-landscape .menu-row{
-  gap: 22px;
-}
-body.extra-compact-landscape .play-btn{
-  width: min(182px, 38vw);
-  padding: 8px 7px;
-  border-radius: 22px;
-}
-body.extra-compact-landscape .btn-icon{
-  font-size: 24px;
-}
-body.extra-compact-landscape .btn-title{
-  font-size: clamp(14px, 2vw, 18px);
-}
-body.extra-compact-landscape .btn-desc{
-  font-size: 9px;
-}
-body.extra-compact-landscape .guide-bubble{
-  top: clamp(82px, 20vh, 120px);
-  padding: 7px 14px;
-}
-body.extra-compact-landscape .guide-bubble .bunny{
-  font-size: 22px;
-}
-body.extra-compact-landscape .guide-bubble .text{
-  font-size: 16px;
-}
-body.extra-compact-landscape .center-illustration{
-  transform: translate(-50%, -50%) scale(0.76);
-  opacity: 0.82;
-}
-body.extra-compact-landscape .ver-badge{
-  bottom: calc(88px + env(safe-area-inset-bottom));
+body.needLandscape #viewportFitRoot{
+  display: none !important;
 }
 
 </style>
@@ -630,39 +540,6 @@ function setVh(){
 window.addEventListener('resize', setVh);
 window.addEventListener('orientationchange', ()=>setTimeout(setVh, 250));
 setVh();
-
-
-// viewport fit v6: 低い横画面だけ安全側でコンパクト化
-(function initCompactLandscapeFit(){
-  function getVisibleSize(){
-    const vv = window.visualViewport;
-    const w = Math.min(window.innerWidth || Infinity, vv ? vv.width : Infinity);
-    const h = Math.min(window.innerHeight || Infinity, vv ? vv.height : Infinity);
-    return {
-      w: Number.isFinite(w) ? w : (window.innerWidth || 0),
-      h: Number.isFinite(h) ? h : (window.innerHeight || 0)
-    };
-  }
-  function apply(){
-    const {w, h} = getVisibleSize();
-    const landscape = w > h;
-    const coarse = window.matchMedia('(pointer: coarse)').matches || /iPhone|Android|Mobile/i.test(navigator.userAgent || '');
-    const compact = coarse && landscape && h <= 500;
-    const extra = coarse && landscape && h <= 390;
-    document.body.classList.toggle('compact-landscape', compact);
-    document.body.classList.toggle('extra-compact-landscape', extra);
-    document.documentElement.style.setProperty('--visible-vw', w + 'px');
-    document.documentElement.style.setProperty('--visible-vh', h + 'px');
-  }
-  apply();
-  window.addEventListener('resize', apply, { passive:true });
-  window.addEventListener('orientationchange', function(){ setTimeout(apply, 120); }, { passive:true });
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', apply, { passive:true });
-    window.visualViewport.addEventListener('scroll', apply, { passive:true });
-  }
-})();
-
 
 let __navLock = false;
 function goFlip(url){
@@ -894,6 +771,139 @@ window.addEventListener('pageshow', ()=>{
 
 ;
 
+</script>
+
+
+<script>
+/* VIEWPORT_FIT_V7 */
+(function(){
+  const EXCLUDE_IDS = new Set(["pageFlip", "landscapeLock"]);
+  const MEASURE_SELECTORS = [".title-area", ".guide-bubble", ".menu-row", ".ver-badge"];
+  let fitRoot = null;
+  let rafId = 0;
+  let retryTimer = 0;
+
+  function isVisible(el){
+    if(!el || !el.isConnected) return false;
+    const cs = getComputedStyle(el);
+    if(cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity || '1') <= 0.01) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1;
+  }
+
+  function ensureFitRoot(){
+    if(fitRoot && fitRoot.isConnected) return fitRoot;
+    fitRoot = document.getElementById('viewportFitRoot');
+    if(fitRoot) return fitRoot;
+
+    fitRoot = document.createElement('div');
+    fitRoot.id = 'viewportFitRoot';
+
+    const kids = Array.from(document.body.children).filter((el)=>{
+      if(!el || el.id === 'viewportFitRoot') return false;
+      if(el.tagName === 'SCRIPT') return false;
+      if(EXCLUDE_IDS.has(el.id)) return false;
+      return true;
+    });
+
+    document.body.insertBefore(fitRoot, document.body.firstChild);
+    kids.forEach((el)=> fitRoot.appendChild(el));
+    return fitRoot;
+  }
+
+  function measureContentUnion(){
+    const nodes = [];
+    MEASURE_SELECTORS.forEach((sel)=>{
+      document.querySelectorAll(sel).forEach((el)=>{
+        if(isVisible(el)) nodes.push(el);
+      });
+    });
+    if(!nodes.length) return null;
+
+    let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+    nodes.forEach((el)=>{
+      const r = el.getBoundingClientRect();
+      left = Math.min(left, r.left);
+      top = Math.min(top, r.top);
+      right = Math.max(right, r.right);
+      bottom = Math.max(bottom, r.bottom);
+    });
+    if(!isFinite(left) || !isFinite(top) || !isFinite(right) || !isFinite(bottom)) return null;
+    return {
+      left, top, right, bottom,
+      width: Math.max(1, right - left),
+      height: Math.max(1, bottom - top)
+    };
+  }
+
+  function fitNow(){
+    const root = ensureFitRoot();
+    if(!root) return;
+
+    root.style.transform = 'scale(1)';
+    document.documentElement.style.setProperty('--vv-fit-scale', '1');
+
+    const vv = window.visualViewport;
+    const vw = vv ? vv.width : window.innerWidth;
+    const vh = vv ? vv.height : window.innerHeight;
+
+    const union = measureContentUnion();
+    if(!union) return;
+
+    const padX = 8;
+    const padY = 8;
+    let scale = Math.min(1, (vw - padX * 2) / union.width, (vh - padY * 2) / union.height);
+    if(!isFinite(scale) || scale <= 0) scale = 1;
+    if(scale > 0.999) scale = 1;
+
+    root.style.transform = `scale(${scale})`;
+    document.documentElement.style.setProperty('--vv-fit-scale', String(scale));
+  }
+
+  function scheduleFit(){
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(()=>{
+      rafId = requestAnimationFrame(fitNow);
+    });
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(fitNow, 180);
+  }
+
+  document.addEventListener('DOMContentLoaded', scheduleFit, { once: true });
+  window.addEventListener('load', scheduleFit, { passive: true });
+  window.addEventListener('pageshow', scheduleFit, { passive: true });
+  window.addEventListener('resize', scheduleFit, { passive: true });
+  window.addEventListener('orientationchange', ()=> setTimeout(scheduleFit, 120), { passive: true });
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', scheduleFit, { passive: true });
+    window.visualViewport.addEventListener('scroll', scheduleFit, { passive: true });
+  }
+
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(scheduleFit).catch(()=>{});
+  }
+
+  const obsTargets = [];
+  const body = document.body;
+  if(body) obsTargets.push(body);
+  ['#menu-overlay','#sample-overlay','#task-modal','#start-overlay','#diagnosis-splash','#diagnosis-card','#back-btn','.guide-bubble'].forEach((sel)=>{
+    const el = document.querySelector(sel);
+    if(el) obsTargets.push(el);
+  });
+  if('MutationObserver' in window){
+    const mo = new MutationObserver(()=> scheduleFit());
+    obsTargets.forEach((el)=>{
+      try{
+        mo.observe(el, { attributes: true, childList: true, subtree: false });
+      }catch(e){}
+    });
+  }
+
+  scheduleFit();
+  setTimeout(scheduleFit, 500);
+  setTimeout(scheduleFit, 1200);
+})();
 </script>
 
 </body>

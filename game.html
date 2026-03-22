@@ -1434,6 +1434,19 @@ body.is-uke .vol-inline{ display:none !important; }
   #imported-panel .t2, #imported-panel .t3{ font-size: 10px; line-height: 1.1; }
 }
 
+
+/* VIEWPORT_FIT_V7 */
+#viewportFitRoot{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  transform-origin: top center;
+  will-change: transform;
+}
+body.needLandscape #viewportFitRoot{
+  display: none !important;
+}
+
 </style>
 
 <style>
@@ -6943,6 +6956,139 @@ document.addEventListener('DOMContentLoaded', function(){
     <p class="orig-note">この版はメニュー整理までです。</p>
   </div>
 </div>
+
+
+<script>
+/* VIEWPORT_FIT_V7 */
+(function(){
+  const EXCLUDE_IDS = new Set(["pageFlip", "landscapeLock"]);
+  const MEASURE_SELECTORS = ["#menu-overlay .menu-card", "#sample-overlay .sample-card", "#task-modal[aria-hidden=\"false\"] .orig-modal", "#imported-panel", "#back-btn"];
+  let fitRoot = null;
+  let rafId = 0;
+  let retryTimer = 0;
+
+  function isVisible(el){
+    if(!el || !el.isConnected) return false;
+    const cs = getComputedStyle(el);
+    if(cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity || '1') <= 0.01) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1;
+  }
+
+  function ensureFitRoot(){
+    if(fitRoot && fitRoot.isConnected) return fitRoot;
+    fitRoot = document.getElementById('viewportFitRoot');
+    if(fitRoot) return fitRoot;
+
+    fitRoot = document.createElement('div');
+    fitRoot.id = 'viewportFitRoot';
+
+    const kids = Array.from(document.body.children).filter((el)=>{
+      if(!el || el.id === 'viewportFitRoot') return false;
+      if(el.tagName === 'SCRIPT') return false;
+      if(EXCLUDE_IDS.has(el.id)) return false;
+      return true;
+    });
+
+    document.body.insertBefore(fitRoot, document.body.firstChild);
+    kids.forEach((el)=> fitRoot.appendChild(el));
+    return fitRoot;
+  }
+
+  function measureContentUnion(){
+    const nodes = [];
+    MEASURE_SELECTORS.forEach((sel)=>{
+      document.querySelectorAll(sel).forEach((el)=>{
+        if(isVisible(el)) nodes.push(el);
+      });
+    });
+    if(!nodes.length) return null;
+
+    let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+    nodes.forEach((el)=>{
+      const r = el.getBoundingClientRect();
+      left = Math.min(left, r.left);
+      top = Math.min(top, r.top);
+      right = Math.max(right, r.right);
+      bottom = Math.max(bottom, r.bottom);
+    });
+    if(!isFinite(left) || !isFinite(top) || !isFinite(right) || !isFinite(bottom)) return null;
+    return {
+      left, top, right, bottom,
+      width: Math.max(1, right - left),
+      height: Math.max(1, bottom - top)
+    };
+  }
+
+  function fitNow(){
+    const root = ensureFitRoot();
+    if(!root) return;
+
+    root.style.transform = 'scale(1)';
+    document.documentElement.style.setProperty('--vv-fit-scale', '1');
+
+    const vv = window.visualViewport;
+    const vw = vv ? vv.width : window.innerWidth;
+    const vh = vv ? vv.height : window.innerHeight;
+
+    const union = measureContentUnion();
+    if(!union) return;
+
+    const padX = 8;
+    const padY = 8;
+    let scale = Math.min(1, (vw - padX * 2) / union.width, (vh - padY * 2) / union.height);
+    if(!isFinite(scale) || scale <= 0) scale = 1;
+    if(scale > 0.999) scale = 1;
+
+    root.style.transform = `scale(${scale})`;
+    document.documentElement.style.setProperty('--vv-fit-scale', String(scale));
+  }
+
+  function scheduleFit(){
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(()=>{
+      rafId = requestAnimationFrame(fitNow);
+    });
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(fitNow, 180);
+  }
+
+  document.addEventListener('DOMContentLoaded', scheduleFit, { once: true });
+  window.addEventListener('load', scheduleFit, { passive: true });
+  window.addEventListener('pageshow', scheduleFit, { passive: true });
+  window.addEventListener('resize', scheduleFit, { passive: true });
+  window.addEventListener('orientationchange', ()=> setTimeout(scheduleFit, 120), { passive: true });
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', scheduleFit, { passive: true });
+    window.visualViewport.addEventListener('scroll', scheduleFit, { passive: true });
+  }
+
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(scheduleFit).catch(()=>{});
+  }
+
+  const obsTargets = [];
+  const body = document.body;
+  if(body) obsTargets.push(body);
+  ['#menu-overlay','#sample-overlay','#task-modal','#start-overlay','#diagnosis-splash','#diagnosis-card','#back-btn','.guide-bubble'].forEach((sel)=>{
+    const el = document.querySelector(sel);
+    if(el) obsTargets.push(el);
+  });
+  if('MutationObserver' in window){
+    const mo = new MutationObserver(()=> scheduleFit());
+    obsTargets.forEach((el)=>{
+      try{
+        mo.observe(el, { attributes: true, childList: true, subtree: false });
+      }catch(e){}
+    });
+  }
+
+  scheduleFit();
+  setTimeout(scheduleFit, 500);
+  setTimeout(scheduleFit, 1200);
+})();
+</script>
 
 </body>
 </html>
