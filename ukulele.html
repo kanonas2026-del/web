@@ -12,7 +12,6 @@
 <style>
   :root {
     --vh: 1vh;
-    --page-scale: 1;
   }
 
   html, body {
@@ -29,18 +28,11 @@
 
   /* === メインレイアウト（TOPと同じ） === */
   .app-container {
-    position: fixed; inset: 0;
+    position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    width: 100%;
-    height: 100dvh;
-    height: calc(var(--vh) * 100);
-    min-height: calc(var(--vh) * 100);
-    box-sizing: border-box;
-    padding: calc(env(safe-area-inset-top) + 8px) 20px calc(16px + env(safe-area-inset-bottom)) 20px;
+    padding: 10px 20px calc(16px + env(safe-area-inset-bottom)) 20px;
     z-index: 10;
-    transform-origin: center center;
-    transform: scale(var(--page-scale));
   }
 
   /* タイトル */
@@ -427,6 +419,18 @@
   transform: scale(1);
 }
 </style>
+<style id="viewport-fit-browser-v2">
+  /* browser viewport fit: only shrink when visible viewport is smaller */
+  #viewportFitRoot{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: top left;
+    will-change: transform;
+    overflow: hidden;
+  }
+</style>
 </head>
 <body>
   <div class="app-container">
@@ -511,63 +515,12 @@
   // iOS 高さ対策
   (function setVH(){
     function apply(){
-      const vv = window.visualViewport;
-      const vh = (vv && vv.height) ? vv.height * 0.01 : window.innerHeight * 0.01;
+      const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
-    function fit(){
-      apply();
-      const root = document.querySelector('.app-container');
-      if(!root) return;
-      const vv = window.visualViewport;
-      const vw = (vv && vv.width) ? vv.width : window.innerWidth;
-      const vh = (vv && vv.height) ? vv.height : window.innerHeight;
-
-      document.documentElement.style.setProperty('--page-scale', '1');
-      void root.offsetHeight;
-
-      const targets = [
-        document.querySelector('.title-area'),
-        document.querySelector('.guide-bubble'),
-        document.querySelector('.menu-row'),
-        document.getElementById('btnTop')
-      ].filter(Boolean);
-      if(!targets.length) return;
-
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      targets.forEach(el => {
-        const r = el.getBoundingClientRect();
-        minX = Math.min(minX, r.left);
-        minY = Math.min(minY, r.top);
-        maxX = Math.max(maxX, r.right);
-        maxY = Math.max(maxY, r.bottom);
-      });
-
-      const padX = 10;
-      const padY = 10;
-      const contentW = Math.max(1, maxX - minX);
-      const contentH = Math.max(1, maxY - minY);
-      const scale = Math.max(0.84, Math.min(1, (vw - padX * 2) / contentW, (vh - padY * 2) / contentH));
-      document.documentElement.style.setProperty('--page-scale', scale.toFixed(4));
-      document.body.classList.toggle('viewport-compact', scale < 0.999);
-    }
-    function schedule(){
-      fit();
-      requestAnimationFrame(fit);
-      setTimeout(fit, 120);
-      setTimeout(fit, 320);
-    }
-    window.addEventListener('resize', schedule);
-    window.addEventListener('orientationchange', ()=>setTimeout(schedule, 60));
-    window.addEventListener('pageshow', schedule);
-    window.addEventListener('visibilitychange', ()=>{ if(!document.hidden) schedule(); });
-    if(window.visualViewport){
-      window.visualViewport.addEventListener('resize', schedule);
-      window.visualViewport.addEventListener('scroll', schedule);
-    }
-    window.addEventListener('touchstart', schedule, { passive:true, capture:true });
-    window.addEventListener('mousedown', schedule, true);
-    schedule();
+    window.addEventListener('resize', apply);
+    window.addEventListener('orientationchange', ()=>setTimeout(apply, 60));
+    apply();
   })();
 
   // ページめくり
@@ -760,5 +713,62 @@
 </script>
 
   <div class="ver-badge">v11</div>
+<script id="viewport-fit-browser-js-v2">
+(function(){
+  if (window.__viewportFitBrowserV2) return;
+  window.__viewportFitBrowserV2 = true;
+
+  function setup(){
+    var body = document.body;
+    if (!body) return;
+    var root = document.getElementById('viewportFitRoot');
+    if (!root){
+      root = document.createElement('div');
+      root.id = 'viewportFitRoot';
+      var nodes = Array.prototype.slice.call(body.childNodes);
+      for (var i = 0; i < nodes.length; i++){
+        var n = nodes[i];
+        if (n.nodeType === 1 && n.tagName === 'SCRIPT') continue;
+        root.appendChild(n);
+      }
+      body.insertBefore(root, body.firstChild);
+    }
+
+    function fit(){
+      var vv = window.visualViewport;
+      var visW = vv && vv.width ? vv.width : window.innerWidth;
+      var visH = vv && vv.height ? vv.height : window.innerHeight;
+      var offL = vv && typeof vv.offsetLeft === 'number' ? vv.offsetLeft : 0;
+      var offT = vv && typeof vv.offsetTop === 'number' ? vv.offsetTop : 0;
+      var layW = document.documentElement.clientWidth || window.innerWidth || visW;
+      var layH = window.innerHeight || document.documentElement.clientHeight || visH;
+
+      var scale = Math.min(1, visW / layW, visH / layH);
+      if (!isFinite(scale) || scale <= 0) scale = 1;
+
+      var tx = offL + Math.max(0, (visW - (layW * scale)) / 2);
+      var ty = offT + Math.max(0, (visH - (layH * scale)) / 2);
+
+      root.style.width = layW + 'px';
+      root.style.height = layH + 'px';
+      root.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
+    }
+
+    fit();
+    window.addEventListener('resize', fit, { passive:true });
+    window.addEventListener('orientationchange', function(){ setTimeout(fit, 80); }, { passive:true });
+    if (window.visualViewport){
+      window.visualViewport.addEventListener('resize', fit, { passive:true });
+      window.visualViewport.addEventListener('scroll', fit, { passive:true });
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setup, { once:true });
+  }else{
+    setup();
+  }
+})();
+</script>
 </body>
 </html>
