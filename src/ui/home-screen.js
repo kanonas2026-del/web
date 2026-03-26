@@ -1,20 +1,16 @@
 const app = document.getElementById('app');
+
 app.innerHTML = `
-  <div class="home-shell">
-    <section class="hero">
-      <div class="hero-copy">
+  <div class="home-shell slim-home">
+    <section class="hero slim-hero">
+      <div class="hero-copy slim-copy">
         <p class="eyebrow">UKULELE PRACTICE</p>
-        <h1>弾くための画面だけに絞った<br>新しい練習アプリ</h1>
-        <p>ホームは縦向きで見やすく、練習画面は横向きで集中。先生の譜面、曲ライブラリ、前回の続きへ素早く進めます。</p>
+        <h1>弾くための画面だけに絞った新しい練習アプリ</h1>
+        <p class="hero-text">前回の曲: 12th Street Rag / 5-8小節 / BPM 72 / Pulse Split</p>
       </div>
-      <aside class="hero-side">
-        <span class="status-label">前回の曲</span>
-        <strong class="status-value">12th Street Rag</strong>
-        <span>5-8小節 / BPM 72 / Pulse Split</span>
-      </aside>
     </section>
 
-    <section class="grid">
+    <section class="grid slim-grid">
       <a class="card" href="./practice.html">
         <span class="card-kicker">RESTART</span>
         <h2>前回の続き</h2>
@@ -42,12 +38,6 @@ app.innerHTML = `
         <p>練習前に4弦を合わせる</p>
         <span class="card-meta">準備重視</span>
       </button>
-    </section>
-
-    <section class="bottom">
-      <div class="mini"><span class="mini-label">標準UI</span><strong>Pulse Split</strong></div>
-      <div class="mini"><span class="mini-label">画面方針</span><strong>ホームは縦 / 練習は横優先</strong></div>
-      <div class="mini"><span class="mini-label">テーマ</span><strong>Dark + Neon Accent</strong></div>
     </section>
   </div>
 `;
