@@ -20,8 +20,6 @@ const nowCard = {
 
 const nextCard = {
   title: 'G7',
-  hintLabel: '切替のコツ',
-  hint: '形そのままで 1F 戻す',
   summary: '人・中・薬はそのまま 1F ずつ左へ',
   rows: [
     { label: '1弦(A)', fret: '1F', finger: '人' },
@@ -130,15 +128,10 @@ function renderNextCard(card) {
       <div class="change-summary-banner">${card.summary}</div>
 
       <div class="change-box">
-        <div class="change-box-title">変化点</div>
+        <div class="change-box-title">ゆっくり確認</div>
         <div class="change-box-lines">
           ${changeRows}
         </div>
-      </div>
-
-      <div class="shape-line shape-line-hint shape-line-hint-next">
-        <span class="shape-label">${card.hintLabel}</span>
-        <strong>${card.hint}</strong>
       </div>
     </section>
   `;
