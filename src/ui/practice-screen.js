@@ -2,6 +2,7 @@ const app = document.getElementById('app');
 
 const nowCard = {
   title: 'C6',
+  hintLabel: 'ヒント',
   hint: 'そのまま維持',
   rows: [
     { label: '1弦(A)', fret: '2F', finger: '人' },
@@ -19,7 +20,9 @@ const nowCard = {
 
 const nextCard = {
   title: 'G7',
-  hint: '次で薬指を離す',
+  hintLabel: '切替のコツ',
+  hint: '形そのままで 1F 戻す',
+  summary: '人・中・薬はそのまま 1F ずつ左へ',
   rows: [
     { label: '1弦(A)', fret: '1F', finger: '人' },
     { label: '2弦(E)', fret: '2F', finger: '中' },
@@ -33,10 +36,10 @@ const nextCard = {
     { row: 3, col: 0, text: '開放', open: true },
   ],
   changes: [
-    '1弦(A): 2F 人 → 1F 人',
-    '2弦(E): 3F 中 → 2F 中',
-    '3弦(C): 4F 薬 → 3F 薬',
-    '4弦(G): そのまま',
+    { text: '1弦(A) 人: 2F → 1F', type: 'move' },
+    { text: '2弦(E) 中: 3F → 2F', type: 'move' },
+    { text: '3弦(C) 薬: 4F → 3F', type: 'move' },
+    { text: '4弦(G): そのまま', type: 'stay' },
   ]
 };
 
@@ -101,7 +104,7 @@ function renderNowCard(card) {
       </div>
 
       <div class="shape-line shape-line-hint">
-        <span class="shape-label">ヒント</span>
+        <span class="shape-label">${card.hintLabel}</span>
         <strong>${card.hint}</strong>
       </div>
     </section>
@@ -109,9 +112,9 @@ function renderNowCard(card) {
 }
 
 function renderNextCard(card) {
-  const changeRows = card.changes.map((text, index) => {
-    const cls = index === card.changes.length - 1 ? 'change-line change-line-stay' : 'change-line';
-    return `<div class="${cls}">${text}</div>`;
+  const changeRows = card.changes.map((item) => {
+    const cls = item.type === 'stay' ? 'change-line change-line-stay' : 'change-line change-line-move';
+    return `<div class="${cls}">${item.text}</div>`;
   }).join('');
 
   return `
@@ -124,6 +127,8 @@ function renderNextCard(card) {
       <div class="shape-name shape-name-next">${card.title}</div>
       ${renderTable(card, true)}
 
+      <div class="change-summary-banner">${card.summary}</div>
+
       <div class="change-box">
         <div class="change-box-title">変化点</div>
         <div class="change-box-lines">
@@ -131,8 +136,8 @@ function renderNextCard(card) {
         </div>
       </div>
 
-      <div class="shape-line shape-line-hint">
-        <span class="shape-label">ヒント</span>
+      <div class="shape-line shape-line-hint shape-line-hint-next">
+        <span class="shape-label">${card.hintLabel}</span>
         <strong>${card.hint}</strong>
       </div>
     </section>

@@ -187,8 +187,8 @@
 }
 
 .chord-cell-hit-next{
-  background: rgba(41,240,208,.16);
-  box-shadow: 0 0 0 1px rgba(41,240,208,.28) inset, 0 0 24px rgba(41,240,208,.18);
+  background: rgba(41,240,208,.18);
+  box-shadow: 0 0 0 1px rgba(41,240,208,.30) inset, 0 0 24px rgba(41,240,208,.20);
 }
 
 .chord-cell-open{
@@ -209,6 +209,17 @@
   background: rgba(255,255,255,.03);
   color: var(--text);
   font-weight: 700;
+}
+
+.change-summary-banner{
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(41,240,208,.16), rgba(41,240,208,.08));
+  border: 1px solid rgba(41,240,208,.22);
+  color: #f0fffc;
+  font-weight: 800;
+  line-height: 1.5;
 }
 
 .change-box{
@@ -232,15 +243,18 @@
 .change-line{
   padding: 12px 14px;
   border-radius: 14px;
-  background: rgba(41,240,208,.08);
-  border: 1px solid rgba(41,240,208,.12);
-  color: #edfffb;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+.change-line-move{
+  background: rgba(41,240,208,.10);
+  border: 1px solid rgba(41,240,208,.16);
+  color: #f0fffc;
 }
 
 .change-line-stay{
   background: rgba(255,255,255,.03);
-  border-color: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.05);
   color: var(--text);
 }
 
@@ -256,6 +270,11 @@
 
 .shape-line-hint{
   margin-top: auto;
+}
+
+.shape-line-hint-next{
+  background: rgba(41,240,208,.06);
+  border: 1px solid rgba(41,240,208,.10);
 }
 
 .shape-label{
