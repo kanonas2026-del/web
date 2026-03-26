@@ -1,5 +1,5 @@
 web 直下に展開して上書きしてください。
 上書き対象:
-- src/ui/practice-screen.js
+- src/styles/practice.css
 
-NEXT の重複説明を減らし、「まずはゆっくり確認」の形に寄せた版です。
+iPhone 横向きでも 左 / 中央 / 右 の3ブロックを横並び維持する版です。
