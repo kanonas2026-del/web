@@ -1,0 +1,14 @@
+:root{
+  --bg: #0b1020;
+  --panel: #12192b;
+  --line: #2a334a;
+  --text: #e8eefc;
+  --muted: #95a3bf;
+  --accent: #29f0d0;
+  --danger: #ff5a6b;
+
+  --radius: 16px;
+  --gap: 12px;
+  --tap: 48px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
