@@ -1,6 +1,10 @@
-差し替え対象は2ファイルです。
+このZIPは web フォルダ直下で展開してください。
 
-1. src/ui/home-screen.js
-2. src/styles/home.css
+上書きされるファイル:
+- src\ui\practice-screen.js
+- src\styles\practice.css
 
-web 直下にある同名ファイルへ上書きしてください。
+目的:
+- 4弦レーンをはっきり見せる
+- iPhone横で3カラム維持
+- 練習画面を見やすくする
