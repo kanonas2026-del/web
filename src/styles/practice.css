@@ -5,6 +5,25 @@
   color: var(--text);
 }
 
+.practice-page::after{
+  content: 'PRACTICE CSS v10';
+  position: fixed;
+  right: 10px;
+  bottom: 8px;
+  z-index: 9999;
+  min-height: 24px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(41,240,208,.22);
+  background: rgba(8,12,24,.86);
+  color: #dffefa;
+  font-size: 11px;
+  letter-spacing: .08em;
+  box-shadow: 0 0 16px rgba(41,240,208,.10);
+}
+
 .practice-shell{
   max-width: 1440px;
   margin: 0 auto;
@@ -415,7 +434,7 @@
   }
 }
 
-@media (max-width: 980px) and (orientation: landscape){
+@media screen and (max-width: 980px) and (orientation: landscape){
   .practice-shell{
     gap: 12px;
     padding: 10px 8px 12px;
@@ -436,7 +455,7 @@
   }
 
   .practice-layout{
-    grid-template-columns: 220px minmax(0,1fr) 220px;
+    grid-template-columns: 220px minmax(0, 1fr) 220px !important;
     gap: 10px;
   }
 
@@ -526,9 +545,9 @@
   }
 }
 
-@media (max-width: 980px) and (orientation: portrait){
+@media screen and (max-width: 980px) and (orientation: portrait){
   .practice-layout{
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .transport{
