@@ -1,6 +1,2 @@
-web 直下に展開して上書きしてください。
-上書き対象:
-- src/styles/practice.css
-
-iPhone 横向きで重なりを避けるため、詳細を隠して1画面完結に寄せた版です。
-右下が PRACTICE CSS v12 L になれば反映済みです。
+practice.css の末尾に上書きではなく追記してください。
+右下が PRACTICE CSS v13 L になれば反映です。
