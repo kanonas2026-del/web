@@ -31,6 +31,12 @@ const nextCard = {
     { row: 1, col: 1, text: '中' },
     { row: 2, col: 2, text: '薬' },
     { row: 3, col: 0, text: '開放', open: true },
+  ],
+  changes: [
+    '1弦(A): 2F 人 → 1F 人',
+    '2弦(E): 3F 中 → 2F 中',
+    '3弦(C): 4F 薬 → 3F 薬',
+    '4弦(G): そのまま',
   ]
 };
 
@@ -41,7 +47,7 @@ const laneRows = [
   { code: '4(G)', points: [12, 40, 64] },
 ];
 
-function renderChordCard(card, modeLabel, isNext = false) {
+function renderTable(card, isNext = false) {
   const headers = ['1F', '2F', '3F', '4F'];
   const rows = ['1弦(A)', '2弦(E)', '3弦(C)', '4弦(G)'];
 
@@ -50,7 +56,7 @@ function renderChordCard(card, modeLabel, isNext = false) {
       const hit = card.cells.find((item) => item.row === rowIndex && item.col === colIndex);
       if (!hit) return `<span class="chord-cell"></span>`;
       if (hit.open) return `<span class="chord-cell chord-cell-open">開放</span>`;
-      return `<span class="chord-cell chord-cell-hit">${hit.text}</span>`;
+      return `<span class="chord-cell chord-cell-hit ${isNext ? 'chord-cell-hit-next' : ''}">${hit.text}</span>`;
     }).join('');
 
     return `
@@ -61,29 +67,34 @@ function renderChordCard(card, modeLabel, isNext = false) {
     `;
   }).join('');
 
+  return `
+    <div class="chord-table-wrap ${isNext ? 'chord-table-wrap-next' : ''}">
+      <div class="fret-header">
+        <span class="fret-header-spacer"></span>
+        <div class="fret-header-cells">
+          ${headers.map((header) => `<span class="fret-header-cell">${header}</span>`).join('')}
+        </div>
+      </div>
+      ${gridRows}
+    </div>
+  `;
+}
+
+function renderNowCard(card) {
   const infoRows = card.rows.map((row) => {
     const text = row.finger ? `${row.label}: ${row.fret} ${row.finger}` : `${row.label}: ${row.fret}`;
     return `<div class="chord-info-line">${text}</div>`;
   }).join('');
 
   return `
-    <section class="practice-card side-card ${isNext ? 'next-card' : ''}">
+    <section class="practice-card side-card">
       <div class="card-head">
-        <span class="card-head-label">${modeLabel}</span>
-        <span class="card-head-dot ${isNext ? 'card-head-dot-next' : ''}"></span>
+        <span class="card-head-label">NOW</span>
+        <span class="card-head-dot"></span>
       </div>
 
-      <div class="shape-name ${isNext ? 'shape-name-next' : ''}">${card.title}</div>
-
-      <div class="chord-table-wrap ${isNext ? 'chord-table-wrap-next' : ''}">
-        <div class="fret-header">
-          <span class="fret-header-spacer"></span>
-          <div class="fret-header-cells">
-            ${headers.map((header) => `<span class="fret-header-cell">${header}</span>`).join('')}
-          </div>
-        </div>
-        ${gridRows}
-      </div>
+      <div class="shape-name">${card.title}</div>
+      ${renderTable(card, false)}
 
       <div class="shape-meta shape-meta-lines">
         ${infoRows}
@@ -97,17 +108,43 @@ function renderChordCard(card, modeLabel, isNext = false) {
   `;
 }
 
-const laneRowHtml = laneRows.map((row) => {
-  const notes = row.points
-    .map((left) => `<span class="lane-note" style="left:${left}%"></span>`)
-    .join('');
+function renderNextCard(card) {
+  const changeRows = card.changes.map((text, index) => {
+    const cls = index === card.changes.length - 1 ? 'change-line change-line-stay' : 'change-line';
+    return `<div class="${cls}">${text}</div>`;
+  }).join('');
 
+  return `
+    <section class="practice-card side-card next-card">
+      <div class="card-head">
+        <span class="card-head-label">NEXT</span>
+        <span class="card-head-dot card-head-dot-next"></span>
+      </div>
+
+      <div class="shape-name shape-name-next">${card.title}</div>
+      ${renderTable(card, true)}
+
+      <div class="change-box">
+        <div class="change-box-title">変化点</div>
+        <div class="change-box-lines">
+          ${changeRows}
+        </div>
+      </div>
+
+      <div class="shape-line shape-line-hint">
+        <span class="shape-label">ヒント</span>
+        <strong>${card.hint}</strong>
+      </div>
+    </section>
+  `;
+}
+
+const laneRowHtml = laneRows.map((row) => {
+  const notes = row.points.map((left) => `<span class="lane-note" style="left:${left}%"></span>`).join('');
   return `
     <div class="lane-row">
       <span class="lane-name">${row.code}</span>
-      <div class="lane-track">
-        ${notes}
-      </div>
+      <div class="lane-track">${notes}</div>
     </div>
   `;
 }).join('');
@@ -129,7 +166,7 @@ app.innerHTML = `
     </header>
 
     <div class="practice-layout">
-      ${renderChordCard(nowCard, 'NOW')}
+      ${renderNowCard(nowCard)}
 
       <section class="practice-card center-card">
         <div class="card-head">
@@ -138,22 +175,10 @@ app.innerHTML = `
         </div>
 
         <div class="rhythm-line">
-          <div class="rhythm-col">
-            <span class="rhythm-beat">1拍目</span>
-            <span class="rhythm-hit">↓</span>
-          </div>
-          <div class="rhythm-col">
-            <span class="rhythm-beat">2拍目</span>
-            <span class="rhythm-hit">↓↑</span>
-          </div>
-          <div class="rhythm-col">
-            <span class="rhythm-beat">3拍目</span>
-            <span class="rhythm-hit">↓</span>
-          </div>
-          <div class="rhythm-col">
-            <span class="rhythm-beat">4拍目</span>
-            <span class="rhythm-hit">↑</span>
-          </div>
+          <div class="rhythm-col"><span class="rhythm-beat">1拍目</span><span class="rhythm-hit">↓</span></div>
+          <div class="rhythm-col"><span class="rhythm-beat">2拍目</span><span class="rhythm-hit">↓↑</span></div>
+          <div class="rhythm-col"><span class="rhythm-beat">3拍目</span><span class="rhythm-hit">↓</span></div>
+          <div class="rhythm-col"><span class="rhythm-beat">4拍目</span><span class="rhythm-hit">↑</span></div>
         </div>
 
         <div class="lane-box">
@@ -167,7 +192,7 @@ app.innerHTML = `
         </div>
       </section>
 
-      ${renderChordCard(nextCard, 'NEXT', true)}
+      ${renderNextCard(nextCard)}
     </div>
 
     <footer class="transport">

@@ -39,5 +39,7 @@ app.innerHTML = `
         <span class="card-meta">準備重視</span>
       </button>
     </section>
+
+    <div class="ver-tag">HOME v3.1</div>
   </div>
 `;
