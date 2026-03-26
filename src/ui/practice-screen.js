@@ -1,101 +1,183 @@
 const app = document.getElementById('app');
 
+const nowCard = {
+  title: 'C6',
+  hint: 'そのまま維持',
+  rows: [
+    { label: '1弦(A)', fret: '2F', finger: '人' },
+    { label: '2弦(E)', fret: '3F', finger: '中' },
+    { label: '3弦(C)', fret: '4F', finger: '薬' },
+    { label: '4弦(G)', fret: '開放', finger: '' },
+  ],
+  cells: [
+    { row: 0, col: 1, text: '人' },
+    { row: 1, col: 2, text: '中' },
+    { row: 2, col: 3, text: '薬' },
+    { row: 3, col: 0, text: '開放', open: true },
+  ]
+};
+
+const nextCard = {
+  title: 'G7',
+  hint: '次で薬指を離す',
+  rows: [
+    { label: '1弦(A)', fret: '1F', finger: '人' },
+    { label: '2弦(E)', fret: '2F', finger: '中' },
+    { label: '3弦(C)', fret: '3F', finger: '薬' },
+    { label: '4弦(G)', fret: '開放', finger: '' },
+  ],
+  cells: [
+    { row: 0, col: 0, text: '人' },
+    { row: 1, col: 1, text: '中' },
+    { row: 2, col: 2, text: '薬' },
+    { row: 3, col: 0, text: '開放', open: true },
+  ]
+};
+
 const laneRows = [
-  { name: 'A', points: [14, 38, 67, 84] },
-  { name: 'E', points: [10, 29, 55, 78] },
-  { name: 'C', points: [18, 46, 71] },
-  { name: 'G', points: [8, 34, 60] },
+  { code: '1(A)', points: [18, 44, 71, 83] },
+  { code: '2(E)', points: [14, 36, 59, 77] },
+  { code: '3(C)', points: [22, 51, 69] },
+  { code: '4(G)', points: [12, 40, 64] },
 ];
 
-const laneHtml = laneRows.map(row => `
-  <div class="lane-row">
-    <span class="lane-name">${row.name}</span>
-    <div class="lane-track">
-      ${row.points.map(left => `<span class="lane-note" style="left:${left}%"></span>`).join('')}
+function renderChordCard(card, modeLabel, isNext = false) {
+  const headers = ['1F', '2F', '3F', '4F'];
+  const rows = ['1弦(A)', '2弦(E)', '3弦(C)', '4弦(G)'];
+
+  const gridRows = rows.map((rowName, rowIndex) => {
+    const cells = [0, 1, 2, 3].map((colIndex) => {
+      const hit = card.cells.find((item) => item.row === rowIndex && item.col === colIndex);
+      if (!hit) return `<span class="chord-cell"></span>`;
+      if (hit.open) return `<span class="chord-cell chord-cell-open">開放</span>`;
+      return `<span class="chord-cell chord-cell-hit">${hit.text}</span>`;
+    }).join('');
+
+    return `
+      <div class="fret-row">
+        <span class="fret-row-label">${rowName}</span>
+        <div class="fret-row-cells">${cells}</div>
+      </div>
+    `;
+  }).join('');
+
+  const infoRows = card.rows.map((row) => {
+    const text = row.finger ? `${row.label}: ${row.fret} ${row.finger}` : `${row.label}: ${row.fret}`;
+    return `<div class="chord-info-line">${text}</div>`;
+  }).join('');
+
+  return `
+    <section class="practice-card side-card ${isNext ? 'next-card' : ''}">
+      <div class="card-head">
+        <span class="card-head-label">${modeLabel}</span>
+        <span class="card-head-dot ${isNext ? 'card-head-dot-next' : ''}"></span>
+      </div>
+
+      <div class="shape-name ${isNext ? 'shape-name-next' : ''}">${card.title}</div>
+
+      <div class="chord-table-wrap ${isNext ? 'chord-table-wrap-next' : ''}">
+        <div class="fret-header">
+          <span class="fret-header-spacer"></span>
+          <div class="fret-header-cells">
+            ${headers.map((header) => `<span class="fret-header-cell">${header}</span>`).join('')}
+          </div>
+        </div>
+        ${gridRows}
+      </div>
+
+      <div class="shape-meta shape-meta-lines">
+        ${infoRows}
+      </div>
+
+      <div class="shape-line shape-line-hint">
+        <span class="shape-label">ヒント</span>
+        <strong>${card.hint}</strong>
+      </div>
+    </section>
+  `;
+}
+
+const laneRowHtml = laneRows.map((row) => {
+  const notes = row.points
+    .map((left) => `<span class="lane-note" style="left:${left}%"></span>`)
+    .join('');
+
+  return `
+    <div class="lane-row">
+      <span class="lane-name">${row.code}</span>
+      <div class="lane-track">
+        ${notes}
+      </div>
     </div>
-  </div>`).join('');
+  `;
+}).join('');
 
 app.innerHTML = `
-<div class="practice-shell">
-  <header class="topbar">
-    <div>
-      <p class="eyebrow">PRACTICE</p>
-      <h1>12th Street Rag</h1>
-      <p class="sub">4/4 / swing / 5-8小節 / ループ中</p>
-    </div>
-    <div class="chips">
-      <div class="chip">BPM 72</div>
-      <div class="chip active">Pulse Split</div>
-      <div class="chip">★★★</div>
-    </div>
-  </header>
-
-  <section class="layout">
-    <article class="panel side-panel now-panel">
-      <div class="panel-head"><span class="head-label">NOW</span><span class="head-dot"></span></div>
-      <div class="shape-name">C6</div>
-      <div class="diagram"><div class="shape-grid">
-        <span class="mark m-a">2</span>
-        <span class="mark m-e">3</span>
-        <span class="mark m-c">4</span>
-      </div></div>
-      <div class="meta">
-        <div class="meta-line"><span class="label">指</span><strong>2 / 3 / 4</strong></div>
-        <div class="meta-line"><span class="label">ヒント</span><strong>そのまま維持</strong></div>
+  <div class="practice-shell">
+    <header class="practice-topbar">
+      <div class="topbar-left">
+        <p class="eyebrow">PRACTICE</p>
+        <h1>12th Street Rag</h1>
+        <p class="topbar-sub">4/4 / swing / 5-8小節 / ループ中</p>
       </div>
-    </article>
 
-    <article class="panel center-panel">
-      <div class="panel-head"><span class="head-label">4弦レーン</span><span class="head-dot"></span></div>
+      <div class="topbar-right">
+        <div class="top-chip">BPM 72</div>
+        <div class="top-chip top-chip-active">Pulse Split</div>
+        <div class="top-chip">★★★</div>
+      </div>
+    </header>
 
-      <div class="rhythm-wrap">
-        <div class="measure-labels">
-          <span>1拍目</span>
-          <span>2拍目</span>
-          <span>3拍目</span>
-          <span>4拍目</span>
+    <div class="practice-layout">
+      ${renderChordCard(nowCard, 'NOW')}
+
+      <section class="practice-card center-card">
+        <div class="card-head">
+          <span class="card-head-label">4弦レーン</span>
+          <span class="card-head-dot"></span>
         </div>
-        <div class="rhythm">
-          <div class="hit">↓</div>
-          <div class="hit">↓↑</div>
-          <div class="hit">↓</div>
-          <div class="hit">↑</div>
+
+        <div class="rhythm-line">
+          <div class="rhythm-col">
+            <span class="rhythm-beat">1拍目</span>
+            <span class="rhythm-hit">↓</span>
+          </div>
+          <div class="rhythm-col">
+            <span class="rhythm-beat">2拍目</span>
+            <span class="rhythm-hit">↓↑</span>
+          </div>
+          <div class="rhythm-col">
+            <span class="rhythm-beat">3拍目</span>
+            <span class="rhythm-hit">↓</span>
+          </div>
+          <div class="rhythm-col">
+            <span class="rhythm-beat">4拍目</span>
+            <span class="rhythm-hit">↑</span>
+          </div>
         </div>
-      </div>
 
-      <div class="lane-box">
-        ${laneHtml}
-        <div class="playhead"></div>
-      </div>
+        <div class="lane-box">
+          ${laneRowHtml}
+          <div class="playhead"></div>
+        </div>
 
-      <div class="current">
-        <span class="label">現在</span>
-        <strong>3小節目 / 4拍目</strong>
-      </div>
-    </article>
+        <div class="lane-hint">
+          <span class="lane-hint-label">現在</span>
+          <strong>3小節目 / 4拍目</strong>
+        </div>
+      </section>
 
-    <article class="panel side-panel next-panel">
-      <div class="panel-head"><span class="head-label">NEXT</span><span class="head-dot"></span></div>
-      <div class="shape-name next">G7</div>
-      <div class="diagram next"><div class="shape-grid">
-        <span class="mark g1">1</span>
-        <span class="mark g2">2</span>
-        <span class="mark g3">3</span>
-      </div></div>
-      <div class="meta">
-        <div class="meta-line"><span class="label">変わる指</span><strong>人 / 中</strong></div>
-        <div class="meta-line"><span class="label">ヒント</span><strong>次で薬指を離す</strong></div>
-      </div>
-    </article>
-  </section>
+      ${renderChordCard(nextCard, 'NEXT', true)}
+    </div>
 
-  <footer class="transport">
-    <button class="btn">戻る</button>
-    <button class="btn">もう一回</button>
-    <button class="btn primary">再生 / 停止</button>
-    <button class="btn">次へ</button>
-    <button class="btn">遅く</button>
-    <button class="btn">速く</button>
-    <button class="btn voice">🎤</button>
-  </footer>
-</div>`;
+    <footer class="transport">
+      <button class="transport-btn" type="button">戻る</button>
+      <button class="transport-btn" type="button">もう一回</button>
+      <button class="transport-btn transport-btn-primary" type="button">再生 / 停止</button>
+      <button class="transport-btn" type="button">次へ</button>
+      <button class="transport-btn" type="button">遅く</button>
+      <button class="transport-btn" type="button">速く</button>
+      <button class="transport-btn transport-btn-voice" type="button">🎤</button>
+    </footer>
+  </div>
+`;
