@@ -1,1 +1,1 @@
-フレット番号をマス中央ではなく境目寄りに右へ寄せ、少し大きくした CSS 修正版です。上書き対象は src/styles/practice.css のみ。
+指の文字とコメントの視認性を上げたCSS版。上書き対象は src/styles/practice.css。

@@ -145,7 +145,7 @@ function positionBoxHtml(current, next) {
   const jump = detectJump(current.strings, next.strings);
   const win = windowForStrings(current.strings, next.strings);
   const compared = compareStrings(current.strings, next.strings);
-  const header = win.map(f => `<span class="pos-header-cell">${f}F</span>`).join('');
+  const header = win.map(f => `<span class="pos-header-cell">${f}</span>`).join('');
 
   const rows = labels.map(label => {
     const cur = current.strings[label] || { fret:0, finger:'' };
@@ -252,7 +252,7 @@ function render() {
         <button class="transport-btn transport-btn-voice" id="voiceBtn" type="button">🎤</button>
       </footer>
 
-      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1</div>
+      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.2</div>
     </div>
   `;
   bindEvents();
