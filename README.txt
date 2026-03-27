@@ -1,6 +1,1 @@
-web 直下に展開して上書きしてください。
-上書き対象:
-- src/ui/practice-screen.js
-
-12th Street Rag の xlsx から変換した実データで、
-再生/停止・戻る・もう一回・次へ・遅く・速く を動かす版です。
+フレット番号をマス中央ではなく境目寄りに右へ寄せ、少し大きくした CSS 修正版です。上書き対象は src/styles/practice.css のみ。
