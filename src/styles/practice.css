@@ -443,3 +443,41 @@
     min-height: 28px;
   }
 }
+
+
+.js-ver-tag{
+  position:fixed;
+  left:8px;
+  bottom:4px;
+  z-index:9999;
+  min-height:18px;
+  padding:0 6px;
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  border:1px solid rgba(41,240,208,.22);
+  background:rgba(7,12,24,.82);
+  color:#dffefa;
+  font-size:9px;
+  letter-spacing:.06em;
+  pointer-events:none;
+}
+
+@media screen and (max-width: 980px) and (orientation: landscape){
+  .practice-page::after{
+    top:8px;
+    right:8px;
+    bottom:auto;
+    min-height:20px;
+    padding:0 8px;
+    font-size:9px;
+  }
+  .js-ver-tag{
+    top:8px;
+    left:8px;
+    bottom:auto;
+    min-height:20px;
+    padding:0 8px;
+    font-size:9px;
+  }
+}

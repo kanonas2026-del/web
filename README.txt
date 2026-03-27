@@ -1,1 +1,1 @@
-音量差調整 v3。PCをさらに下げ、iPhoneをさらに少し上げ、コンプレッサを強めています。上書き対象は src/ui/practice-screen.js。
+下部に被っていた左右の version 表示を、iPhone横では上部へ移動する版です。上書き対象は src/ui/practice-screen.js と src/styles/practice.css。
