@@ -25,13 +25,13 @@ function ensureAudio() {
     masterCompressor = audioCtx.createDynamicsCompressor();
     masterGain = audioCtx.createGain();
 
-    masterCompressor.threshold.setValueAtTime(-20, audioCtx.currentTime);
+    masterCompressor.threshold.setValueAtTime(-26, audioCtx.currentTime);
     masterCompressor.knee.setValueAtTime(14, audioCtx.currentTime);
-    masterCompressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+    masterCompressor.ratio.setValueAtTime(6, audioCtx.currentTime);
     masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
-    masterCompressor.release.setValueAtTime(0.22, audioCtx.currentTime);
+    masterCompressor.release.setValueAtTime(0.28, audioCtx.currentTime);
 
-    masterGain.gain.setValueAtTime(isIOSLike() ? 2.0 : 0.36, audioCtx.currentTime);
+    masterGain.gain.setValueAtTime(isIOSLike() ? 2.4 : 0.26, audioCtx.currentTime);
 
     masterCompressor.connect(masterGain);
     masterGain.connect(audioCtx.destination);
@@ -131,7 +131,7 @@ function playEventSound(ev) {
   order.forEach((name, idx) => {
     const data = ev.strings[name] || { fret:0 };
     const fret = typeof data.fret === 'number' ? data.fret : 0;
-    const perStringAmp = isIOSLike() ? 0.30 : 0.10;
+    const perStringAmp = isIOSLike() ? 0.34 : 0.08;
     pluckString(name, fret, startAt + idx*0.016, perStringAmp);
   });
 }
@@ -321,7 +321,7 @@ function render() {
         <button class="transport-btn transport-btn-voice" id="voiceBtn" type="button">🎤</button>
       </footer>
 
-      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.3 / AUDIO v2</div>
+      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.3 / AUDIO v3</div>
     </div>
   `;
   bindEvents();
