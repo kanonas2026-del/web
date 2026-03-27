@@ -464,11 +464,26 @@
 }
 
 @media screen and (max-width: 980px) and (orientation: landscape){
+  html, body{
+    height:100%;
+    overflow:hidden;
+  }
   .practice-page::after{
     display:none;
   }
+  #app{
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 6px)
+      6px
+      calc(env(safe-area-inset-bottom, 0px) + 6px)
+      6px;
+  }
+  .two-box-shell{
+    min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 12px);
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 12px);
+  }
   .js-ver-tag{
-    top:8px;
+    top:calc(env(safe-area-inset-top, 0px) + 8px);
     left:8px;
     bottom:auto;
     min-height:20px;

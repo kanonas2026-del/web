@@ -1,1 +1,1 @@
-iPhone横では右上のCSS version表示を非表示にし、左上のJS versionだけ残す版です。上書き対象は src/styles/practice.css のみ。
+iPhone Safari の上バー表示時でも下ボタンが押せるよう、landscape の高さ計算を safe-area + 100dvh ベースにした版です。上書き対象は src/styles/practice.css のみ。
