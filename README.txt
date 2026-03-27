@@ -1,1 +1,1 @@
-音の調整版。PCの出力を抑え、iPhoneを少し持ち上げ、アタックを足してウクレレ寄りにしたJS版です。上書き対象は src/ui/practice-screen.js。
+音量差調整 v2。PC をさらに下げ、iPhone をさらに上げています。上書き対象は src/ui/practice-screen.js。
