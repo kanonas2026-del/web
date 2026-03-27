@@ -1,1 +1,1 @@
-下部に被っていた左右の version 表示を、iPhone横では上部へ移動する版です。上書き対象は src/ui/practice-screen.js と src/styles/practice.css。
+iPhone横では右上のCSS version表示を非表示にし、左上のJS versionだけ残す版です。上書き対象は src/styles/practice.css のみ。

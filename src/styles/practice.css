@@ -465,12 +465,7 @@
 
 @media screen and (max-width: 980px) and (orientation: landscape){
   .practice-page::after{
-    top:8px;
-    right:8px;
-    bottom:auto;
-    min-height:20px;
-    padding:0 8px;
-    font-size:9px;
+    display:none;
   }
   .js-ver-tag{
     top:8px;
