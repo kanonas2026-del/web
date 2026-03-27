@@ -8,12 +8,34 @@ flatEvents.forEach((ev, idx) => { if (!barStarts.has(ev.barNo)) barStarts.set(ev
 
 let tempoBpm = 72;
 let audioCtx = null;
+let masterGain = null;
+let masterCompressor = null;
 let isPlaying = false;
 let playTimer = null;
 let playIndex = Math.max(0, flatEvents.findIndex((ev, idx) => idx < flatEvents.length - 1 && (flatEvents[idx + 1].chord !== ev.chord)));
 
+function isIOSLike() {
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 function ensureAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterCompressor = audioCtx.createDynamicsCompressor();
+    masterGain = audioCtx.createGain();
+
+    masterCompressor.threshold.setValueAtTime(-20, audioCtx.currentTime);
+    masterCompressor.knee.setValueAtTime(14, audioCtx.currentTime);
+    masterCompressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+    masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+    masterCompressor.release.setValueAtTime(0.22, audioCtx.currentTime);
+
+    masterGain.gain.setValueAtTime(isIOSLike() ? 1.28 : 0.72, audioCtx.currentTime);
+
+    masterCompressor.connect(masterGain);
+    masterGain.connect(audioCtx.destination);
+  }
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
@@ -36,24 +58,70 @@ function withFeedback(id, fn, delay=140) {
   setTimeout(fn, delay);
 }
 
-function pluckString(name, fret, when, amp=0.22) {
+function makeNoiseBuffer(seconds = 0.03) {
+  const length = Math.max(1, Math.floor(audioCtx.sampleRate * seconds));
+  const buffer = audioCtx.createBuffer(1, length, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / length);
+  return buffer;
+}
+
+function pluckString(name, fret, when, amp=0.18) {
   if (!audioCtx) return;
   const freq = BASE_FREQ[name] * Math.pow(2, fret / 12);
+  const body = audioCtx.createBiquadFilter();
+  const shimmer = audioCtx.createBiquadFilter();
+  const gain = audioCtx.createGain();
+
   const osc1 = audioCtx.createOscillator();
   const osc2 = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-  osc1.type='triangle'; osc2.type='sine';
+
+  osc1.type = 'triangle';
+  osc2.type = 'sine';
+
   osc1.frequency.setValueAtTime(freq, when);
-  osc2.frequency.setValueAtTime(freq*2, when);
-  filter.type='lowpass';
-  filter.frequency.setValueAtTime(2600, when);
+  osc2.frequency.setValueAtTime(freq * 2, when);
+
+  body.type = 'lowpass';
+  body.frequency.setValueAtTime(3000, when);
+  body.Q.value = 0.85;
+
+  shimmer.type = 'highpass';
+  shimmer.frequency.setValueAtTime(120, when);
+
   gain.gain.setValueAtTime(0.0001, when);
-  gain.gain.exponentialRampToValueAtTime(amp, when+0.004);
-  gain.gain.exponentialRampToValueAtTime(0.0001, when+1.0);
-  osc1.connect(filter); osc2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-  osc1.start(when); osc2.start(when);
-  osc1.stop(when+1.05); osc2.stop(when+0.95);
+  gain.gain.exponentialRampToValueAtTime(amp, when + 0.003);
+  gain.gain.exponentialRampToValueAtTime(amp * 0.34, when + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.88);
+
+  osc1.connect(body);
+  osc2.connect(body);
+
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = makeNoiseBuffer(0.02);
+  const noiseFilter = audioCtx.createBiquadFilter();
+  const noiseGain = audioCtx.createGain();
+  noiseFilter.type = 'bandpass';
+  noiseFilter.frequency.setValueAtTime(2400, when);
+  noiseFilter.Q.value = 0.8;
+  noiseGain.gain.setValueAtTime(0.0001, when);
+  noiseGain.gain.exponentialRampToValueAtTime(amp * 0.26, when + 0.002);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, when + 0.028);
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(body);
+
+  body.connect(shimmer);
+  shimmer.connect(gain);
+  gain.connect(masterCompressor);
+
+  osc1.start(when);
+  osc2.start(when);
+  noise.start(when);
+
+  osc1.stop(when + 0.9);
+  osc2.stop(when + 0.75);
+  noise.stop(when + 0.03);
 }
 
 function playEventSound(ev) {
@@ -63,7 +131,8 @@ function playEventSound(ev) {
   order.forEach((name, idx) => {
     const data = ev.strings[name] || { fret:0 };
     const fret = typeof data.fret === 'number' ? data.fret : 0;
-    pluckString(name, fret, startAt + idx*0.016, 0.18);
+    const perStringAmp = isIOSLike() ? 0.22 : 0.14;
+    pluckString(name, fret, startAt + idx*0.016, perStringAmp);
   });
 }
 
@@ -252,7 +321,7 @@ function render() {
         <button class="transport-btn transport-btn-voice" id="voiceBtn" type="button">🎤</button>
       </footer>
 
-      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.2</div>
+      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.2 / AUDIO v1</div>
     </div>
   `;
   bindEvents();

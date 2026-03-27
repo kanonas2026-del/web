@@ -1,1 +1,1 @@
-指の文字とコメントの視認性を上げたCSS版。上書き対象は src/styles/practice.css。
+音の調整版。PCの出力を抑え、iPhoneを少し持ち上げ、アタックを足してウクレレ寄りにしたJS版です。上書き対象は src/ui/practice-screen.js。
