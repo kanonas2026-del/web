@@ -491,3 +491,142 @@
     font-size:9px;
   }
 }
+
+
+@media screen and (max-width: 980px) and (orientation: landscape){
+  .two-box-shell{
+    gap:4px !important;
+  }
+  .practice-topbar{
+    gap:4px;
+  }
+  .eyebrow{
+    display:none;
+  }
+  .topbar-left h1{
+    font-size:18px;
+    line-height:1.05;
+  }
+  .topbar-sub{
+    margin-top:3px;
+    font-size:11px;
+  }
+  .two-box-layout{
+    gap:6px !important;
+  }
+  .practice-card{
+    padding:8px !important;
+    border-radius:14px;
+    min-height:0;
+    overflow:hidden;
+  }
+  .position-title{
+    font-size:20px;
+  }
+  .position-sub{
+    margin-top:4px;
+    font-size:12px;
+  }
+  .position-chip{
+    min-height:24px;
+    padding:0 8px;
+    font-size:10px;
+  }
+  .position-grid{
+    padding:8px;
+  }
+  .pos-header,.pos-row{
+    grid-template-columns:54px 1fr;
+    gap:4px;
+  }
+  .pos-header-cell{
+    width:1.3em;
+    font-size:12px;
+    transform:translateX(42%);
+  }
+  .pos-label{
+    font-size:11px;
+  }
+  .pos-cell{
+    min-height:28px;
+    border-radius:8px;
+  }
+  .marker-current{
+    width:20px;
+    height:20px;
+    font-size:14px;
+  }
+  .marker-open{
+    font-size:13px;
+  }
+  .position-summary{
+    margin-top:8px;
+    padding:8px 10px;
+    font-size:12px;
+    line-height:1.35;
+  }
+  .card-head{
+    margin-bottom:6px;
+  }
+  .card-head-label{
+    font-size:10px;
+  }
+  .rhythm-line{
+    gap:4px;
+  }
+  .rhythm-col{
+    min-height:38px;
+    padding:4px;
+    border-radius:10px;
+  }
+  .rhythm-beat{
+    font-size:10px;
+    margin-bottom:2px;
+  }
+  .rhythm-hit{
+    font-size:15px;
+  }
+  .lane-box{
+    min-height:128px;
+    padding:10px 8px;
+    gap:8px;
+    margin-top:6px;
+  }
+  .lane-row{
+    grid-template-columns:34px 1fr;
+    min-height:22px;
+    gap:6px;
+  }
+  .lane-name{
+    font-size:11px;
+  }
+  .lane-track{
+    height:3px;
+  }
+  .lane-note{
+    width:12px;
+    height:12px;
+  }
+  .playhead{
+    width:3px;
+    top:10px;
+    bottom:10px;
+  }
+  .lane-hint{
+    margin-top:8px;
+    padding:7px 8px;
+  }
+  .lane-hint-label,
+  .lane-hint strong{
+    font-size:10px;
+  }
+  .transport{
+    gap:4px;
+  }
+  .transport-btn{
+    min-height:30px;
+    padding:0 4px;
+    font-size:10px;
+    border-radius:9px;
+  }
+}
