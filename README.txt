@@ -1,1 +1,1 @@
-iPhone横向きで上バー有り無し両方でも重なりにくくするため、landscape時の全体密度を下げたCSS版です。上書き対象は src/styles/practice.css。
+曲切替を追加し、12th Street Rag と きらきら星を選べるようにした版です。上書き対象は src/ui/practice-screen.js。
