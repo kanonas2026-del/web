@@ -5,8 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Practice</title>
 <style>
-body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif}
-#app{max-width:1280px;margin:0 auto}
+html,body{height:100%}
+body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
+#viewportFit{position:relative;min-height:calc(100vh - 32px)}
+#app{max-width:1280px;margin:0 auto;transform-origin:top left}
+body.compact-practice{padding:0;overflow:hidden}
+body.compact-practice #viewportFit{min-height:100vh}
+body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
 .layout{display:grid;grid-template-columns:minmax(360px,1.05fr) minmax(420px,.95fr);gap:14px}
 .card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px}
@@ -26,10 +31,42 @@ body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 52
 svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
 .transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
+
+body.compact-practice .top{margin-bottom:10px}
+body.compact-practice .eyebrow{margin:0 0 4px;font-size:10px}
+body.compact-practice .top h1{font-size:24px}
+body.compact-practice .sub{margin-top:4px;font-size:13px}
+body.compact-practice .layout{gap:10px}
+body.compact-practice .card{padding:10px;border-radius:14px}
+body.compact-practice .left-head{margin-bottom:8px}
+body.compact-practice .title-big{font-size:34px}
+body.compact-practice .next{margin-top:4px;font-size:14px}
+body.compact-practice .chip{min-height:26px;padding:0 8px;font-size:11px}
+body.compact-practice .grid{padding:10px;border-radius:12px}
+body.compact-practice .header,.row{grid-template-columns:62px 1fr;gap:6px}
+body.compact-practice .cells,.headcells{gap:5px}
+body.compact-practice .headcell{font-size:15px}
+body.compact-practice .label{font-size:12px}
+body.compact-practice .cell{min-height:38px;border-radius:8px}
+body.compact-practice .marker{width:28px;height:28px;font-size:17px}
+body.compact-practice .marker-text{font-size:16px}
+body.compact-practice .marker-ghost{width:22px;height:22px}
+body.compact-practice .marker-ghost-empty{width:18px;height:18px}
+body.compact-practice .open{font-size:14px}
+body.compact-practice .summary{margin-top:10px;padding:10px 12px;font-size:14px}
+body.compact-practice .card-head{margin-bottom:8px}
+body.compact-practice .card-head-label{font-size:11px}
+body.compact-practice svg{border-radius:12px}
+body.compact-practice .tag{margin-top:8px;padding:3px 8px;font-size:11px}
+body.compact-practice .transport{gap:6px;margin-top:10px}
+body.compact-practice .transport button{min-height:36px;font-size:12px;border-radius:10px}
+body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
+
 @keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}50%{box-shadow: inset 0 0 0 1px rgba(255,234,160,.34), 0 0 24px rgba(255,220,120,.22); background: rgba(255,220,120,.18);}100%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}}
 </style>
 </head>
 <body>
+<div id="viewportFit">
 <div id="app">
   <div style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v19 kirakira</div>
 
@@ -72,6 +109,7 @@ svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,
   <div class="transport">
     <button id="firstBtn">最初へ</button><button id="backBtn">戻る</button><button id="replayBtn">もう一回</button><button id="playBtn" class="primary">再生</button><button id="nextBtn">次へ</button><button id="slowBtn">遅く</button><button id="fastBtn">速く</button><button id="micBtn">🎤</button>
   </div>
+</div>
 </div>
 <script>
 const events = [
@@ -165,6 +203,38 @@ let lastTs = null;
 let currentIndex = 0;
 let progress = 0;
 let speedIndex = speedSteps.indexOf(0.75);
+
+const viewportFit = document.getElementById('viewportFit');
+
+function applyViewportFit() {
+  const compact = window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 520;
+  document.body.classList.toggle('compact-practice', compact);
+
+  const root = document.getElementById('app');
+  root.style.position = '';
+  root.style.left = '';
+  root.style.top = '';
+  root.style.width = '';
+  root.style.transform = '';
+
+  if (!compact) return;
+
+  const pad = 8;
+  const availableW = Math.max(1, window.innerWidth - pad * 2);
+  const availableH = Math.max(1, window.innerHeight - pad * 2);
+
+  const naturalW = Math.max(root.scrollWidth, root.offsetWidth);
+  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
+  const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+  const scaledW = naturalW * scale;
+  const x = Math.max(pad, (availableW - scaledW) / 2 + pad);
+
+  root.style.position = 'absolute';
+  root.style.left = '0';
+  root.style.top = '0';
+  root.style.width = naturalW + 'px';
+  root.style.transform = `translate(${x}px, ${pad}px) scale(${scale})`;
+}
 
 function getSpeed() {
   return speedSteps[speedIndex];
@@ -388,6 +458,7 @@ function render() {
   const fastDelta = faster - getSpeed();
   slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
   fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
+  applyViewportFit();
 }
 
 function stopPlayback() {
@@ -467,6 +538,9 @@ if (document.getElementById('micBtn')) {
   document.getElementById('micBtn').addEventListener('click', () => flashButton(document.getElementById('micBtn')));
 }
 
+applyViewportFit();
+window.addEventListener('resize', applyViewportFit);
+window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 50));
 render();
 syncPlayButton();
 requestAnimationFrame(loop);
