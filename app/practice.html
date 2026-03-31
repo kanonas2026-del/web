@@ -9,9 +9,9 @@ html,body{height:100%}
 body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
 #viewportFit{position:relative;min-height:calc(100vh - 32px)}
 #app{max-width:1280px;margin:0 auto;transform-origin:top left}
-body.compact-practice{padding:0;overflow:hidden}
-body.compact-practice #viewportFit{min-height:100vh}
-body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0}
+body.compact-practice{padding:0;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
+body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
+body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
 .layout{display:grid;grid-template-columns:minmax(360px,1.05fr) minmax(420px,.95fr);gap:14px;align-items:start}
 .tab-card{display:flex;flex-direction:column}
@@ -37,10 +37,11 @@ body.compact-practice .top{margin-bottom:10px}
 body.compact-practice .eyebrow{margin:0 0 4px;font-size:10px}
 body.compact-practice .top h1{font-size:24px}
 body.compact-practice .sub{margin-top:4px;font-size:13px}
-body.compact-practice .layout{gap:10px;align-items:start}
-body.compact-practice .card{padding:10px;border-radius:14px}
+body.compact-practice .layout{grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);gap:10px;align-items:start}
+body.compact-practice .tab-card{align-self:start}
+body.compact-practice .card{padding:9px;border-radius:14px}
 body.compact-practice .left-head{margin-bottom:8px}
-body.compact-practice .title-big{font-size:34px}
+body.compact-practice .title-big{font-size:31px}
 body.compact-practice .next{margin-top:4px;font-size:14px}
 body.compact-practice .chip{min-height:26px;padding:0 8px;font-size:11px}
 body.compact-practice .grid{padding:10px;border-radius:12px}
@@ -54,13 +55,14 @@ body.compact-practice .marker-text{font-size:16px}
 body.compact-practice .marker-ghost{width:22px;height:22px}
 body.compact-practice .marker-ghost-empty{width:18px;height:18px}
 body.compact-practice .open{font-size:14px}
-body.compact-practice .summary{margin-top:10px;padding:10px 12px;font-size:14px}
+body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
 body.compact-practice .card-head{margin-bottom:8px}
 body.compact-practice .card-head-label{font-size:11px}
 body.compact-practice svg{border-radius:12px}
+body.compact-practice .tab-card svg{height:214px}
 body.compact-practice .tag{margin-top:8px;padding:3px 8px;font-size:11px}
 body.compact-practice .transport{gap:6px;margin-top:10px}
-body.compact-practice .transport button{min-height:36px;font-size:12px;border-radius:10px}
+body.compact-practice .transport button{min-height:34px;font-size:12px;border-radius:10px}
 body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
 
 @keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}50%{box-shadow: inset 0 0 0 1px rgba(255,234,160,.34), 0 0 24px rgba(255,220,120,.22); background: rgba(255,220,120,.18);}100%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}}
@@ -220,21 +222,22 @@ function applyViewportFit() {
 
   if (!compact) return;
 
-  const pad = 8;
-  const availableW = Math.max(1, window.innerWidth - pad * 2);
-  const availableH = Math.max(1, window.innerHeight - pad * 2);
-
-  const naturalW = Math.max(root.scrollWidth, root.offsetWidth);
-  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
-  const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
-  const scaledW = naturalW * scale;
-  const x = Math.max(pad, (availableW - scaledW) / 2 + pad);
+  const padX = 8;
+  const padY = 8;
+  const availableW = Math.max(1, window.innerWidth - padX * 2);
+  const availableH = Math.max(1, window.innerHeight - padY * 2);
 
   root.style.position = 'absolute';
   root.style.left = '0';
   root.style.top = '0';
-  root.style.width = naturalW + 'px';
-  root.style.transform = `translate(${x}px, ${pad}px) scale(${scale})`;
+  root.style.width = availableW + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(1)`;
+
+  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
+  const scale = Math.min(1, availableH / naturalH);
+
+  root.style.width = Math.floor(availableW / scale) + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(${scale})`;
 }
 
 function getSpeed() {
