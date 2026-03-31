@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Right Box Preview v1</title>
+<style>
+body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif}
+#app{max-width:1280px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
+.layout{display:grid;grid-template-columns:minmax(360px,1.05fr) minmax(420px,.95fr);gap:14px}
+.card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px}
+.left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
+.grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.header,.row{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:center}.header{margin-bottom:6px}.cells,.headcells{display:grid;grid-template-columns:repeat(4,minmax(48px,1fr));gap:6px}.headcell{width:1.3em;justify-self:end;transform:translateX(45%);color:#d9e7ff;font-size:18px}.row+.row{margin-top:6px}.label{font-size:14px;white-space:nowrap}.cell{min-height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}.cell-next{background: rgba(255,207,90,.10);border-color: rgba(255,207,90,.18);animation: glow 1.8s ease-in-out infinite}.cell-next::after{content:"";position:absolute;inset:6px;border-radius:8px;background: rgba(255,207,90,.12);filter: blur(4px);opacity:.9}.marker{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;width:34px;height:34px;background:rgba(41,240,208,.22);border:1px solid rgba(41,240,208,.34);color:#f4fffd;font-weight:800;font-size:20px;box-shadow:0 0 16px rgba(41,240,208,.32)}.open{font-size:16px;font-weight:700;color:#edf4ff;position:relative;z-index:2}
+.summary{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,207,90,.10);border:1px solid rgba(255,207,90,.18);color:#fff7d8;font-size:17px;font-weight:700}
+.card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
+.note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
+svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px}.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700}
+.tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
+@keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,207,90,.18), 0 0 10px rgba(255,207,90,.06); background: rgba(255,207,90,.08);}50%{box-shadow: inset 0 0 0 1px rgba(255,207,90,.28), 0 0 18px rgba(255,207,90,.12); background: rgba(255,207,90,.14);}100%{box-shadow: inset 0 0 0 1px rgba(255,207,90,.18), 0 0 10px rgba(255,207,90,.06); background: rgba(255,207,90,.08);}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div><p class="eyebrow">PRACTICE PREVIEW</p><h1>12th Street Rag</h1><p class="sub">右BOX統合プレビュー / BPM 72</p></div>
+  </div>
+  <div class="layout">
+    <section class="card">
+      <div class="left-head">
+        <div><div class="title-big">G</div><div class="next">次: Gdim</div></div>
+        <div class="chip">2BOX</div>
+      </div>
+      <div class="grid">
+        <div class="header"><span></span><div class="headcells"><span class="headcell">2</span><span class="headcell">3</span><span class="headcell">4</span><span class="headcell">5</span></div></div>
+        <div class="row"><span class="label">1(A)</span><div class="cells"><span class="cell"><span class="marker">人</span></span><span class="cell"></span><span class="cell"></span><span class="cell"></span></div></div>
+        <div class="row"><span class="label">2(E)</span><div class="cells"><span class="cell"></span><span class="cell cell-next"><span class="marker">薬</span></span><span class="cell"></span><span class="cell"></span></div></div>
+        <div class="row"><span class="label">3(C)</span><div class="cells"><span class="cell"><span class="marker">中</span></span><span class="cell"></span><span class="cell"></span><span class="cell"></span></div></div>
+        <div class="row"><span class="label">4(G)</span><div class="cells"><span class="cell"><span class="open">開</span></span><span class="cell"></span><span class="cell"></span><span class="cell"></span></div></div>
+      </div>
+      <div class="summary">そのまま維持</div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><span class="card-head-label">FLOW / MINI TAB</span><span class="dot"></span></div>
+      <p class="note">緑ラインを帯 + 線で強く見せた統合プレビューです。</p>
+      <svg id="svg" viewBox="0 0 940 360" aria-label="right box integration preview">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="tabClip"><rect x="120" y="56" width="740" height="250"></rect></clipPath>
+        </defs>
+        <text x="78" y="133" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
+        <text x="78" y="183" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
+        <text x="78" y="233" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
+        <text x="78" y="283" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
+        <line x1="120" y1="92" x2="120" y2="292" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="128" x2="860" y2="128" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="178" x2="860" y2="178" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="228" x2="860" y2="228" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="278" x2="860" y2="278" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <g id="content" clip-path="url(#tabClip)"></g>
+        <rect x="282" y="92" width="16" height="200" fill="rgba(41,240,208,.14)"></rect>
+        <line x1="290" y1="92" x2="290" y2="292" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
+      </svg>
+      <div class="tag">practice integration preview v3</div>
+    </section>
+  </div>
+  <div class="transport">
+    <button>最初へ</button><button>戻る</button><button>もう一回</button><button class="primary">再生 / 停止</button><button>次へ</button><button>遅く</button><button>速く</button><button>🎤</button>
+  </div>
+</div>
+<script>
+const events = [
+  {bar:7, strum:'↑', frets:[1,3,2,0]},
+  {bar:7, strum:'↓', frets:[0,1,2,0]},
+  {bar:7, strum:'↑', frets:[2,1,2,2]},
+  {bar:7, strum:'↓', frets:[2,0,0,2]},
+  {bar:8, strum:'↓', frets:[1,3,2,0]},
+  {bar:8, strum:'↑', frets:[1,0,2,0]},
+  {bar:8, strum:'↓', frets:[0,0,0,0]},
+  {bar:8, strum:'↑', frets:[1,0,1,0]},
+  {bar:9, strum:'↓', frets:[2,3,2,0]},
+  {bar:9, strum:'↑', frets:[2,0,2,0]},
+  {bar:9, strum:'↓', frets:[2,3,2,0]},
+  {bar:9, strum:'↑', frets:[2,0,2,0]}
+];
+const rowY = [128,178,228,278];
+const playheadX = 290;
+const columnGap = 92;
+const measureGap = 36;
+let running = true, t = 0, lastTs = null;
+const pxPerSec = 150;
+const content = document.getElementById('content');
+function pill(x,y,text){return `<rect x="${x-18}" y="${y-24}" width="36" height="48" rx="12" fill="rgba(7,12,24,.94)" stroke="rgba(255,255,255,.08)" stroke-width="1"></rect><text x="${x}" y="${y}" fill="#fff" font-size="28" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;}
+function render(){let x = playheadX - 1.5*columnGap - t; let html = ''; let lastBar=null; for (let i=0;i<events.length;i++){const ev=events[i]; if(lastBar!==ev.bar){html += `<line x1="${x-40}" y1="92" x2="${x-40}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`; html += `<text x="${x+columnGap}" y="42" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`; lastBar=ev.bar;} html += `<text x="${x}" y="82" fill="#f7fbff" font-size="26" font-weight="700" text-anchor="middle">${ev.strum}</text>`; for(let r=0;r<4;r++) html += pill(x,rowY[r],ev.frets[r]); x += columnGap; const next=events[i+1]; if(next && next.bar!==ev.bar) x += measureGap;} html += `<line x1="${x-40}" y1="92" x2="${x-40}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`; content.innerHTML = html;}
+function loop(ts){if(lastTs==null) lastTs=ts; const dt=(ts-lastTs)/1000; lastTs=ts; if(running){t += pxPerSec*dt; const cycle = (columnGap * events.length) + measureGap * 2; if(t>cycle) t -= cycle; render();} requestAnimationFrame(loop);} render(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>

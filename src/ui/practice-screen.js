@@ -3,11 +3,11 @@ const RAG_SCORE = [{"barNo":1,"events":[{"barNo":1,"i":0,"chord":"G","strum":"�
 
 const KIRAKIRA_SCORE = [{"barNo":1,"events":[{"barNo":1,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":1,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":1,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":1,"i":12,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":2,"events":[{"barNo":2,"i":0,"chord":"F","strum":"↓","strings":{"1(A)":{"fret":0,"finger":""},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":2,"finger":"中"}}},{"barNo":2,"i":4,"chord":"F","strum":"↓","strings":{"1(A)":{"fret":0,"finger":""},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":2,"finger":"中"}}},{"barNo":2,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":3,"events":[{"barNo":3,"i":0,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":3,"i":4,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":3,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":3,"i":12,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":4,"events":[{"barNo":4,"i":0,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":4,"i":4,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":4,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":5,"events":[{"barNo":5,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":5,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":5,"i":8,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":5,"i":12,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":6,"events":[{"barNo":6,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":6,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":6,"i":8,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":7,"events":[{"barNo":7,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":7,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":7,"i":8,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":7,"i":12,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":8,"events":[{"barNo":8,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":8,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":8,"i":8,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":9,"events":[{"barNo":9,"i":0,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":9,"i":4,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":9,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":9,"i":12,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":10,"events":[{"barNo":10,"i":0,"chord":"F","strum":"↓","strings":{"1(A)":{"fret":0,"finger":""},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":2,"finger":"中"}}},{"barNo":10,"i":4,"chord":"F","strum":"↓","strings":{"1(A)":{"fret":0,"finger":""},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":2,"finger":"中"}}},{"barNo":10,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":11,"events":[{"barNo":11,"i":0,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":11,"i":4,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":11,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}},{"barNo":11,"i":12,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]},{"barNo":12,"events":[{"barNo":12,"i":0,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":12,"i":4,"chord":"G7","strum":"↓","strings":{"1(A)":{"fret":2,"finger":"薬"},"2(E)":{"fret":1,"finger":"人"},"3(C)":{"fret":2,"finger":"中"},"4(G)":{"fret":0,"finger":""}}},{"barNo":12,"i":8,"chord":"C","strum":"↓","strings":{"1(A)":{"fret":3,"finger":"薬"},"2(E)":{"fret":0,"finger":""},"3(C)":{"fret":0,"finger":""},"4(G)":{"fret":0,"finger":""}}}]}];
 const SONGS = {
-  rag: { title: '12th Street Rag', subtitle: 'JUMP TEST / 4/4 / swing', score: RAG_SCORE, startMode: 'change' },
-  kirakira: { title: 'きらきら星', subtitle: '4/4 / ゆっくり練習', score: KIRAKIRA_SCORE, startMode: 'start' }
+  rag: { title: '12th Street Rag', subtitle: 'JUMP TEST / 4/4 / swing', score: RAG_SCORE, startMode: 'change', bpm: 72 },
+  kirakira: { title: 'きらきら星', subtitle: '4/4 / ゆっくり練習', score: KIRAKIRA_SCORE, startMode: 'start', bpm: 60 }
 };
-let currentSongKey = 'rag';
-let currentScore = RAG_SCORE;
+let currentSongKey = 'kirakira';
+let currentScore = KIRAKIRA_SCORE;
 let flatEvents = [];
 let barStarts = new Map();
 
@@ -32,6 +32,7 @@ function setSong(key) {
   stopPlayback();
   currentSongKey = key;
   currentScore = SONGS[key].score;
+  tempoBpm = SONGS[key].bpm || tempoBpm;
   rebuildSongState(true);
   render();
 }
@@ -39,7 +40,7 @@ function setSong(key) {
 const BASE_FREQ = {"1(A)":440.0,"2(E)":329.6275569,"3(C)":261.6255653,"4(G)":392.0};
 const app = document.getElementById('app');
 
-let tempoBpm = 72;
+let tempoBpm = SONGS[currentSongKey].bpm || 72;
 let audioCtx = null;
 let masterGain = null;
 let masterCompressor = null;
@@ -292,32 +293,83 @@ function positionBoxHtml(current, next) {
   `;
 }
 
-function rhythmHtml(activeBeat) {
-  const arrows={1:'↓',2:'↓↑',3:'↓',4:'↑'};
-  return [1,2,3,4].map(n => {
-    const active = n===activeBeat ? ' rhythm-col-active' : '';
-    return `<div class="rhythm-col${active}"><span class="rhythm-beat">${n}拍目</span><span class="rhythm-hit">${arrows[n]}</span></div>`;
-  }).join('');
+
+function barPixelWidth() {
+  return window.innerWidth <= 980 ? 280 : 420;
 }
 
-function laneRowsHtml(barNo) {
-  const bar = currentScore.find(b => b.barNo === barNo) || currentScore[0];
+function nowLineX() {
+  return window.innerWidth <= 980 ? 108 : 160;
+}
+
+function fullTabX(barNo, stepI) {
+  const BAR_W = barPixelWidth();
+  return ((barNo - 1) * BAR_W) + ((stepI / 16) * BAR_W);
+}
+
+function fullTabShift(current) {
+  return nowLineX() - fullTabX(current.barNo, current.i);
+}
+
+function fullTabWidth() {
+  return Math.max(800, currentScore.length * barPixelWidth() + 240);
+}
+
+function fullTabHeader(shiftPx) {
+  const labels = currentScore.map((bar) => {
+    const left = fullTabX(bar.barNo, 0);
+    return `<span class="fulltab-bar-label" style="left:${left}px">${bar.barNo}小節</span>`;
+  }).join('');
+  return `<div class="fulltab-header"><div class="fulltab-strip-track" data-fulltab-track style="width:${fullTabWidth()}px; transform:translateX(${shiftPx}px);">${labels}</div></div>`;
+}
+
+function fullTabStrum(shiftPx) {
+  const marks = flatEvents.map((ev) => {
+    const left = fullTabX(ev.barNo, ev.i);
+    return `<span class="fulltab-strum" style="left:${left}px">${(ev.strum || '↓')}</span>`;
+  }).join('');
+  return `<div class="fulltab-strum-row"><div class="fulltab-strip-track" data-fulltab-track style="width:${fullTabWidth()}px; transform:translateX(${shiftPx}px);">${marks}</div></div>`;
+}
+
+function fullTabRows(shiftPx) {
   const labels = ["1(A)","2(E)","3(C)","4(G)"];
   return labels.map(label => {
-    const dots = bar.events.map(ev => {
-      const left = 10 + (ev.i / 15) * 78;
-      return `<span class="lane-note" style="left:${left}%"></span>`;
+    const notes = flatEvents.map((ev) => {
+      const left = fullTabX(ev.barNo, ev.i);
+      const cell = ev.strings?.[label] || { fret: 0, finger: '' };
+      const fretText = (typeof cell.fret === 'number') ? String(cell.fret) : '';
+      return `<span class="fulltab-fret" style="left:${left}px">${fretText}</span>`;
     }).join('');
-    return `<div class="lane-row"><span class="lane-name">${label}</span><div class="lane-track">${dots}</div></div>`;
+    const measures = Array.from({length: currentScore.length + 1}, (_, idx) => {
+      const left = idx * barPixelWidth();
+      return `<span class="fulltab-measure" style="left:${left}px"></span>`;
+    }).join('');
+    return `<div class="fulltab-row"><span class="fulltab-label">${label}</span><div class="fulltab-track"><div class="fulltab-strip-track" data-fulltab-track style="width:${fullTabWidth()}px; transform:translateX(${shiftPx}px);">${measures}${notes}</div></div></div>`;
   }).join('');
 }
 
-function playheadLeft(step) { return 10 + (step / 15) * 78; }
+function animateFullTab(current) {
+  const next = nextEvent();
+  if (!next || next === current) return;
+  const curAbs = (current.barNo - 1) * 16 + current.i;
+  const nextAbs = (next.barNo - 1) * 16 + next.i;
+  const delta = Math.max(1, nextAbs - curAbs);
+  const duration = stepMs() * delta;
+  const nextShift = fullTabShift(next);
+  document.querySelectorAll('[data-fulltab-track]').forEach((el) => {
+    el.style.transition = `transform ${duration}ms linear`;
+    requestAnimationFrame(() => {
+      el.style.transform = `translateX(${nextShift}px)`;
+    });
+  });
+}
+
 
 function render() {
   const current = currentEvent();
   const next = nextEvent();
   const beatNo = Math.floor(current.i / 4) + 1;
+  const shiftPx = fullTabShift(current);
 
   app.innerHTML = `
     <div class="practice-shell two-box-shell">
@@ -334,11 +386,13 @@ function render() {
         ${positionBoxHtml(current, next)}
 
         <section class="practice-card rhythm-card">
-          <div class="card-head"><span class="card-head-label">RHYTHM / FLOW</span><span class="card-head-dot"></span></div>
-          <div class="rhythm-line">${rhythmHtml(beatNo)}</div>
-          <div class="lane-box">
-            ${laneRowsHtml(current.barNo)}
-            <div class="playhead" style="left:${playheadLeft(current.i)}%"></div>
+          <div class="card-head"><span class="card-head-label">FLOW / MINI TAB</span><span class="card-head-dot"></span></div>
+          <div class="fulltab-wrap">
+            ${fullTabHeader(shiftPx)}
+            ${fullTabStrum(shiftPx)}
+            ${fullTabRows(shiftPx)}
+            <div class="playhead playhead-fixed"></div>
+            <div class="playhead-label playhead-fixed-label">今</div>
           </div>
           <div class="lane-hint"><span class="lane-hint-label">現在</span><strong>${current.barNo}小節目 / ${beatNo}拍目</strong></div>
         </section>
@@ -355,10 +409,11 @@ function render() {
         <button class="transport-btn transport-btn-voice" id="voiceBtn" type="button">🎤</button>
       </footer>
 
-      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX JUMP VIEW v1.3 / AUDIO v3 / SONG v1</div>
+      <div style="position:fixed; left:8px; bottom:4px; z-index:9999; min-height:18px; padding:0 6px; display:inline-flex; align-items:center; border-radius:999px; border:1px solid rgba(41,240,208,.22); background:rgba(7,12,24,.82); color:#dffefa; font-size:9px; letter-spacing:.06em; pointer-events:none;">2BOX FULL TAB v3 / AUDIO v3 / SONG v1</div>
     </div>
   `;
   bindEvents();
+  if (isPlaying) animateFullTab(current);
 }
 
 function stopPlayback() {

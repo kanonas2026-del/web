@@ -1,1 +1,1 @@
-曲切替を追加し、12th Street Rag と きらきら星を選べるようにした版です。上書き対象は src/ui/practice-screen.js。
+web 直下へ app フォルダを上書きし、http://127.0.0.1:8001/app/practice.html?v=60 を開いてください。
