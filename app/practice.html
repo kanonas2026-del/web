@@ -479,10 +479,10 @@ let lastSoundedEventKey = '';
 const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
 const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const DEVICE_MASTER_GAIN = isIOSLike ? 1.48 : 1.15;
-const DEVICE_PRE_GAIN = isIOSLike ? 0.19 : 0.16;
-const DEVICE_ENV_PEAK = isIOSLike ? 0.068 : 0.055;
-const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.026 : 0.020;
+const DEVICE_MASTER_GAIN = isIOSLike ? 2.05 : 1.15;
+const DEVICE_PRE_GAIN = isIOSLike ? 0.23 : 0.16;
+const DEVICE_ENV_PEAK = isIOSLike ? 0.082 : 0.055;
+const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.032 : 0.020;
 
 function ensureAudio() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -490,9 +490,9 @@ function ensureAudio() {
   if (!audioCtx) {
     audioCtx = new Ctx();
     audioComp = audioCtx.createDynamicsCompressor();
-    audioComp.threshold.value = -21;
+    audioComp.threshold.value = isIOSLike ? -24 : -21;
     audioComp.knee.value = 14;
-    audioComp.ratio.value = 4.2;
+    audioComp.ratio.value = isIOSLike ? 5.2 : 4.2;
     audioComp.attack.value = 0.003;
     audioComp.release.value = 0.18;
     audioMaster = audioCtx.createGain();
