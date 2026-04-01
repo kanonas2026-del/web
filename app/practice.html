@@ -15,7 +15,7 @@ body.compact-practice #viewportFit{min-height:calc(100vh - 10px);width:100%;over
 body.compact-practice #app{position:relative;left:0;top:0;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
 .layout{display:grid;grid-template-columns:minmax(360px,1.02fr) minmax(420px,.98fr);gap:14px;align-items:start}
-.tab-card{display:grid;grid-template-rows:auto auto auto;align-content:start;align-items:start}
+.tab-card{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-content:start;align-items:start;min-height:0}
 .card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px}
 .left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
 .grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
@@ -35,40 +35,70 @@ svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,
 .transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
-body.compact-practice .top{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin-bottom:4px}
+body.compact-practice{padding:0;overflow:hidden}
+body.compact-practice #viewportFit{height:var(--vvh,100dvh);min-height:var(--vvh,100dvh);overflow:hidden}
+body.compact-practice #app{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:4px;height:var(--appH,calc(var(--vvh,100dvh) - 4px));padding:4px 6px 4px;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
+body.compact-practice .top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;margin-bottom:0}
 body.compact-practice .eyebrow{margin:0 0 1px;font-size:9px}
-body.compact-practice .top h1{font-size:18px}
-body.compact-practice .sub{margin-top:1px;font-size:10px}
-body.compact-practice .layout{grid-template-columns:minmax(0,1.09fr) minmax(0,.91fr);gap:5px;align-items:start}
-body.compact-practice .tab-card{align-self:start}
-body.compact-practice .card{padding:6px;border-radius:14px}
-body.compact-practice .left-head{margin-bottom:4px}
-body.compact-practice .title-big{font-size:21px}
-body.compact-practice .next{margin-top:1px;font-size:11px}
+body.compact-practice .top h1{font-size:16px}
+body.compact-practice .sub{margin-top:0;font-size:9px}
+body.compact-practice .song-picker{justify-content:flex-end;align-self:end;gap:4px;flex-wrap:nowrap}
+body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px;white-space:nowrap}
+body.compact-practice .layout{grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:4px;align-items:stretch;min-height:0}
+body.compact-practice .layout > .card{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+body.compact-practice .card{padding:6px;border-radius:13px}
+body.compact-practice .left-head{margin-bottom:4px;gap:6px}
+body.compact-practice .title-big{font-size:18px}
+body.compact-practice .next{margin-top:1px;font-size:10px}
 body.compact-practice .chip{min-height:20px;padding:0 6px;font-size:8.5px}
-body.compact-practice .grid{padding:6px;border-radius:12px}
-body.compact-practice .header,.row{grid-template-columns:48px 1fr;gap:4px}
+body.compact-practice .grid{padding:5px;border-radius:11px;min-height:0}
+body.compact-practice .header,.row{grid-template-columns:44px 1fr;gap:3px}
 body.compact-practice .cells,.headcells{gap:3px}
-body.compact-practice .headcell{font-size:12px}
-body.compact-practice .label{font-size:9px}
-body.compact-practice .cell{min-height:28px;border-radius:8px}
-body.compact-practice .marker{width:21px;height:21px;font-size:13px}
-body.compact-practice .marker-text{font-size:12px}
-body.compact-practice .marker-ghost{width:16px;height:16px}
-body.compact-practice .marker-ghost-empty{width:14px;height:14px}
-body.compact-practice .open{font-size:11px}
-body.compact-practice .summary{margin-top:5px;padding:6px 8px;font-size:10px}
-body.compact-practice .card-head{margin-bottom:5px}
-body.compact-practice .card-head-label{font-size:10px}
+body.compact-practice .headcell{font-size:11px}
+body.compact-practice .label{font-size:8.5px}
+body.compact-practice .cell{min-height:26px;border-radius:7px}
+body.compact-practice .marker{width:20px;height:20px;font-size:12px}
+body.compact-practice .marker-text{font-size:11px}
+body.compact-practice .marker-ghost{width:14px;height:14px}
+body.compact-practice .marker-ghost-empty{width:12px;height:12px}
+body.compact-practice .open{font-size:10px}
+body.compact-practice .summary{margin-top:4px;padding:4px 6px;font-size:9px;min-height:22px}
+body.compact-practice .tab-card{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-self:stretch;min-height:0}
+body.compact-practice .card-head{margin-bottom:3px}
+body.compact-practice .card-head-label{font-size:9px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:118px;max-height:none}
-body.compact-practice .tag{margin-top:4px;padding:2px 7px;font-size:8.5px}
-body.compact-practice .transport{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:6px}
-body.compact-practice .transport button{min-height:24px;font-size:9px;border-radius:9px}
+body.compact-practice .tab-card svg{height:100%;max-height:none;min-height:0;aspect-ratio:940/200}
+body.compact-practice .tag{margin-top:2px;padding:2px 6px;font-size:8px;align-self:flex-start}
+body.compact-practice .transport{grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;margin-top:0}
+body.compact-practice .transport button{min-height:26px;font-size:9px;border-radius:8px;padding:0;min-width:0}
 body.compact-practice #verTag{display:none !important}
-body.compact-practice .song-picker{justify-content:flex-start;gap:4px}
-body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px}
 
+
+body.ultra-compact-practice #app{gap:2px;padding:2px 4px 4px;height:var(--appH,calc(var(--vvh,100dvh) - 1px))}
+body.ultra-compact-practice .top h1{font-size:13px}
+body.ultra-compact-practice .sub{font-size:7px}
+body.ultra-compact-practice .song-chip{min-height:16px;padding:0 5px;font-size:7px}
+body.ultra-compact-practice .layout{gap:3px}
+body.ultra-compact-practice .card{padding:4px;border-radius:10px}
+body.ultra-compact-practice .title-big{font-size:15px}
+body.ultra-compact-practice .next{font-size:8px}
+body.ultra-compact-practice .chip{min-height:16px;padding:0 4px;font-size:7px}
+body.ultra-compact-practice .grid{padding:3px}
+body.ultra-compact-practice .header,.row{grid-template-columns:34px 1fr;gap:2px}
+body.ultra-compact-practice .cells,.headcells{gap:2px}
+body.ultra-compact-practice .headcell{font-size:9px}
+body.ultra-compact-practice .label{font-size:7px}
+body.ultra-compact-practice .cell{min-height:18px;border-radius:5px}
+body.ultra-compact-practice .marker{width:14px;height:14px}
+body.ultra-compact-practice .marker-text{font-size:8px}
+body.ultra-compact-practice .open{font-size:8px}
+body.ultra-compact-practice .summary{margin-top:2px;padding:2px 5px;font-size:7px;min-height:16px}
+body.ultra-compact-practice .card-head{margin-bottom:1px}
+body.ultra-compact-practice .card-head-label{font-size:7px}
+body.ultra-compact-practice .tab-card svg{height:100%;aspect-ratio:940/176}
+body.ultra-compact-practice .tag{margin-top:1px;padding:1px 4px;font-size:6.8px}
+body.ultra-compact-practice .transport{gap:2px}
+body.ultra-compact-practice .transport button{min-height:20px;font-size:7px;border-radius:6px}
 
 .song-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
 .song-chip{min-height:34px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#dfe9ff;font-size:13px;font-weight:700}
@@ -82,7 +112,7 @@ body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px}
 <body>
 <div id="viewportFit">
 <div id="app">
-  <div id="verTag" style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v28 fit</div>
+  <div id="verTag" style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v29c landscape_fix</div>
 
   <div class="top">
     <div><p class="eyebrow">PRACTICE</p><h1 id="songTitle">きらきら星</h1><p class="sub" id="songSubtitle">4/4 / ゆっくり練習 / BPM 120</p></div>
@@ -103,20 +133,20 @@ body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px}
       <svg id="svg" viewBox="0 0 940 236" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="tabClip"><rect x="120" y="56" width="740" height="190"></rect></clipPath>
+          <clipPath id="tabClip"><rect id="tabClipRect" x="120" y="56" width="740" height="190"></rect></clipPath>
         </defs>
-        <text x="78" y="111" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
-        <text x="78" y="148" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
-        <text x="78" y="185" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
-        <text x="78" y="222" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
-        <line x1="120" y1="86" x2="120" y2="234" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
-        <line x1="120" y1="111" x2="860" y2="111" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="148" x2="860" y2="148" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="185" x2="860" y2="185" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="222" x2="860" y2="222" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <text id="labelA" x="78" y="111" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
+        <text id="labelE" x="78" y="148" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
+        <text id="labelC" x="78" y="185" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
+        <text id="labelG" x="78" y="222" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
+        <line id="leftRail" x1="120" y1="86" x2="120" y2="234" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line id="stringA" x1="120" y1="111" x2="860" y2="111" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line id="stringE" x1="120" y1="148" x2="860" y2="148" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line id="stringC" x1="120" y1="185" x2="860" y2="185" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line id="stringG" x1="120" y1="222" x2="860" y2="222" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
         <g id="content" clip-path="url(#tabClip)"></g>
-        <rect x="278" y="88" width="24" height="150" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
-        <line x1="290" y1="86" x2="290" y2="234" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"></line>
+        <rect id="playGlow" x="278" y="88" width="24" height="150" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
+        <line id="playLine" x1="290" y1="86" x2="290" y2="234" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"></line>
       </svg>
       <span class="tag" id="speedTag">速度 0.75x / 基準 -0.25x</span>
     </section>
@@ -145,8 +175,9 @@ const SONGS = {"kirakira":{"id":"kirakira","title":"きらきら星","subtitle":
 const SONG_ORDER = ["kirakira", "saints", "rag"];
 
 const RIGHT_METRICS = {
-  normal: { rowY:[92,124,156,188], tabTopY:74, tabBottomY:204, barLabelY:24, strumY:48, playheadX:206, pillW:34, pillH:44, pillFont:24, strumFontActive:24, strumFontIdle:19 },
-  compact: { rowY:[74,98,122,146], tabTopY:58, tabBottomY:160, barLabelY:18, strumY:34, playheadX:158, pillW:24, pillH:32, pillFont:18, strumFontActive:18, strumFontIdle:14 }
+  normal: { rowY:[111,148,185,222], tabTopY:86, tabBottomY:234, labelX:78, lineStartX:120, lineEndX:860, clipX:120, clipY:56, clipW:740, clipH:190, strumY:48, playheadX:290, playGlowX:278, playGlowY:88, playGlowW:24, playGlowH:150, pillW:34, pillH:44, pillFont:24, strumFontActive:24, strumFontIdle:19 },
+  compact: { rowY:[105,136,167,198], tabTopY:92, tabBottomY:210, labelX:84, lineStartX:130, lineEndX:852, clipX:126, clipY:68, clipW:720, clipH:152, strumY:64, playheadX:292, playGlowX:280, playGlowY:96, playGlowW:20, playGlowH:118, pillW:28, pillH:34, pillFont:18, strumFontActive:18, strumFontIdle:14 },
+  ultra: { rowY:[97,124,151,178], tabTopY:84, tabBottomY:188, labelX:82, lineStartX:128, lineEndX:850, clipX:124, clipY:58, clipW:720, clipH:136, strumY:54, playheadX:288, playGlowX:277, playGlowY:88, playGlowW:18, playGlowH:104, pillW:24, pillH:30, pillFont:16, strumFontActive:15, strumFontIdle:12 }
 };
 const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
 const slotGap = 42;
@@ -213,44 +244,70 @@ function rebuildSongRuntime() {
 }
 
 function getRightMetrics() {
-  return document.body.classList.contains('compact-practice') ? RIGHT_METRICS.compact : RIGHT_METRICS.normal;
+  if (document.body.classList.contains('ultra-compact-practice')) return RIGHT_METRICS.ultra;
+  if (document.body.classList.contains('compact-practice')) return RIGHT_METRICS.compact;
+  return RIGHT_METRICS.normal;
+}
+
+function applyRightStaticMetrics() {
+  const m = getRightMetrics();
+  const labelIds = ['labelA','labelE','labelC','labelG'];
+  const lineIds = ['stringA','stringE','stringC','stringG'];
+  labelIds.forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute('x', m.labelX);
+    el.setAttribute('y', m.rowY[idx]);
+  });
+  lineIds.forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute('x1', m.lineStartX);
+    el.setAttribute('x2', m.lineEndX);
+    el.setAttribute('y1', m.rowY[idx]);
+    el.setAttribute('y2', m.rowY[idx]);
+  });
+  const leftRail = document.getElementById('leftRail');
+  if (leftRail) {
+    leftRail.setAttribute('x1', m.lineStartX);
+    leftRail.setAttribute('x2', m.lineStartX);
+    leftRail.setAttribute('y1', m.tabTopY);
+    leftRail.setAttribute('y2', m.tabBottomY);
+  }
+  const clipRect = document.getElementById('tabClipRect');
+  if (clipRect) {
+    clipRect.setAttribute('x', m.clipX);
+    clipRect.setAttribute('y', m.clipY);
+    clipRect.setAttribute('width', m.clipW);
+    clipRect.setAttribute('height', m.clipH);
+  }
+  const playGlow = document.getElementById('playGlow');
+  if (playGlow) {
+    playGlow.setAttribute('x', m.playGlowX);
+    playGlow.setAttribute('y', m.playGlowY);
+    playGlow.setAttribute('width', m.playGlowW);
+    playGlow.setAttribute('height', m.playGlowH);
+  }
+  const playLine = document.getElementById('playLine');
+  if (playLine) {
+    playLine.setAttribute('x1', m.playheadX);
+    playLine.setAttribute('x2', m.playheadX);
+    playLine.setAttribute('y1', m.tabTopY);
+    playLine.setAttribute('y2', m.tabBottomY);
+  }
 }
 
 function applyViewportFit() {
   const vv = window.visualViewport;
   const vw = vv ? vv.width : window.innerWidth;
   const vh = vv ? vv.height : window.innerHeight;
-  const compact = window.matchMedia('(orientation: landscape)').matches && vh <= 760;
+  const compact = (vw > vh) && (vh <= 560 || vw <= 980);
+  const ultra = compact && vh <= 360;
   document.body.classList.toggle('compact-practice', compact);
-
-  const root = document.getElementById('app');
-  viewportFit.style.width = '';
-  viewportFit.style.height = '';
-  root.style.position = '';
-  root.style.left = '';
-  root.style.top = '';
-  root.style.width = '';
-  root.style.transform = '';
-
-  if (!compact) return;
-
-  const maxW = Math.max(1, vw - 8);
-  const maxH = Math.max(1, vh - 8);
-  const naturalW = Math.max(root.scrollWidth, root.offsetWidth);
-  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
-  const scale = Math.min(1, maxW / naturalW, maxH / naturalH);
-
-  root.style.position = 'absolute';
-  root.style.left = '0';
-  root.style.top = '0';
-  viewportFit.style.width = maxW + 'px';
-  viewportFit.style.height = Math.min(maxH, naturalH * Math.max(0.68, scale)) + 'px';
-
-  if (scale < 0.995) {
-    const s = Math.max(0.68, scale);
-    root.style.width = naturalW + 'px';
-    root.style.transform = `scale(${s})`;
-  }
+  document.body.classList.toggle('ultra-compact-practice', ultra);
+  document.documentElement.style.setProperty('--vvh', `${Math.max(1, vh)}px`);
+  document.documentElement.style.setProperty('--appH', `${Math.max(1, vh - 2)}px`);
+  applyRightStaticMetrics();
 }
 
 function getSpeed() {
@@ -314,13 +371,13 @@ function ensureAudio() {
   if (!audioCtx) {
     audioCtx = new Ctx();
     audioComp = audioCtx.createDynamicsCompressor();
-    audioComp.threshold.value = -22;
+    audioComp.threshold.value = -26;
     audioComp.knee.value = 18;
-    audioComp.ratio.value = 3;
+    audioComp.ratio.value = 4;
     audioComp.attack.value = 0.003;
     audioComp.release.value = 0.18;
     audioMaster = audioCtx.createGain();
-    audioMaster.gain.value = 1.9;
+    audioMaster.gain.value = 8.8;
     audioComp.connect(audioMaster);
     audioMaster.connect(audioCtx.destination);
   }
@@ -340,22 +397,29 @@ function playEventSound(ev) {
     if (fret == null) return;
     const t0 = now + idx * 0.012;
     const osc = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
     const gain = ctx.createGain();
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1800, t0);
-    filter.Q.setValueAtTime(0.8, t0);
+    filter.frequency.setValueAtTime(3200, t0);
+    filter.Q.setValueAtTime(0.9, t0);
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(fretToFreq(openStringFreqs[idx], fret), t0);
+    osc2.type = 'square';
+    const freq = fretToFreq(openStringFreqs[idx], fret);
+    osc.frequency.setValueAtTime(freq, t0);
+    osc2.frequency.setValueAtTime(freq * 2, t0);
     gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(0.20, t0 + 0.009);
-    gain.gain.exponentialRampToValueAtTime(0.06, t0 + 0.12);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.70);
+    gain.gain.exponentialRampToValueAtTime(0.62, t0 + 0.010);
+    gain.gain.exponentialRampToValueAtTime(0.26, t0 + 0.16);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.20);
     osc.connect(filter);
+    osc2.connect(filter);
     filter.connect(gain);
     gain.connect(audioComp);
     osc.start(t0);
-    osc.stop(t0 + 0.72);
+    osc2.start(t0);
+    osc.stop(t0 + 1.07);
+    osc2.stop(t0 + 1.04);
   });
 }
 
@@ -541,13 +605,13 @@ function renderRight(anchor) {
   for (let bar = 1; bar <= maxBar; bar += 1) {
     const barStart = m.playheadX + (((bar - 1) * (barWidth + measureGap)) - anchor);
     const barEnd = barStart + barWidth;
-    if (barEnd < 50 || barStart > 918) continue;
+    if (barEnd < (m.lineStartX - 80) || barStart > (m.lineEndX + 80)) continue;
     html += `<line x1="${barStart}" y1="${m.tabTopY}" x2="${barStart}" y2="${m.tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
   }
   for (let i = 0; i < events.length; i += 1) {
     const ev = events[i];
     const x = m.playheadX + (positions[i] - anchor);
-    if (x < 42 || x > 912) continue;
+    if (x < (m.lineStartX - 60) || x > (m.lineEndX + 60)) continue;
     const isCurrent = i === currentIndex;
     if (ev.strum) {
       html += `<text x="${x}" y="${m.strumY}" fill="#f7fbff" font-size="${isCurrent ? m.strumFontActive : m.strumFontIdle}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
