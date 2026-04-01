@@ -470,7 +470,101 @@ function stopPlayback() {
   syncPlayButton();
 }
 
+let audioCtx = null;
+let audioMaster = null;
+let audioComp = null;
+let lastSoundedEventKey = '';
+const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
+const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const DEVICE_MASTER_GAIN = isIOSLike ? 5.20 : 1.15;
+const DEVICE_PRE_GAIN = isIOSLike ? 0.48 : 0.16;
+const DEVICE_ENV_PEAK = isIOSLike ? 0.180 : 0.055;
+const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.080 : 0.020;
+
+function ensureAudio() {
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return null;
+  if (!audioCtx) {
+    audioCtx = new Ctx();
+    audioComp = audioCtx.createDynamicsCompressor();
+    audioComp.threshold.value = isIOSLike ? -36 : -21;
+    audioComp.knee.value = isIOSLike ? 20 : 14;
+    audioComp.ratio.value = isIOSLike ? 9.0 : 4.2;
+    audioComp.attack.value = 0.003;
+    audioComp.release.value = isIOSLike ? 0.24 : 0.18;
+    audioMaster = audioCtx.createGain();
+    audioMaster.gain.value = DEVICE_MASTER_GAIN;
+    audioComp.connect(audioMaster);
+    audioMaster.connect(audioCtx.destination);
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function fretToFreq(baseFreq, fret) {
+  return baseFreq * Math.pow(2, (fret || 0) / 12);
+}
+
+function playEventSound(ev) {
+  const ctx = ensureAudio();
+  if (!ctx || !ev) return;
+  const now = ctx.currentTime;
+  ev.frets.forEach((fret, idx) => {
+    if (fret == null) return;
+    const t0 = now + idx * 0.008;
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const pre = ctx.createGain();
+    const env = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    const freq = fretToFreq(openStringFreqs[idx], fret);
+    osc1.type = 'triangle';
+    osc2.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, t0);
+    osc2.frequency.setValueAtTime(freq * 2, t0);
+
+    pre.gain.setValueAtTime(DEVICE_PRE_GAIN, t0);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(isIOSLike ? 3200 : 1750, t0);
+    filter.Q.setValueAtTime(0.7, t0);
+
+    env.gain.setValueAtTime(0.0001, t0);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_PEAK, t0 + 0.012);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_SUSTAIN, t0 + 0.11);
+    env.gain.exponentialRampToValueAtTime(0.0001, t0 + (isIOSLike ? 0.58 : 0.42));
+
+    osc1.connect(pre);
+    osc2.connect(pre);
+    pre.connect(filter);
+    filter.connect(env);
+    env.connect(audioComp);
+
+    osc1.start(t0);
+    osc2.start(t0);
+    osc1.stop(t0 + (isIOSLike ? 0.60 : 0.44));
+    osc2.stop(t0 + (isIOSLike ? 0.58 : 0.42));
+  });
+}
+
+function soundCurrentEvent(force = false) {
+  const ev = events[currentIndex];
+  if (!ev) return;
+  const key = String(currentIndex);
+  if (!force && key === lastSoundedEventKey) return;
+  playEventSound(ev);
+  lastSoundedEventKey = key;
+}
+
+
 function togglePlay() {
+  if (!running) {
+    ensureAudio();
+    soundCurrentEvent(true);
+  }
   running = !running;
   lastTs = null;
   syncPlayButton();
@@ -478,29 +572,37 @@ function togglePlay() {
 
 function goFirst() {
   stopPlayback();
+  ensureAudio();
   currentIndex = 0;
   progress = 0;
   render();
+  soundCurrentEvent(true);
 }
 
 function goBack() {
   stopPlayback();
+  ensureAudio();
   currentIndex = Math.max(0, currentIndex - 1);
   progress = 0;
   render();
+  soundCurrentEvent(true);
 }
 
 function replay() {
   stopPlayback();
+  ensureAudio();
   progress = 0;
   render();
+  soundCurrentEvent(true);
 }
 
 function goNext() {
   stopPlayback();
+  ensureAudio();
   currentIndex = Math.min(events.length - 1, currentIndex + 1);
   progress = 0;
   render();
+  soundCurrentEvent(true);
 }
 
 function changeSpeed(direction) {
@@ -519,6 +621,7 @@ function loop(ts) {
     while (progress >= getCurrentDistance() && currentIndex < events.length - 1) {
       progress -= getCurrentDistance();
       currentIndex += 1;
+      soundCurrentEvent(true);
     }
     if (currentIndex >= events.length - 1 && progress >= getCurrentDistance()) {
       progress = 0;
@@ -538,7 +641,10 @@ attachButtonFeedback(slowBtn, () => changeSpeed(-1));
 attachButtonFeedback(fastBtn, () => changeSpeed(1));
 
 if (document.getElementById('micBtn')) {
-  document.getElementById('micBtn').addEventListener('click', () => flashButton(document.getElementById('micBtn')));
+  document.getElementById('micBtn').addEventListener('click', () => {
+    ensureAudio();
+    flashButton(document.getElementById('micBtn'));
+  });
 }
 
 applyViewportFit();
