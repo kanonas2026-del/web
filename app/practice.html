@@ -5,17 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Practice</title>
 <style>
-
-html,body{height:100%;width:100%;background:#061023}
+html,body{height:100%}
 body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
-#viewportFit{position:relative;min-height:calc(100vh - 32px);width:100%;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
-#app{max-width:1280px;margin:0 auto;transform-origin:top left;box-sizing:border-box}
-body.compact-practice{padding:4px 6px 6px;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
-body.compact-practice #viewportFit{min-height:calc(100vh - 10px);width:100%;overflow:hidden;position:relative}
-body.compact-practice #app{position:relative;left:0;top:0;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
+#viewportFit{position:relative;min-height:calc(100vh - 32px)}
+#app{max-width:1280px;margin:0 auto;transform-origin:top left}
+body.compact-practice{padding:0;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
+body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
+body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
-.layout{display:grid;grid-template-columns:minmax(360px,1.02fr) minmax(420px,.98fr);gap:14px;align-items:start}
-.tab-card{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-content:start;align-items:start;min-height:0}
+.layout{display:grid;grid-template-columns:minmax(360px,1.05fr) minmax(420px,.95fr);gap:14px;align-items:start}
+.tab-card{display:flex;flex-direction:column}
 .card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px}
 .left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
 .grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
@@ -30,99 +29,58 @@ body.compact-practice #app{position:relative;left:0;top:0;max-width:none;margin:
 .summary{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,207,90,.10);border:1px solid rgba(255,207,90,.18);color:#fff7d8;font-size:17px;font-weight:700;min-height:1.4em}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
 .note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
-svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);aspect-ratio:940/236}.tab-card svg{max-height:248px}.tab-card .tag{margin-top:6px}
-.tab-card .tag{align-self:flex-start;white-space:nowrap}
+svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
 .transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
-body.compact-practice{padding:0;overflow:hidden}
-body.compact-practice #viewportFit{height:var(--vvh,100dvh);min-height:var(--vvh,100dvh);overflow:hidden}
-body.compact-practice #app{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:4px;height:var(--appH,calc(var(--vvh,100dvh) - 4px));padding:4px 6px 4px;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
-body.compact-practice .top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;margin-bottom:0}
-body.compact-practice .eyebrow{margin:0 0 1px;font-size:9px}
-body.compact-practice .top h1{font-size:16px}
-body.compact-practice .sub{margin-top:0;font-size:9px}
-body.compact-practice .song-picker{justify-content:flex-end;align-self:end;gap:4px;flex-wrap:nowrap}
-body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px;white-space:nowrap}
-body.compact-practice .layout{grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:4px;align-items:stretch;min-height:0}
-body.compact-practice .layout > .card{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
-body.compact-practice .card{padding:6px;border-radius:13px}
-body.compact-practice .left-head{margin-bottom:4px;gap:6px}
-body.compact-practice .title-big{font-size:18px}
-body.compact-practice .next{margin-top:1px;font-size:10px}
-body.compact-practice .chip{min-height:20px;padding:0 6px;font-size:8.5px}
-body.compact-practice .grid{padding:5px;border-radius:11px;min-height:0}
-body.compact-practice .header,.row{grid-template-columns:44px 1fr;gap:3px}
-body.compact-practice .cells,.headcells{gap:3px}
-body.compact-practice .headcell{font-size:11px}
-body.compact-practice .label{font-size:8.5px}
-body.compact-practice .cell{min-height:26px;border-radius:7px}
-body.compact-practice .marker{width:20px;height:20px;font-size:12px}
-body.compact-practice .marker-text{font-size:11px}
-body.compact-practice .marker-ghost{width:14px;height:14px}
-body.compact-practice .marker-ghost-empty{width:12px;height:12px}
-body.compact-practice .open{font-size:10px}
-body.compact-practice .summary{margin-top:4px;padding:4px 6px;font-size:9px;min-height:22px}
-body.compact-practice .tab-card{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-self:stretch;min-height:0}
-body.compact-practice .card-head{margin-bottom:3px}
-body.compact-practice .card-head-label{font-size:9px}
+body.compact-practice .top{margin-bottom:10px}
+body.compact-practice .eyebrow{margin:0 0 4px;font-size:10px}
+body.compact-practice .top h1{font-size:24px}
+body.compact-practice .sub{margin-top:4px;font-size:13px}
+body.compact-practice .layout{grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);gap:10px;align-items:start}
+body.compact-practice .tab-card{align-self:start}
+body.compact-practice .card{padding:9px;border-radius:14px}
+body.compact-practice .left-head{margin-bottom:8px}
+body.compact-practice .title-big{font-size:31px}
+body.compact-practice .next{margin-top:4px;font-size:14px}
+body.compact-practice .chip{min-height:26px;padding:0 8px;font-size:11px}
+body.compact-practice .grid{padding:10px;border-radius:12px}
+body.compact-practice .header,.row{grid-template-columns:62px 1fr;gap:6px}
+body.compact-practice .cells,.headcells{gap:5px}
+body.compact-practice .headcell{font-size:15px}
+body.compact-practice .label{font-size:12px}
+body.compact-practice .cell{min-height:38px;border-radius:8px}
+body.compact-practice .marker{width:28px;height:28px;font-size:17px}
+body.compact-practice .marker-text{font-size:16px}
+body.compact-practice .marker-ghost{width:22px;height:22px}
+body.compact-practice .marker-ghost-empty{width:18px;height:18px}
+body.compact-practice .open{font-size:14px}
+body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
+body.compact-practice .card-head{margin-bottom:8px}
+body.compact-practice .card-head-label{font-size:11px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:100%;max-height:none;min-height:0;aspect-ratio:940/200}
-body.compact-practice .tag{margin-top:2px;padding:2px 6px;font-size:8px;align-self:flex-start}
-body.compact-practice .transport{grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;margin-top:0}
-body.compact-practice .transport button{min-height:26px;font-size:9px;border-radius:8px;padding:0;min-width:0}
-body.compact-practice #verTag{display:none !important}
-
-
-body.ultra-compact-practice #app{gap:2px;padding:2px 4px 4px;height:var(--appH,calc(var(--vvh,100dvh) - 1px))}
-body.ultra-compact-practice .top h1{font-size:13px}
-body.ultra-compact-practice .sub{font-size:7px}
-body.ultra-compact-practice .song-chip{min-height:16px;padding:0 5px;font-size:7px}
-body.ultra-compact-practice .layout{gap:3px}
-body.ultra-compact-practice .card{padding:4px;border-radius:10px}
-body.ultra-compact-practice .title-big{font-size:15px}
-body.ultra-compact-practice .next{font-size:8px}
-body.ultra-compact-practice .chip{min-height:16px;padding:0 4px;font-size:7px}
-body.ultra-compact-practice .grid{padding:3px}
-body.ultra-compact-practice .header,.row{grid-template-columns:34px 1fr;gap:2px}
-body.ultra-compact-practice .cells,.headcells{gap:2px}
-body.ultra-compact-practice .headcell{font-size:9px}
-body.ultra-compact-practice .label{font-size:7px}
-body.ultra-compact-practice .cell{min-height:18px;border-radius:5px}
-body.ultra-compact-practice .marker{width:14px;height:14px}
-body.ultra-compact-practice .marker-text{font-size:8px}
-body.ultra-compact-practice .open{font-size:8px}
-body.ultra-compact-practice .summary{margin-top:2px;padding:2px 5px;font-size:7px;min-height:16px}
-body.ultra-compact-practice .card-head{margin-bottom:1px}
-body.ultra-compact-practice .card-head-label{font-size:7px}
-body.ultra-compact-practice .tab-card svg{height:100%;aspect-ratio:940/176}
-body.ultra-compact-practice .tag{margin-top:1px;padding:1px 4px;font-size:6.8px}
-body.ultra-compact-practice .transport{gap:2px}
-body.ultra-compact-practice .transport button{min-height:20px;font-size:7px;border-radius:6px}
-
-.song-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
-.song-chip{min-height:34px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#dfe9ff;font-size:13px;font-weight:700}
-.song-chip.active{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.34);color:#e8fffb;box-shadow:0 0 18px rgba(41,240,208,.12)}
-
+body.compact-practice .tab-card svg{height:214px}
+body.compact-practice .tag{margin-top:8px;padding:3px 8px;font-size:11px}
+body.compact-practice .transport{gap:6px;margin-top:10px}
+body.compact-practice .transport button{min-height:34px;font-size:12px;border-radius:10px}
+body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
 
 @keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}50%{box-shadow: inset 0 0 0 1px rgba(255,234,160,.34), 0 0 24px rgba(255,220,120,.22); background: rgba(255,220,120,.18);}100%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}}
-
 </style>
 </head>
 <body>
 <div id="viewportFit">
 <div id="app">
-  <div id="verTag" style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v29c landscape_fix</div>
+  <div style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v19 kirakira</div>
 
   <div class="top">
-    <div><p class="eyebrow">PRACTICE</p><h1 id="songTitle">きらきら星</h1><p class="sub" id="songSubtitle">4/4 / ゆっくり練習 / BPM 120</p></div>
-    <div class="song-picker" id="songPicker"></div>
+    <div><p class="eyebrow">PRACTICE</p><h1>きらきら星</h1><p class="sub">4/4 / ゆっくり練習 / BPM 60</p></div>
   </div>
   <div class="layout">
     <section class="card">
       <div class="left-head">
-        <div><div class="title-big" id="currentName">C 3000</div><div class="next" id="nextName">次の形: なし</div></div>
-        <div class="chip" id="statusChip">1小節 / ・ / C 3000</div>
+        <div><div class="title-big" id="currentName">Gm 1320</div><div class="next" id="nextName">次の形: Gm 0120</div></div>
+        <div class="chip" id="statusChip">7小節 / ↑ / 1.00x</div>
       </div>
       <div class="grid" id="leftGrid"></div>
       <div class="summary" id="summary">そのまま維持</div>
@@ -130,25 +88,25 @@ body.ultra-compact-practice .transport button{min-height:20px;font-size:7px;bord
 
     <section class="card tab-card">
       <div class="card-head"><span class="card-head-label">流れるTAB</span><span class="dot"></span></div>
-      <svg id="svg" viewBox="0 0 940 236" aria-label="right box integration preview">
+      <svg id="svg" viewBox="0 0 940 400" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="tabClip"><rect id="tabClipRect" x="120" y="56" width="740" height="190"></rect></clipPath>
+          <clipPath id="tabClip"><rect x="120" y="62" width="740" height="270"></rect></clipPath>
         </defs>
-        <text id="labelA" x="78" y="111" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
-        <text id="labelE" x="78" y="148" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
-        <text id="labelC" x="78" y="185" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
-        <text id="labelG" x="78" y="222" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
-        <line id="leftRail" x1="120" y1="86" x2="120" y2="234" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
-        <line id="stringA" x1="120" y1="111" x2="860" y2="111" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line id="stringE" x1="120" y1="148" x2="860" y2="148" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line id="stringC" x1="120" y1="185" x2="860" y2="185" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line id="stringG" x1="120" y1="222" x2="860" y2="222" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <text x="78" y="145" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
+        <text x="78" y="199" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
+        <text x="78" y="253" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
+        <text x="78" y="307" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
+        <line x1="120" y1="104" x2="120" y2="324" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="140" x2="860" y2="140" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="194" x2="860" y2="194" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="248" x2="860" y2="248" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="302" x2="860" y2="302" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
         <g id="content" clip-path="url(#tabClip)"></g>
-        <rect id="playGlow" x="278" y="88" width="24" height="150" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
-        <line id="playLine" x1="290" y1="86" x2="290" y2="234" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"></line>
+        <rect x="278" y="104" width="24" height="220" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
+        <line x1="290" y1="104" x2="290" y2="324" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
       </svg>
-      <span class="tag" id="speedTag">速度 0.75x / 基準 -0.25x</span>
+      <span class="tag" id="speedTag">速度 1.00x / 基準 ±0.00x</span>
     </section>
   </div>
   <div class="transport">
@@ -157,35 +115,63 @@ body.ultra-compact-practice .transport button{min-height:20px;font-size:7px;bord
 </div>
 </div>
 <script>
+const events = [
+  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:2, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
+  {bar:2, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
+  {bar:2, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:3, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:3, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:3, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:3, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:4, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:4, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:4, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:5, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:5, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:5, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:5, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:6, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:6, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:6, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:7, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:7, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:7, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:7, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:8, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:8, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:8, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:10, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
+  {bar:10, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
+  {bar:10, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:11, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:11, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:11, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:11, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+  {bar:12, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:12, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
+  {bar:12, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
+].map(ev => {
+  const shapeText = ev.frets.join('');
+  return { ...ev, shapeKey: ev.frets.join('-'), displayName: `${ev.chord} ${shapeText}` };
+});
 
-const SONGS = {"kirakira":{"id":"kirakira","title":"きらきら星","subtitle":"4/4 / ゆっくり練習 / BPM 120","defaultSpeed":0.75,"events":[{"bar":1,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":1,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":1,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":1,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":0,"strum":"","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":2,"slot":4,"strum":"","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":2,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":0,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":3,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":3,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":0,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":4,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":4,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":8,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":5,"slot":12,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":6,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":6,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":6,"slot":8,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":7,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":8,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":7,"slot":12,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":8,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":8,"slot":8,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":9,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":9,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":9,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":9,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":0,"strum":"","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":10,"slot":4,"strum":"","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":10,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":11,"slot":0,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":11,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":11,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":11,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":12,"slot":0,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":12,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":12,"slot":8,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"}]},"rag":{"id":"rag","title":"12th Street Rag","subtitle":"4/4 / swing / BPM 72","defaultSpeed":0.75,"events":[
-{"bar":7,"slot":0,"strum":"↑","chord":"G","labels":["1","3","2","0"],"frets":[1,3,2,0],"shapeKey":"1|3|2|0"},
-{"bar":7,"slot":4,"strum":"↓","chord":"Gdim","labels":["0","1","2","0"],"frets":[0,1,2,0],"shapeKey":"0|1|2|0"},
-{"bar":7,"slot":8,"strum":"↑","chord":"Am","labels":["2","1","2","2"],"frets":[2,1,2,2],"shapeKey":"2|1|2|2"},
-{"bar":7,"slot":12,"strum":"↓","chord":"D7","labels":["2","0","0","2"],"frets":[2,0,0,2],"shapeKey":"2|0|0|2"},
-{"bar":8,"slot":0,"strum":"↓","chord":"G","labels":["1","3","2","0"],"frets":[1,3,2,0],"shapeKey":"1|3|2|0"},
-{"bar":8,"slot":4,"strum":"↑","chord":"Gdim","labels":["1","0","2","0"],"frets":[1,0,2,0],"shapeKey":"1|0|2|0"},
-{"bar":8,"slot":8,"strum":"↓","chord":"Am","labels":["0","0","0","0"],"frets":[0,0,0,0],"shapeKey":"0|0|0|0"},
-{"bar":8,"slot":12,"strum":"↑","chord":"D7","labels":["1","0","1","0"],"frets":[1,0,1,0],"shapeKey":"1|0|1|0"},
-{"bar":9,"slot":0,"strum":"↓","chord":"G","labels":["2","3","2","0"],"frets":[2,3,2,0],"shapeKey":"2|3|2|0"},
-{"bar":9,"slot":4,"strum":"↑","chord":"G7","labels":["2","0","2","0"],"frets":[2,0,2,0],"shapeKey":"2|0|2|0"},
-{"bar":9,"slot":8,"strum":"↓","chord":"G","labels":["2","3","2","0"],"frets":[2,3,2,0],"shapeKey":"2|3|2|0"},
-{"bar":9,"slot":12,"strum":"↑","chord":"G7","labels":["2","0","2","0"],"frets":[2,0,2,0],"shapeKey":"2|0|2|0"}
-]},"saints":{"id":"saints","title":"聖者の行進","subtitle":"4/4 / 中間チェック / BPM 120","defaultSpeed":0.75,"events":[{"bar":1,"slot":4,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":1,"slot":8,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":1,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":2,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":8,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":9,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":12,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":13,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":0,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":4,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":3,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":3,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":4,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":4,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":8,"strum":"↓","chord":"C","labels":[null,null,null,null],"frets":[null,null,null,null],"shapeKey":"|||"},{"bar":4,"slot":9,"strum":"↑","chord":"C","labels":[null,null,null,null],"frets":[null,null,null,null],"shapeKey":"|||"},{"bar":4,"slot":12,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":13,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":0,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":4,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":5,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":5,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":6,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":6,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":6,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":6,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":0,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":7,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":7,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":8,"slot":0,"strum":"","chord":"G7","labels":["2中",null,null,null],"frets":[2,null,null,null],"shapeKey":"2中|||"},{"bar":8,"slot":4,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":5,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":8,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":9,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":12,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":13,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":9,"slot":0,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":9,"slot":4,"strum":"","chord":"G7","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":9,"slot":8,"strum":"","chord":"G7","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":9,"slot":12,"strum":"","chord":"G7","labels":[null,null,null,"2中"],"frets":[null,null,null,2],"shapeKey":"|||2中"},{"bar":10,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":10,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":6,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":11,"slot":0,"strum":"","chord":"C7","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":11,"slot":4,"strum":"","chord":"C7","labels":[null,"0",null,"1人"],"frets":[null,0,null,1],"shapeKey":"|0||1人"},{"bar":11,"slot":8,"strum":"","chord":"C7","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":11,"slot":12,"strum":"","chord":"C7","labels":[null,null,null,"1人"],"frets":[null,null,null,1],"shapeKey":"|||1人"},{"bar":12,"slot":0,"strum":"","chord":"F","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":12,"slot":4,"strum":"","chord":"F","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":12,"slot":8,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":9,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":12,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":13,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":0,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":1,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":2,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":8,"strum":"","chord":"F","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":13,"slot":12,"strum":"","chord":"F","labels":[null,"1人",null,"2中"],"frets":[null,1,null,2],"shapeKey":"|1人||2中"},{"bar":14,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":14,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":14,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":14,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":15,"slot":0,"strum":"","chord":"G7","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":15,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":15,"slot":8,"strum":"","chord":"G7","labels":[null,null,"2中",null],"frets":[null,null,2,null],"shapeKey":"||2中|"},{"bar":15,"slot":12,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":16,"slot":0,"strum":"","chord":"C","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":16,"slot":4,"strum":"","chord":"C","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":16,"slot":8,"strum":"","chord":"C","labels":["2中",null,null,null],"frets":[2,null,null,null],"shapeKey":"2中|||"},{"bar":16,"slot":12,"strum":"","chord":"C","labels":["3薬",null,null,null],"frets":[3,null,null,null],"shapeKey":"3薬|||"},{"bar":17,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"}]}};
-const SONG_ORDER = ["kirakira", "saints", "rag"];
-
-const RIGHT_METRICS = {
-  normal: { rowY:[111,148,185,222], tabTopY:86, tabBottomY:234, labelX:78, lineStartX:120, lineEndX:860, clipX:120, clipY:56, clipW:740, clipH:190, strumY:48, playheadX:290, playGlowX:278, playGlowY:88, playGlowW:24, playGlowH:150, pillW:34, pillH:44, pillFont:24, strumFontActive:24, strumFontIdle:19 },
-  compact: { rowY:[105,136,167,198], tabTopY:92, tabBottomY:210, labelX:84, lineStartX:130, lineEndX:852, clipX:126, clipY:68, clipW:720, clipH:152, strumY:64, playheadX:292, playGlowX:280, playGlowY:96, playGlowW:20, playGlowH:118, pillW:28, pillH:34, pillFont:18, strumFontActive:18, strumFontIdle:14 },
-  ultra: { rowY:[97,124,151,178], tabTopY:84, tabBottomY:188, labelX:82, lineStartX:128, lineEndX:850, clipX:124, clipY:58, clipW:720, clipH:136, strumY:54, playheadX:288, playGlowX:277, playGlowY:88, playGlowW:18, playGlowH:104, pillW:24, pillH:30, pillFont:16, strumFontActive:15, strumFontIdle:12 }
-};
+const rowY = [140,194,248,302];
 const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
-const slotGap = 42;
-const barWidth = slotGap * 16;
-const measureGap = 34;
+const playheadX = 290;
+const columnGap = 92;
+const measureGap = 36;
 const basePxPerSec = 150;
 const speedSteps = [0.35, 0.4, 0.5, 0.6, 0.75, 0.9, 1.0, 1.15, 1.3];
 const prepGlowRatio = 0.82;
+const prepFingerRatio = 0.52;
 const currentCommitRatio = 0.30;
 
 const content = document.getElementById('content');
@@ -195,10 +181,6 @@ const nextName = document.getElementById('nextName');
 const summary = document.getElementById('summary');
 const statusChip = document.getElementById('statusChip');
 const speedTag = document.getElementById('speedTag');
-const songTitle = document.getElementById('songTitle');
-const songSubtitle = document.getElementById('songSubtitle');
-const songPicker = document.getElementById('songPicker');
-const viewportFit = document.getElementById('viewportFit');
 
 const playBtn = document.getElementById('playBtn');
 const firstBtn = document.getElementById('firstBtn');
@@ -207,107 +189,55 @@ const replayBtn = document.getElementById('replayBtn');
 const nextBtn = document.getElementById('nextBtn');
 const slowBtn = document.getElementById('slowBtn');
 const fastBtn = document.getElementById('fastBtn');
-const micBtn = document.getElementById('micBtn');
 
-let currentSongKey = SONG_ORDER[0];
-let currentSong = SONGS[currentSongKey];
-let events = [];
-let positions = [];
-let maxBar = 1;
+const positions = (() => {
+  let x = 0;
+  return events.map((ev, idx) => {
+    if (idx === 0) return 0;
+    const prev = events[idx - 1];
+    x += columnGap;
+    if (ev.bar !== prev.bar) x += measureGap;
+    return x;
+  });
+})();
+
 let running = false;
 let lastTs = null;
 let currentIndex = 0;
 let progress = 0;
 let speedIndex = speedSteps.indexOf(0.75);
 
-function compactShape(ev) {
-  return ev.labels.map((label, idx) => {
-    if (label === '0' || ev.frets[idx] === 0) return '0';
-    if (label) {
-      const m = String(label).match(/^(\d+)/);
-      return m ? m[1] : '·';
-    }
-    if (ev.frets[idx] != null) return String(ev.frets[idx]);
-    return '·';
-  }).join('');
-}
-
-function formatEventName(ev) {
-  const shape = compactShape(ev);
-  return ev.chord ? `${ev.chord} ${shape}` : shape;
-}
-
-function rebuildSongRuntime() {
-  events = (currentSong.events || []).map(ev => ({ ...ev, displayName: formatEventName(ev) }));
-  positions = events.map(ev => ((ev.bar - 1) * (barWidth + measureGap)) + (ev.slot * slotGap));
-  maxBar = events.reduce((m, ev) => Math.max(m, ev.bar || 1), 1);
-}
-
-function getRightMetrics() {
-  if (document.body.classList.contains('ultra-compact-practice')) return RIGHT_METRICS.ultra;
-  if (document.body.classList.contains('compact-practice')) return RIGHT_METRICS.compact;
-  return RIGHT_METRICS.normal;
-}
-
-function applyRightStaticMetrics() {
-  const m = getRightMetrics();
-  const labelIds = ['labelA','labelE','labelC','labelG'];
-  const lineIds = ['stringA','stringE','stringC','stringG'];
-  labelIds.forEach((id, idx) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.setAttribute('x', m.labelX);
-    el.setAttribute('y', m.rowY[idx]);
-  });
-  lineIds.forEach((id, idx) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.setAttribute('x1', m.lineStartX);
-    el.setAttribute('x2', m.lineEndX);
-    el.setAttribute('y1', m.rowY[idx]);
-    el.setAttribute('y2', m.rowY[idx]);
-  });
-  const leftRail = document.getElementById('leftRail');
-  if (leftRail) {
-    leftRail.setAttribute('x1', m.lineStartX);
-    leftRail.setAttribute('x2', m.lineStartX);
-    leftRail.setAttribute('y1', m.tabTopY);
-    leftRail.setAttribute('y2', m.tabBottomY);
-  }
-  const clipRect = document.getElementById('tabClipRect');
-  if (clipRect) {
-    clipRect.setAttribute('x', m.clipX);
-    clipRect.setAttribute('y', m.clipY);
-    clipRect.setAttribute('width', m.clipW);
-    clipRect.setAttribute('height', m.clipH);
-  }
-  const playGlow = document.getElementById('playGlow');
-  if (playGlow) {
-    playGlow.setAttribute('x', m.playGlowX);
-    playGlow.setAttribute('y', m.playGlowY);
-    playGlow.setAttribute('width', m.playGlowW);
-    playGlow.setAttribute('height', m.playGlowH);
-  }
-  const playLine = document.getElementById('playLine');
-  if (playLine) {
-    playLine.setAttribute('x1', m.playheadX);
-    playLine.setAttribute('x2', m.playheadX);
-    playLine.setAttribute('y1', m.tabTopY);
-    playLine.setAttribute('y2', m.tabBottomY);
-  }
-}
+const viewportFit = document.getElementById('viewportFit');
 
 function applyViewportFit() {
-  const vv = window.visualViewport;
-  const vw = vv ? vv.width : window.innerWidth;
-  const vh = vv ? vv.height : window.innerHeight;
-  const compact = (vw > vh) && (vh <= 560 || vw <= 980);
-  const ultra = compact && vh <= 360;
+  const compact = window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 520;
   document.body.classList.toggle('compact-practice', compact);
-  document.body.classList.toggle('ultra-compact-practice', ultra);
-  document.documentElement.style.setProperty('--vvh', `${Math.max(1, vh)}px`);
-  document.documentElement.style.setProperty('--appH', `${Math.max(1, vh - 2)}px`);
-  applyRightStaticMetrics();
+
+  const root = document.getElementById('app');
+  root.style.position = '';
+  root.style.left = '';
+  root.style.top = '';
+  root.style.width = '';
+  root.style.transform = '';
+
+  if (!compact) return;
+
+  const padX = 8;
+  const padY = 8;
+  const availableW = Math.max(1, window.innerWidth - padX * 2);
+  const availableH = Math.max(1, window.innerHeight - padY * 2);
+
+  root.style.position = 'absolute';
+  root.style.left = '0';
+  root.style.top = '0';
+  root.style.width = availableW + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(1)`;
+
+  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
+  const scale = Math.min(1, availableH / naturalH);
+
+  root.style.width = Math.floor(availableW / scale) + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(${scale})`;
 }
 
 function getSpeed() {
@@ -315,20 +245,23 @@ function getSpeed() {
 }
 
 function getCurrentDistance() {
-  if (currentIndex >= events.length - 1) return slotGap * 2;
-  return Math.max(slotGap, positions[currentIndex + 1] - positions[currentIndex]);
+  if (currentIndex >= events.length - 1) return columnGap;
+  return positions[currentIndex + 1] - positions[currentIndex];
 }
 
 function getPrepGlowPx() {
   return getCurrentDistance() * prepGlowRatio;
 }
 
+function getPrepFingerPx() {
+  return getCurrentDistance() * prepFingerRatio;
+}
+
 function pill(x, y, text, active) {
-  const m = getRightMetrics();
   const glow = active ? ' filter="url(#glow)"' : '';
   const fill = active ? 'rgba(41,240,208,.22)' : 'rgba(7,12,24,.94)';
   const stroke = active ? 'rgba(41,240,208,.34)' : 'rgba(255,255,255,.08)';
-  return `<rect x="${x-(m.pillW/2)}" y="${y-(m.pillH/2)}" width="${m.pillW}" height="${m.pillH}" rx="${Math.round(m.pillW/3)}" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="${m.pillFont}" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
+  return `<rect x="${x-18}" y="${y-24}" width="36" height="48" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="28" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
 }
 
 function syncPlayButton() {
@@ -352,6 +285,186 @@ function attachButtonFeedback(btn, handler) {
   });
 }
 
+
+function getNextDifferentIndex(fromIndex = currentIndex) {
+  const currentShape = events[fromIndex]?.shapeKey;
+  for (let i = fromIndex + 1; i < events.length; i += 1) {
+    if (events[i].shapeKey !== currentShape) return i;
+  }
+  return -1;
+}
+
+function getDisplayCurrentIndex(anchor) {
+  const nextDifferentIndex = getNextDifferentIndex(currentIndex);
+  if (nextDifferentIndex < 0) return currentIndex;
+  const remain = positions[nextDifferentIndex] - anchor;
+  const commitLead = Math.max(1, getCurrentDistance() * currentCommitRatio);
+  return remain <= commitLead ? nextDifferentIndex : currentIndex;
+}
+
+function getPrepState(nextIndex, anchor) {
+  if (nextIndex < 0) return { glowProgress: 0, fingerProgress: 0, fingerVisible: false };
+  const remain = positions[nextIndex] - anchor;
+  const glowLead = Math.max(1, getPrepGlowPx());
+  const fingerLead = Math.max(1, getPrepFingerPx());
+  const glowRaw = 1 - (remain / glowLead);
+  const fingerRaw = 1 - (remain / fingerLead);
+  const glowProgress = Math.max(0, Math.min(1, glowRaw));
+  const fingerProgress = Math.max(0, Math.min(1, fingerRaw));
+  return {
+    glowProgress,
+    fingerProgress,
+    fingerVisible: false
+  };
+}
+
+function getWindowStart(currentEvent, prepEvent) {
+  const positives = [];
+  [currentEvent, prepEvent].forEach(ev => {
+    if (!ev) return;
+    ev.frets.forEach(f => { if (f > 0) positives.push(f); });
+  });
+  if (!positives.length) return 1;
+  const minFret = Math.min(...positives);
+  const maxFret = Math.max(...positives);
+  return Math.max(1, Math.min(minFret, maxFret - 3));
+}
+
+const fingerGlyphs = ['人', '中', '薬', '小'];
+
+function getFingerLabels(frets) {
+  const entries = frets
+    .map((fret, rowIdx) => ({ fret, rowIdx }))
+    .filter(item => item.fret > 0)
+    .sort((a, b) => (a.fret - b.fret) || (a.rowIdx - b.rowIdx));
+  const labels = Array(4).fill('');
+  entries.forEach((item, idx) => {
+    labels[item.rowIdx] = fingerGlyphs[Math.min(idx, fingerGlyphs.length - 1)];
+  });
+  return labels;
+}
+
+function markerForCurrent(fret, fingerLabel) {
+  if (fret === 0) return '<span class="open">開</span>';
+  return `<span class="marker"><span class="marker-text">${fingerLabel || '人'}</span></span>`;
+}
+
+function markerForNext() {
+  return '<span class="marker-ghost"></span>';
+}
+
+function buildLeftGrid(currentEvent, prepEvent, prepState) {
+  const start = getWindowStart(currentEvent, prepEvent);
+  const currentLabels = getFingerLabels(currentEvent.frets);
+  const header = `
+    <div class="header">
+      <span></span>
+      <div class="headcells">
+        <span class="headcell">${start}</span>
+        <span class="headcell">${start + 1}</span>
+        <span class="headcell">${start + 2}</span>
+        <span class="headcell">${start + 3}</span>
+      </div>
+    </div>`;
+
+  const rows = rowLabels.map((label, rowIdx) => {
+    let cells = '';
+    for (let col = 0; col < 4; col += 1) {
+      const fret = start + col;
+      const currentFret = currentEvent.frets[rowIdx];
+      const prepFret = prepEvent ? prepEvent.frets[rowIdx] : null;
+      const showCurrent = currentFret === fret || (currentFret === 0 && col === 0);
+      const prepMatch = prepEvent && (prepFret === fret || (prepFret === 0 && col === 0));
+      const classes = ['cell'];
+      const prepActive = prepMatch && prepState.glowProgress > 0.06;
+      if (prepActive) classes.push('cell-next');
+      const style = prepActive ? ` style="opacity:${(0.30 + prepState.glowProgress * 0.56).toFixed(3)}"` : '';
+      let inner = '';
+      if (prepActive && !showCurrent) {
+        inner = markerForNext();
+      }
+      if (showCurrent) {
+        inner = markerForCurrent(currentFret, currentLabels[rowIdx]);
+      }
+      cells += `<span class="${classes.join(' ')}"${style}>${inner}</span>`;
+    }
+    return `<div class="row"><span class="label">${label}</span><div class="cells">${cells}</div></div>`;
+  }).join('');
+
+  leftGrid.innerHTML = header + rows;
+}
+
+function buildSummary(currentEvent, prepEvent) {
+  if (!prepEvent) return '最後の形です';
+  const diffs = [];
+  for (let i = 0; i < 4; i += 1) {
+    const cur = currentEvent.frets[i];
+    const nxt = prepEvent.frets[i];
+    if (cur === nxt) continue;
+    const prefix = `${i + 1}弦`;
+    if (nxt === 0) {
+      diffs.push(`${prefix}を開放へ`);
+    } else if (cur === 0) {
+      diffs.push(`${prefix}を${nxt}Fへ`);
+    } else {
+      diffs.push(`${prefix} ${cur}→${nxt}`);
+    }
+  }
+  if (!diffs.length) return 'そのまま維持';
+  return diffs.slice(0, 2).join(' / ');
+}
+
+function renderLeft(anchor) {
+  const displayCurrentIndex = getDisplayCurrentIndex(anchor);
+  const currentEvent = events[displayCurrentIndex];
+  const nextDifferentIndex = getNextDifferentIndex(displayCurrentIndex);
+  const prepState = getPrepState(nextDifferentIndex, anchor);
+  const prepEvent = prepState.glowProgress > 0.10 ? events[nextDifferentIndex] : null;
+
+  currentName.textContent = currentEvent.displayName;
+  nextName.textContent = prepEvent ? `次の形: ${prepEvent.displayName}` : '次の形: なし';
+  statusChip.textContent = `${currentEvent.bar}小節 / ${currentEvent.strum} / ${currentEvent.displayName}`;
+  summary.textContent = buildSummary(currentEvent, prepEvent);
+  buildLeftGrid(currentEvent, prepEvent, prepState);
+}
+
+function renderRight(anchor) {
+  let html = '';
+  let lastBar = null;
+  for (let i = 0; i < events.length; i += 1) {
+    const ev = events[i];
+    const x = playheadX + (positions[i] - anchor);
+    if (x < 60 || x > 910) continue;
+    if (lastBar !== ev.bar) {
+      html += `<line x1="${x-40}" y1="92" x2="${x-40}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+      html += `<text x="${x + columnGap}" y="42" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
+      lastBar = ev.bar;
+    }
+    const isCurrent = i === currentIndex;
+    html += `<text x="${x}" y="82" fill="#f7fbff" font-size="${isCurrent ? 30 : 26}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
+    for (let r = 0; r < 4; r += 1) html += pill(x, rowY[r], ev.frets[r], isCurrent);
+  }
+  const lastVisible = playheadX + (positions[events.length - 1] - anchor) + columnGap;
+  html += `<line x1="${lastVisible}" y1="92" x2="${lastVisible}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+  content.innerHTML = html;
+}
+
+function render() {
+  const anchor = positions[currentIndex] + progress;
+  renderRight(anchor);
+  renderLeft(anchor);
+  const delta = getSpeed() - 1.0;
+  const deltaText = delta === 0 ? '±0.00x' : `${delta > 0 ? '+' : ''}${delta.toFixed(2)}x`;
+  speedTag.textContent = `速度 ${getSpeed().toFixed(2)}x / 基準 ${deltaText}`;
+  const slower = speedSteps[Math.max(0, speedIndex - 1)];
+  const faster = speedSteps[Math.min(speedSteps.length - 1, speedIndex + 1)];
+  const slowDelta = slower - getSpeed();
+  const fastDelta = faster - getSpeed();
+  slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
+  fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
+  applyViewportFit();
+}
+
 function stopPlayback() {
   running = false;
   lastTs = null;
@@ -371,17 +484,19 @@ function ensureAudio() {
   if (!audioCtx) {
     audioCtx = new Ctx();
     audioComp = audioCtx.createDynamicsCompressor();
-    audioComp.threshold.value = -26;
-    audioComp.knee.value = 18;
-    audioComp.ratio.value = 4;
-    audioComp.attack.value = 0.003;
-    audioComp.release.value = 0.18;
+    audioComp.threshold.value = -18;
+    audioComp.knee.value = 12;
+    audioComp.ratio.value = 3.5;
+    audioComp.attack.value = 0.004;
+    audioComp.release.value = 0.16;
     audioMaster = audioCtx.createGain();
-    audioMaster.gain.value = 8.8;
+    audioMaster.gain.value = 1.15;
     audioComp.connect(audioMaster);
     audioMaster.connect(audioCtx.destination);
   }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
   return audioCtx;
 }
 
@@ -395,269 +510,95 @@ function playEventSound(ev) {
   const now = ctx.currentTime;
   ev.frets.forEach((fret, idx) => {
     if (fret == null) return;
-    const t0 = now + idx * 0.012;
-    const osc = ctx.createOscillator();
+    const t0 = now + idx * 0.008;
+    const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const pre = ctx.createGain();
+    const env = ctx.createGain();
     const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(3200, t0);
-    filter.Q.setValueAtTime(0.9, t0);
-    osc.type = 'triangle';
-    osc2.type = 'square';
+
     const freq = fretToFreq(openStringFreqs[idx], fret);
-    osc.frequency.setValueAtTime(freq, t0);
+    osc1.type = 'triangle';
+    osc2.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, t0);
     osc2.frequency.setValueAtTime(freq * 2, t0);
-    gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(0.62, t0 + 0.010);
-    gain.gain.exponentialRampToValueAtTime(0.26, t0 + 0.16);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.20);
-    osc.connect(filter);
-    osc2.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioComp);
-    osc.start(t0);
+
+    pre.gain.setValueAtTime(0.16, t0);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1750, t0);
+    filter.Q.setValueAtTime(0.7, t0);
+
+    env.gain.setValueAtTime(0.0001, t0);
+    env.gain.exponentialRampToValueAtTime(0.055, t0 + 0.012);
+    env.gain.exponentialRampToValueAtTime(0.020, t0 + 0.10);
+    env.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.42);
+
+    osc1.connect(pre);
+    osc2.connect(pre);
+    pre.connect(filter);
+    filter.connect(env);
+    env.connect(audioComp);
+
+    osc1.start(t0);
     osc2.start(t0);
-    osc.stop(t0 + 1.07);
-    osc2.stop(t0 + 1.04);
+    osc1.stop(t0 + 0.44);
+    osc2.stop(t0 + 0.42);
   });
 }
 
 function soundCurrentEvent(force = false) {
   const ev = events[currentIndex];
   if (!ev) return;
-  const key = `${currentSongKey}:${currentIndex}`;
+  const key = String(currentIndex);
   if (!force && key === lastSoundedEventKey) return;
   playEventSound(ev);
   lastSoundedEventKey = key;
 }
 
-function renderSongPicker() {
-  songPicker.innerHTML = SONG_ORDER.map(id => `<button class="song-chip ${id === currentSongKey ? 'active' : ''}" data-song="${id}">${SONGS[id].title}</button>`).join('');
-}
-
-songPicker.addEventListener('click', (event) => {
-  const btn = event.target.closest('[data-song]');
-  if (!btn) return;
-  const songId = btn.dataset.song;
-  if (!songId || songId === currentSongKey) return;
-  flashButton(btn);
-  setSong(songId);
-});
-
-function setSong(songId) {
-  stopPlayback();
-  currentSongKey = songId;
-  currentSong = SONGS[songId];
-  currentIndex = 0;
-  progress = 0;
-  lastSoundedEventKey = "";
-  const desiredSpeed = currentSong.defaultSpeed || 0.75;
-  const idx = speedSteps.indexOf(desiredSpeed);
-  speedIndex = idx >= 0 ? idx : speedSteps.indexOf(0.75);
-  rebuildSongRuntime();
-  songTitle.textContent = currentSong.title;
-  songSubtitle.textContent = currentSong.subtitle;
-  document.title = `Practice - ${currentSong.title}`;
-  renderSongPicker();
-  render();
-}
-
-function getNextDifferentIndex(fromIndex = currentIndex) {
-  const currentShape = events[fromIndex]?.shapeKey;
-  for (let i = fromIndex + 1; i < events.length; i += 1) {
-    if (events[i].shapeKey !== currentShape) return i;
-  }
-  return -1;
-}
-
-function getDisplayCurrentIndex(anchor) {
-  const nextDifferentIndex = getNextDifferentIndex(currentIndex);
-  if (nextDifferentIndex < 0) return currentIndex;
-  const remain = positions[nextDifferentIndex] - anchor;
-  const commitLead = Math.max(1, getCurrentDistance() * currentCommitRatio);
-  return remain <= commitLead ? nextDifferentIndex : currentIndex;
-}
-
-function getPrepState(nextIndex, anchor) {
-  if (nextIndex < 0) return { glowProgress: 0 };
-  const remain = positions[nextIndex] - anchor;
-  const glowLead = Math.max(1, getPrepGlowPx());
-  const glowRaw = 1 - (remain / glowLead);
-  const glowProgress = Math.max(0, Math.min(1, glowRaw));
-  return { glowProgress };
-}
-
-function getWindowStart(currentEvent, prepEvent) {
-  const positives = [];
-  [currentEvent, prepEvent].forEach(ev => {
-    if (!ev) return;
-    ev.frets.forEach(f => { if (typeof f === 'number' && f > 0) positives.push(f); });
-  });
-  if (!positives.length) return 1;
-  const minFret = Math.min(...positives);
-  const maxFret = Math.max(...positives);
-  return Math.max(1, Math.min(minFret, Math.max(minFret, maxFret - 3)));
-}
-
-const fallbackFingerGlyphs = ['人', '中', '薬', '小'];
-function getCurrentFingerLabels(ev) {
-  const direct = ev.labels.map(label => {
-    const m = label ? String(label).match(/[人中薬小]/) : null;
-    return m ? m[0] : '';
-  });
-  if (direct.some(Boolean)) return direct;
-  const entries = ev.frets.map((fret, rowIdx) => ({ fret, rowIdx })).filter(item => typeof item.fret === 'number' && item.fret > 0).sort((a,b) => (a.fret - b.fret) || (a.rowIdx - b.rowIdx));
-  const labels = Array(4).fill('');
-  entries.forEach((item, idx) => { labels[item.rowIdx] = fallbackFingerGlyphs[Math.min(idx, fallbackFingerGlyphs.length - 1)]; });
-  return labels;
-}
-
-function markerForCurrent(cellLabel, fret, fingerLabel) {
-  if (fret === 0 || cellLabel === '0') return '<span class="open">開</span>';
-  return `<span class="marker"><span class="marker-text">${fingerLabel || '人'}</span></span>`;
-}
-
-function markerForNext() {
-  return '<span class="marker-ghost-empty"></span>';
-}
-
-function buildLeftGrid(currentEvent, prepEvent, prepState) {
-  const start = getWindowStart(currentEvent, prepEvent);
-  const currentLabels = getCurrentFingerLabels(currentEvent);
-  const header = `
-    <div class="header">
-      <span></span>
-      <div class="headcells">
-        <span class="headcell">${start}</span>
-        <span class="headcell">${start + 1}</span>
-        <span class="headcell">${start + 2}</span>
-        <span class="headcell">${start + 3}</span>
-      </div>
-    </div>`;
-
-  const rows = rowLabels.map((label, rowIdx) => {
-    let cells = '';
-    for (let col = 0; col < 4; col += 1) {
-      const fret = start + col;
-      const currentFret = currentEvent.frets[rowIdx];
-      const currentCellLabel = currentEvent.labels[rowIdx];
-      const prepFret = prepEvent ? prepEvent.frets[rowIdx] : null;
-      const showCurrent = currentFret === fret || (currentFret === 0 && col === 0);
-      const prepMatch = prepEvent && (prepFret === fret || (prepFret === 0 && col === 0));
-      const classes = ['cell'];
-      const prepActive = prepMatch && prepState.glowProgress > 0.06;
-      if (prepActive) classes.push('cell-next');
-      const style = prepActive ? ` style="opacity:${(0.30 + prepState.glowProgress * 0.56).toFixed(3)}"` : '';
-      let inner = '';
-      if (prepActive && !showCurrent) inner = markerForNext();
-      if (showCurrent) inner = markerForCurrent(currentCellLabel, currentFret, currentLabels[rowIdx]);
-      cells += `<span class="${classes.join(' ')}"${style}>${inner}</span>`;
-    }
-    return `<div class="row"><span class="label">${label}</span><div class="cells">${cells}</div></div>`;
-  }).join('');
-
-  leftGrid.innerHTML = header + rows;
-}
-
-function buildSummary(currentEvent, prepEvent) {
-  if (!prepEvent) return '最後の形です';
-  const diffs = [];
-  for (let i = 0; i < 4; i += 1) {
-    const cur = currentEvent.frets[i];
-    const nxt = prepEvent.frets[i];
-    if (cur === nxt) continue;
-    const prefix = `${i + 1}弦`;
-    if (nxt == null) continue;
-    if (nxt === 0) {
-      diffs.push(`${prefix}を開放へ`);
-    } else if (cur == null) {
-      diffs.push(`${prefix}を${nxt}Fへ`);
-    } else if (cur === 0) {
-      diffs.push(`${prefix}を${nxt}Fへ`);
-    } else {
-      diffs.push(`${prefix} ${cur}→${nxt}`);
-    }
-  }
-  if (!diffs.length) return 'そのまま維持';
-  return diffs.slice(0, 2).join(' / ');
-}
-
-function renderLeft(anchor) {
-  if (!events.length) return;
-  const displayCurrentIndex = getDisplayCurrentIndex(anchor);
-  const currentEvent = events[displayCurrentIndex];
-  const nextDifferentIndex = getNextDifferentIndex(displayCurrentIndex);
-  const prepState = getPrepState(nextDifferentIndex, anchor);
-  const prepEvent = prepState.glowProgress > 0.10 ? events[nextDifferentIndex] : null;
-
-  currentName.textContent = formatEventName(currentEvent);
-  nextName.textContent = prepEvent ? `次の形: ${formatEventName(prepEvent)}` : '次の形: なし';
-  const strumText = currentEvent.strum || '・';
-  statusChip.textContent = `${currentEvent.bar}小節 / ${strumText} / ${formatEventName(currentEvent)}`;
-  summary.textContent = buildSummary(currentEvent, prepEvent);
-  buildLeftGrid(currentEvent, prepEvent, prepState);
-}
-
-function renderRight(anchor) {
-  const m = getRightMetrics();
-  let html = '';
-  for (let bar = 1; bar <= maxBar; bar += 1) {
-    const barStart = m.playheadX + (((bar - 1) * (barWidth + measureGap)) - anchor);
-    const barEnd = barStart + barWidth;
-    if (barEnd < (m.lineStartX - 80) || barStart > (m.lineEndX + 80)) continue;
-    html += `<line x1="${barStart}" y1="${m.tabTopY}" x2="${barStart}" y2="${m.tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
-  }
-  for (let i = 0; i < events.length; i += 1) {
-    const ev = events[i];
-    const x = m.playheadX + (positions[i] - anchor);
-    if (x < (m.lineStartX - 60) || x > (m.lineEndX + 60)) continue;
-    const isCurrent = i === currentIndex;
-    if (ev.strum) {
-      html += `<text x="${x}" y="${m.strumY}" fill="#f7fbff" font-size="${isCurrent ? m.strumFontActive : m.strumFontIdle}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
-    }
-    for (let r = 0; r < 4; r += 1) {
-      const fret = ev.frets[r];
-      if (fret == null) continue;
-      html += pill(x, m.rowY[r], fret, isCurrent);
-    }
-  }
-  const endX = m.playheadX + ((maxBar * (barWidth + measureGap) - measureGap) - anchor);
-  html += `<line x1="${endX}" y1="${m.tabTopY}" x2="${endX}" y2="${m.tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
-  content.innerHTML = html;
-}
-
-function render() {
-  if (!events.length) return;
-  const anchor = positions[currentIndex] + progress;
-  renderRight(anchor);
-  renderLeft(anchor);
-  const delta = getSpeed() - 1.0;
-  const deltaText = delta === 0 ? '±0.00x' : `${delta > 0 ? '+' : ''}${delta.toFixed(2)}x`;
-  speedTag.textContent = `速度 ${getSpeed().toFixed(2)}x / 基準 ${deltaText}`;
-  const slower = speedSteps[Math.max(0, speedIndex - 1)];
-  const faster = speedSteps[Math.min(speedSteps.length - 1, speedIndex + 1)];
-  const slowDelta = slower - getSpeed();
-  const fastDelta = faster - getSpeed();
-  slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
-  fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
-  applyViewportFit();
-}
-
 function togglePlay() {
-  running = !running;
-  lastTs = null;
-  if (running) {
+  if (!running) {
     ensureAudio();
     soundCurrentEvent(true);
   }
+  running = !running;
+  lastTs = null;
   syncPlayButton();
 }
 
-function goFirst() { stopPlayback(); currentIndex = 0; progress = 0; lastSoundedEventKey = ""; render(); soundCurrentEvent(true); }
-function goBack() { stopPlayback(); currentIndex = Math.max(0, currentIndex - 1); progress = 0; lastSoundedEventKey = ""; render(); soundCurrentEvent(true); }
-function replay() { stopPlayback(); progress = 0; lastSoundedEventKey = ""; render(); soundCurrentEvent(true); }
-function goNext() { stopPlayback(); currentIndex = Math.min(events.length - 1, currentIndex + 1); progress = 0; lastSoundedEventKey = ""; render(); soundCurrentEvent(true); }
+function goFirst() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = 0;
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function goBack() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = Math.max(0, currentIndex - 1);
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function replay() {
+  stopPlayback();
+  ensureAudio();
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function goNext() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = Math.min(events.length - 1, currentIndex + 1);
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
 
 function changeSpeed(direction) {
   const nextIndex = Math.max(0, Math.min(speedSteps.length - 1, speedIndex + direction));
@@ -693,18 +634,20 @@ attachButtonFeedback(replayBtn, replay);
 attachButtonFeedback(nextBtn, goNext);
 attachButtonFeedback(slowBtn, () => changeSpeed(-1));
 attachButtonFeedback(fastBtn, () => changeSpeed(1));
-if (micBtn) micBtn.addEventListener('click', () => flashButton(micBtn));
 
-window.addEventListener('resize', () => setTimeout(applyViewportFit, 20));
-window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 120));
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', () => setTimeout(applyViewportFit, 20));
-  window.visualViewport.addEventListener('scroll', () => setTimeout(applyViewportFit, 20));
+if (document.getElementById('micBtn')) {
+  document.getElementById('micBtn').addEventListener('click', () => {
+    ensureAudio();
+    flashButton(document.getElementById('micBtn'));
+  });
 }
-setSong(currentSongKey);
+
+applyViewportFit();
+window.addEventListener('resize', applyViewportFit);
+window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 50));
+render();
 syncPlayButton();
 requestAnimationFrame(loop);
-
 </script>
 </body>
 </html>
