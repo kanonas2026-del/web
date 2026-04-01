@@ -477,6 +477,12 @@ let audioMaster = null;
 let audioComp = null;
 let lastSoundedEventKey = '';
 const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
+const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const DEVICE_MASTER_GAIN = isIOSLike ? 1.48 : 1.15;
+const DEVICE_PRE_GAIN = isIOSLike ? 0.19 : 0.16;
+const DEVICE_ENV_PEAK = isIOSLike ? 0.068 : 0.055;
+const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.026 : 0.020;
 
 function ensureAudio() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -484,13 +490,13 @@ function ensureAudio() {
   if (!audioCtx) {
     audioCtx = new Ctx();
     audioComp = audioCtx.createDynamicsCompressor();
-    audioComp.threshold.value = -18;
-    audioComp.knee.value = 12;
-    audioComp.ratio.value = 3.5;
-    audioComp.attack.value = 0.004;
-    audioComp.release.value = 0.16;
+    audioComp.threshold.value = -21;
+    audioComp.knee.value = 14;
+    audioComp.ratio.value = 4.2;
+    audioComp.attack.value = 0.003;
+    audioComp.release.value = 0.18;
     audioMaster = audioCtx.createGain();
-    audioMaster.gain.value = 1.15;
+    audioMaster.gain.value = DEVICE_MASTER_GAIN;
     audioComp.connect(audioMaster);
     audioMaster.connect(audioCtx.destination);
   }
@@ -523,14 +529,14 @@ function playEventSound(ev) {
     osc1.frequency.setValueAtTime(freq, t0);
     osc2.frequency.setValueAtTime(freq * 2, t0);
 
-    pre.gain.setValueAtTime(0.16, t0);
+    pre.gain.setValueAtTime(DEVICE_PRE_GAIN, t0);
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(1750, t0);
     filter.Q.setValueAtTime(0.7, t0);
 
     env.gain.setValueAtTime(0.0001, t0);
-    env.gain.exponentialRampToValueAtTime(0.055, t0 + 0.012);
-    env.gain.exponentialRampToValueAtTime(0.020, t0 + 0.10);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_PEAK, t0 + 0.012);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_SUSTAIN, t0 + 0.10);
     env.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.42);
 
     osc1.connect(pre);
