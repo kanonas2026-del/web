@@ -10,9 +10,9 @@ html,body{height:100%;width:100%;background:#061023}
 body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
 #viewportFit{position:relative;min-height:calc(100vh - 32px);width:100%;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
 #app{max-width:1280px;margin:0 auto;transform-origin:top left;box-sizing:border-box}
-body.compact-practice{padding:8px 10px 10px;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
-body.compact-practice #viewportFit{min-height:calc(100vh - 18px);width:100%;overflow:hidden}
-body.compact-practice #app{position:relative;left:auto;top:auto;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
+body.compact-practice{padding:4px 6px 6px;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
+body.compact-practice #viewportFit{min-height:calc(100vh - 10px);width:100%;overflow:hidden;position:relative}
+body.compact-practice #app{position:relative;left:0;top:0;max-width:none;margin:0;width:100%;box-sizing:border-box;transform:none !important}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
 .layout{display:grid;grid-template-columns:minmax(360px,1.02fr) minmax(420px,.98fr);gap:14px;align-items:start}
 .tab-card{display:grid;grid-template-rows:auto auto auto;align-content:start;align-items:start}
@@ -30,44 +30,44 @@ body.compact-practice #app{position:relative;left:auto;top:auto;max-width:none;m
 .summary{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,207,90,.10);border:1px solid rgba(255,207,90,.18);color:#fff7d8;font-size:17px;font-weight:700;min-height:1.4em}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
 .note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
-svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);aspect-ratio:940/280}.tab-card svg{max-height:290px}.tab-card .tag{margin-top:8px}
+svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);aspect-ratio:940/236}.tab-card svg{max-height:248px}.tab-card .tag{margin-top:6px}
 .tab-card .tag{align-self:flex-start;white-space:nowrap}
 .transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
-body.compact-practice .top{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;margin-bottom:6px}
-body.compact-practice .eyebrow{margin:0 0 2px;font-size:10px}
-body.compact-practice .top h1{font-size:20px}
-body.compact-practice .sub{margin-top:1px;font-size:11px}
-body.compact-practice .layout{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:6px;align-items:start}
+body.compact-practice .top{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin-bottom:4px}
+body.compact-practice .eyebrow{margin:0 0 1px;font-size:9px}
+body.compact-practice .top h1{font-size:18px}
+body.compact-practice .sub{margin-top:1px;font-size:10px}
+body.compact-practice .layout{grid-template-columns:minmax(0,1.09fr) minmax(0,.91fr);gap:5px;align-items:start}
 body.compact-practice .tab-card{align-self:start}
-body.compact-practice .card{padding:7px;border-radius:14px}
-body.compact-practice .left-head{margin-bottom:5px}
-body.compact-practice .title-big{font-size:24px}
-body.compact-practice .next{margin-top:2px;font-size:12px}
-body.compact-practice .chip{min-height:22px;padding:0 6px;font-size:9px}
-body.compact-practice .grid{padding:7px;border-radius:12px}
-body.compact-practice .header,.row{grid-template-columns:52px 1fr;gap:4px}
+body.compact-practice .card{padding:6px;border-radius:14px}
+body.compact-practice .left-head{margin-bottom:4px}
+body.compact-practice .title-big{font-size:21px}
+body.compact-practice .next{margin-top:1px;font-size:11px}
+body.compact-practice .chip{min-height:20px;padding:0 6px;font-size:8.5px}
+body.compact-practice .grid{padding:6px;border-radius:12px}
+body.compact-practice .header,.row{grid-template-columns:48px 1fr;gap:4px}
 body.compact-practice .cells,.headcells{gap:3px}
-body.compact-practice .headcell{font-size:13px}
-body.compact-practice .label{font-size:10px}
-body.compact-practice .cell{min-height:31px;border-radius:8px}
-body.compact-practice .marker{width:23px;height:23px;font-size:14px}
-body.compact-practice .marker-text{font-size:13px}
-body.compact-practice .marker-ghost{width:18px;height:18px}
-body.compact-practice .marker-ghost-empty{width:15px;height:15px}
-body.compact-practice .open{font-size:12px}
-body.compact-practice .summary{margin-top:6px;padding:7px 9px;font-size:11px}
-body.compact-practice .card-head{margin-bottom:6px}
-body.compact-practice .card-head-label{font-size:11px}
+body.compact-practice .headcell{font-size:12px}
+body.compact-practice .label{font-size:9px}
+body.compact-practice .cell{min-height:28px;border-radius:8px}
+body.compact-practice .marker{width:21px;height:21px;font-size:13px}
+body.compact-practice .marker-text{font-size:12px}
+body.compact-practice .marker-ghost{width:16px;height:16px}
+body.compact-practice .marker-ghost-empty{width:14px;height:14px}
+body.compact-practice .open{font-size:11px}
+body.compact-practice .summary{margin-top:5px;padding:6px 8px;font-size:10px}
+body.compact-practice .card-head{margin-bottom:5px}
+body.compact-practice .card-head-label{font-size:10px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:156px;max-height:none}
-body.compact-practice .tag{margin-top:5px;padding:3px 7px;font-size:9px}
-body.compact-practice .transport{gap:5px;margin-top:7px}
-body.compact-practice .transport button{min-height:28px;font-size:10px;border-radius:10px}
+body.compact-practice .tab-card svg{height:118px;max-height:none}
+body.compact-practice .tag{margin-top:4px;padding:2px 7px;font-size:8.5px}
+body.compact-practice .transport{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:6px}
+body.compact-practice .transport button{min-height:24px;font-size:9px;border-radius:9px}
 body.compact-practice #verTag{display:none !important}
 body.compact-practice .song-picker{justify-content:flex-start;gap:4px}
-body.compact-practice .song-chip{min-height:24px;padding:0 7px;font-size:9px}
+body.compact-practice .song-chip{min-height:20px;padding:0 7px;font-size:8.5px}
 
 
 .song-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
@@ -82,7 +82,7 @@ body.compact-practice .song-chip{min-height:24px;padding:0 7px;font-size:9px}
 <body>
 <div id="viewportFit">
 <div id="app">
-  <div id="verTag" style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v26 layout</div>
+  <div id="verTag" style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v28 fit</div>
 
   <div class="top">
     <div><p class="eyebrow">PRACTICE</p><h1 id="songTitle">きらきら星</h1><p class="sub" id="songSubtitle">4/4 / ゆっくり練習 / BPM 120</p></div>
@@ -100,7 +100,7 @@ body.compact-practice .song-chip{min-height:24px;padding:0 7px;font-size:9px}
 
     <section class="card tab-card">
       <div class="card-head"><span class="card-head-label">流れるTAB</span><span class="dot"></span></div>
-      <svg id="svg" viewBox="0 0 940 280" aria-label="right box integration preview">
+      <svg id="svg" viewBox="0 0 940 236" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           <clipPath id="tabClip"><rect x="120" y="56" width="740" height="190"></rect></clipPath>
@@ -144,13 +144,11 @@ const SONGS = {"kirakira":{"id":"kirakira","title":"きらきら星","subtitle":
 ]},"saints":{"id":"saints","title":"聖者の行進","subtitle":"4/4 / 中間チェック / BPM 120","defaultSpeed":0.75,"events":[{"bar":1,"slot":4,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":1,"slot":8,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":1,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":2,"slot":0,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":8,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":9,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":12,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":2,"slot":13,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":0,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":3,"slot":4,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":3,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":3,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":4,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":4,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":8,"strum":"↓","chord":"C","labels":[null,null,null,null],"frets":[null,null,null,null],"shapeKey":"|||"},{"bar":4,"slot":9,"strum":"↑","chord":"C","labels":[null,null,null,null],"frets":[null,null,null,null],"shapeKey":"|||"},{"bar":4,"slot":12,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":4,"slot":13,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":0,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":5,"slot":4,"strum":"","chord":"C","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":5,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":5,"slot":12,"strum":"","chord":"C","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":6,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":6,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":6,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":6,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":0,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":7,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":7,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":7,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":8,"slot":0,"strum":"","chord":"G7","labels":["2中",null,null,null],"frets":[2,null,null,null],"shapeKey":"2中|||"},{"bar":8,"slot":4,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":5,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":8,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":9,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":12,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":8,"slot":13,"strum":"↑","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":9,"slot":0,"strum":"↓","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":9,"slot":4,"strum":"","chord":"G7","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":9,"slot":8,"strum":"","chord":"G7","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":9,"slot":12,"strum":"","chord":"G7","labels":[null,null,null,"2中"],"frets":[null,null,null,2],"shapeKey":"|||2中"},{"bar":10,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":10,"slot":4,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":5,"strum":"↑","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":6,"strum":"↓","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":10,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":11,"slot":0,"strum":"","chord":"C7","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":11,"slot":4,"strum":"","chord":"C7","labels":[null,"0",null,"1人"],"frets":[null,0,null,1],"shapeKey":"|0||1人"},{"bar":11,"slot":8,"strum":"","chord":"C7","labels":[null,null,"0",null],"frets":[null,null,0,null],"shapeKey":"||0|"},{"bar":11,"slot":12,"strum":"","chord":"C7","labels":[null,null,null,"1人"],"frets":[null,null,null,1],"shapeKey":"|||1人"},{"bar":12,"slot":0,"strum":"","chord":"F","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":12,"slot":4,"strum":"","chord":"F","labels":[null,"1人",null,null],"frets":[null,1,null,null],"shapeKey":"|1人||"},{"bar":12,"slot":8,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":9,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":12,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":12,"slot":13,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":0,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":1,"strum":"↑","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":2,"strum":"↓","chord":"F","labels":["0","1人","0","2中"],"frets":[0,1,0,2],"shapeKey":"0|1人|0|2中"},{"bar":13,"slot":8,"strum":"","chord":"F","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":13,"slot":12,"strum":"","chord":"F","labels":[null,"1人",null,"2中"],"frets":[null,1,null,2],"shapeKey":"|1人||2中"},{"bar":14,"slot":0,"strum":"","chord":"C","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":14,"slot":4,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":14,"slot":8,"strum":"","chord":"C","labels":[null,"0",null,null],"frets":[null,0,null,null],"shapeKey":"|0||"},{"bar":14,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"},{"bar":15,"slot":0,"strum":"","chord":"G7","labels":[null,null,null,"0"],"frets":[null,null,null,0],"shapeKey":"|||0"},{"bar":15,"slot":4,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":15,"slot":8,"strum":"","chord":"G7","labels":[null,null,"2中",null],"frets":[null,null,2,null],"shapeKey":"||2中|"},{"bar":15,"slot":12,"strum":"","chord":"G7","labels":["2中","1人","2中","0"],"frets":[2,1,2,0],"shapeKey":"2中|1人|2中|0"},{"bar":16,"slot":0,"strum":"","chord":"C","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":16,"slot":4,"strum":"","chord":"C","labels":["0",null,null,null],"frets":[0,null,null,null],"shapeKey":"0|||"},{"bar":16,"slot":8,"strum":"","chord":"C","labels":["2中",null,null,null],"frets":[2,null,null,null],"shapeKey":"2中|||"},{"bar":16,"slot":12,"strum":"","chord":"C","labels":["3薬",null,null,null],"frets":[3,null,null,null],"shapeKey":"3薬|||"},{"bar":17,"slot":12,"strum":"","chord":"C","labels":["3薬","0","0","0"],"frets":[3,0,0,0],"shapeKey":"3薬|0|0|0"}]}};
 const SONG_ORDER = ["kirakira", "saints", "rag"];
 
-const rowY = [111,148,185,222];
-const tabTopY = 86;
-const tabBottomY = 234;
-const barLabelY = 34;
-const strumY = 64;
+const RIGHT_METRICS = {
+  normal: { rowY:[92,124,156,188], tabTopY:74, tabBottomY:204, barLabelY:24, strumY:48, playheadX:206, pillW:34, pillH:44, pillFont:24, strumFontActive:24, strumFontIdle:19 },
+  compact: { rowY:[74,98,122,146], tabTopY:58, tabBottomY:160, barLabelY:18, strumY:34, playheadX:158, pillW:24, pillH:32, pillFont:18, strumFontActive:18, strumFontIdle:14 }
+};
 const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
-const playheadX = 290;
 const slotGap = 42;
 const barWidth = slotGap * 16;
 const measureGap = 34;
@@ -214,14 +212,20 @@ function rebuildSongRuntime() {
   maxBar = events.reduce((m, ev) => Math.max(m, ev.bar || 1), 1);
 }
 
+function getRightMetrics() {
+  return document.body.classList.contains('compact-practice') ? RIGHT_METRICS.compact : RIGHT_METRICS.normal;
+}
+
 function applyViewportFit() {
   const vv = window.visualViewport;
   const vw = vv ? vv.width : window.innerWidth;
   const vh = vv ? vv.height : window.innerHeight;
-  const compact = window.matchMedia('(orientation: landscape)').matches && vh <= 620;
+  const compact = window.matchMedia('(orientation: landscape)').matches && vh <= 760;
   document.body.classList.toggle('compact-practice', compact);
 
   const root = document.getElementById('app');
+  viewportFit.style.width = '';
+  viewportFit.style.height = '';
   root.style.position = '';
   root.style.left = '';
   root.style.top = '';
@@ -230,18 +234,23 @@ function applyViewportFit() {
 
   if (!compact) return;
 
+  const maxW = Math.max(1, vw - 8);
+  const maxH = Math.max(1, vh - 8);
   const naturalW = Math.max(root.scrollWidth, root.offsetWidth);
   const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
-  const maxW = Math.max(1, vw - 10);
-  const maxH = Math.max(1, vh - 12);
-  const scaleW = maxW / naturalW;
-  const scaleH = maxH / naturalH;
-  const scale = Math.max(0.74, Math.min(1, scaleW, scaleH));
+  const scale = Math.min(1, maxW / naturalW, maxH / naturalH);
 
-  if (scale >= 0.995) return;
+  root.style.position = 'absolute';
+  root.style.left = '0';
+  root.style.top = '0';
+  viewportFit.style.width = maxW + 'px';
+  viewportFit.style.height = Math.min(maxH, naturalH * Math.max(0.68, scale)) + 'px';
 
-  root.style.width = (100 / scale) + '%';
-  root.style.transform = `scale(${scale})`;
+  if (scale < 0.995) {
+    const s = Math.max(0.68, scale);
+    root.style.width = naturalW + 'px';
+    root.style.transform = `scale(${s})`;
+  }
 }
 
 function getSpeed() {
@@ -258,10 +267,11 @@ function getPrepGlowPx() {
 }
 
 function pill(x, y, text, active) {
+  const m = getRightMetrics();
   const glow = active ? ' filter="url(#glow)"' : '';
   const fill = active ? 'rgba(41,240,208,.22)' : 'rgba(7,12,24,.94)';
   const stroke = active ? 'rgba(41,240,208,.34)' : 'rgba(255,255,255,.08)';
-  return `<rect x="${x-18}" y="${y-24}" width="36" height="48" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="28" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
+  return `<rect x="${x-(m.pillW/2)}" y="${y-(m.pillH/2)}" width="${m.pillW}" height="${m.pillH}" rx="${Math.round(m.pillW/3)}" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="${m.pillFont}" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
 }
 
 function syncPlayButton() {
@@ -293,13 +303,27 @@ function stopPlayback() {
 
 
 let audioCtx = null;
+let audioMaster = null;
+let audioComp = null;
 let lastSoundedEventKey = '';
 const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
 
 function ensureAudio() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return null;
-  if (!audioCtx) audioCtx = new Ctx();
+  if (!audioCtx) {
+    audioCtx = new Ctx();
+    audioComp = audioCtx.createDynamicsCompressor();
+    audioComp.threshold.value = -22;
+    audioComp.knee.value = 18;
+    audioComp.ratio.value = 3;
+    audioComp.attack.value = 0.003;
+    audioComp.release.value = 0.18;
+    audioMaster = audioCtx.createGain();
+    audioMaster.gain.value = 1.9;
+    audioComp.connect(audioMaster);
+    audioMaster.connect(audioCtx.destination);
+  }
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
@@ -324,14 +348,14 @@ function playEventSound(ev) {
     osc.type = 'triangle';
     osc.frequency.setValueAtTime(fretToFreq(openStringFreqs[idx], fret), t0);
     gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(0.11, t0 + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.03, t0 + 0.10);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.55);
+    gain.gain.exponentialRampToValueAtTime(0.20, t0 + 0.009);
+    gain.gain.exponentialRampToValueAtTime(0.06, t0 + 0.12);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.70);
     osc.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(audioComp);
     osc.start(t0);
-    osc.stop(t0 + 0.58);
+    osc.stop(t0 + 0.72);
   });
 }
 
@@ -512,30 +536,30 @@ function renderLeft(anchor) {
 }
 
 function renderRight(anchor) {
+  const m = getRightMetrics();
   let html = '';
   for (let bar = 1; bar <= maxBar; bar += 1) {
-    const barStart = playheadX + (((bar - 1) * (barWidth + measureGap)) - anchor);
+    const barStart = m.playheadX + (((bar - 1) * (barWidth + measureGap)) - anchor);
     const barEnd = barStart + barWidth;
-    if (barEnd < 80 || barStart > 900) continue;
-    html += `<line x1="${barStart}" y1="${tabTopY}" x2="${barStart}" y2="${tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
-    html += `<text x="${barStart + barWidth/2}" y="${barLabelY}" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${bar}小節</text>`;
+    if (barEnd < 50 || barStart > 918) continue;
+    html += `<line x1="${barStart}" y1="${m.tabTopY}" x2="${barStart}" y2="${m.tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
   }
   for (let i = 0; i < events.length; i += 1) {
     const ev = events[i];
-    const x = playheadX + (positions[i] - anchor);
-    if (x < 70 || x > 900) continue;
+    const x = m.playheadX + (positions[i] - anchor);
+    if (x < 42 || x > 912) continue;
     const isCurrent = i === currentIndex;
     if (ev.strum) {
-      html += `<text x="${x}" y="${strumY}" fill="#f7fbff" font-size="${isCurrent ? 30 : 24}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
+      html += `<text x="${x}" y="${m.strumY}" fill="#f7fbff" font-size="${isCurrent ? m.strumFontActive : m.strumFontIdle}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
     }
     for (let r = 0; r < 4; r += 1) {
       const fret = ev.frets[r];
       if (fret == null) continue;
-      html += pill(x, rowY[r], fret, isCurrent);
+      html += pill(x, m.rowY[r], fret, isCurrent);
     }
   }
-  const endX = playheadX + ((maxBar * (barWidth + measureGap) - measureGap) - anchor);
-  html += `<line x1="${endX}" y1="${tabTopY}" x2="${endX}" y2="${tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+  const endX = m.playheadX + ((maxBar * (barWidth + measureGap) - measureGap) - anchor);
+  html += `<line x1="${endX}" y1="${m.tabTopY}" x2="${endX}" y2="${m.tabBottomY}" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
   content.innerHTML = html;
 }
 
@@ -607,8 +631,12 @@ attachButtonFeedback(slowBtn, () => changeSpeed(-1));
 attachButtonFeedback(fastBtn, () => changeSpeed(1));
 if (micBtn) micBtn.addEventListener('click', () => flashButton(micBtn));
 
-window.addEventListener('resize', applyViewportFit);
-window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 50));
+window.addEventListener('resize', () => setTimeout(applyViewportFit, 20));
+window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 120));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => setTimeout(applyViewportFit, 20));
+  window.visualViewport.addEventListener('scroll', () => setTimeout(applyViewportFit, 20));
+}
 setSong(currentSongKey);
 syncPlayButton();
 requestAnimationFrame(loop);
