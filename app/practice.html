@@ -8,14 +8,14 @@
 html,body{height:100%}
 body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
 #viewportFit{position:relative;min-height:calc(100vh - 32px)}
-#app{max-width:1280px;margin:0 auto;transform-origin:top left}
+#app{max-width:1280px;margin:0 auto;transform-origin:top left;display:grid;grid-template-rows:auto 1fr auto;gap:12px}
 body.compact-practice{padding:0;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
 body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
-body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
-.layout{display:grid;grid-template-columns:minmax(360px,1.05fr) minmax(420px,.95fr);gap:14px;align-items:start}
-.tab-card{display:flex;flex-direction:column}
-.card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px}
+body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:8px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
+.layout{display:grid;grid-template-columns:minmax(360px,1fr) minmax(420px,1.08fr);gap:12px;align-items:stretch}
+.tab-card{display:flex;flex-direction:column;min-height:0}
+.card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px;min-height:0;height:100%}
 .left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
 .grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
 .header,.row{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:center}.header{margin-bottom:6px}.cells,.headcells{display:grid;grid-template-columns:repeat(4,minmax(48px,1fr));gap:6px}.headcell{width:1.3em;justify-self:end;transform:translateX(45%);color:#d9e7ff;font-size:18px}.row+.row{margin-top:6px}.label{font-size:14px;white-space:nowrap}.cell{min-height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
@@ -30,16 +30,17 @@ body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
 .note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
 svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
+.tab-card svg{flex:1;min-height:0}
+.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:0}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
-body.compact-practice .top{margin-bottom:10px}
-body.compact-practice .eyebrow{margin:0 0 4px;font-size:10px}
-body.compact-practice .top h1{font-size:24px}
-body.compact-practice .sub{margin-top:4px;font-size:13px}
-body.compact-practice .layout{grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);gap:10px;align-items:start}
-body.compact-practice .tab-card{align-self:start}
-body.compact-practice .card{padding:9px;border-radius:14px}
+body.compact-practice .top{min-height:50px}
+body.compact-practice .eyebrow{margin:0 0 2px;font-size:10px}
+body.compact-practice .top h1{font-size:22px}
+body.compact-practice .sub{margin-top:2px;font-size:12px}
+body.compact-practice .layout{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:8px;align-items:stretch;min-height:0}
+body.compact-practice .tab-card{align-self:stretch}
+body.compact-practice .card{padding:8px;border-radius:14px}
 body.compact-practice .left-head{margin-bottom:8px}
 body.compact-practice .title-big{font-size:31px}
 body.compact-practice .next{margin-top:4px;font-size:14px}
@@ -56,13 +57,13 @@ body.compact-practice .marker-ghost{width:22px;height:22px}
 body.compact-practice .marker-ghost-empty{width:18px;height:18px}
 body.compact-practice .open{font-size:14px}
 body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
-body.compact-practice .card-head{margin-bottom:8px}
+body.compact-practice .card-head{margin-bottom:6px}
 body.compact-practice .card-head-label{font-size:11px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:214px}
-body.compact-practice .tag{margin-top:8px;padding:3px 8px;font-size:11px}
-body.compact-practice .transport{gap:6px;margin-top:10px}
-body.compact-practice .transport button{min-height:34px;font-size:12px;border-radius:10px}
+body.compact-practice .tab-card svg{height:100%}
+body.compact-practice .tag{margin-top:6px;padding:3px 8px;font-size:11px;align-self:flex-start}
+body.compact-practice .transport{gap:6px;margin-top:0}
+body.compact-practice .transport button{min-height:32px;font-size:12px;border-radius:10px}
 body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
 
 @keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}50%{box-shadow: inset 0 0 0 1px rgba(255,234,160,.34), 0 0 24px rgba(255,220,120,.22); background: rgba(255,220,120,.18);}100%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}}
@@ -71,8 +72,6 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 <body>
 <div id="viewportFit">
 <div id="app">
-  <div style="position:fixed;right:12px;top:12px;z-index:9999;padding:4px 8px;border-radius:999px;border:1px solid rgba(41,240,208,.22);background:rgba(7,12,24,.82);color:#dffefa;font-size:11px;letter-spacing:.06em;pointer-events:none;">main v19 kirakira</div>
-
   <div class="top">
     <div><p class="eyebrow">PRACTICE</p><h1>きらきら星</h1><p class="sub">4/4 / ゆっくり練習 / BPM 60</p></div>
   </div>
@@ -88,23 +87,23 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 
     <section class="card tab-card">
       <div class="card-head"><span class="card-head-label">流れるTAB</span><span class="dot"></span></div>
-      <svg id="svg" viewBox="0 0 940 400" aria-label="right box integration preview">
+      <svg id="svg" viewBox="0 0 940 340" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="tabClip"><rect x="120" y="62" width="740" height="270"></rect></clipPath>
+          <clipPath id="tabClip"><rect x="120" y="54" width="740" height="236"></rect></clipPath>
         </defs>
-        <text x="78" y="145" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
-        <text x="78" y="199" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
-        <text x="78" y="253" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
-        <text x="78" y="307" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
-        <line x1="120" y1="104" x2="120" y2="324" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
-        <line x1="120" y1="140" x2="860" y2="140" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="194" x2="860" y2="194" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="248" x2="860" y2="248" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="302" x2="860" y2="302" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <text x="78" y="129" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
+        <text x="78" y="177" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
+        <text x="78" y="225" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
+        <text x="78" y="273" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
+        <line x1="120" y1="94" x2="120" y2="286" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="124" x2="860" y2="124" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="172" x2="860" y2="172" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="220" x2="860" y2="220" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="268" x2="860" y2="268" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
         <g id="content" clip-path="url(#tabClip)"></g>
-        <rect x="278" y="104" width="24" height="220" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
-        <line x1="290" y1="104" x2="290" y2="324" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
+        <rect x="278" y="94" width="24" height="192" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
+        <line x1="290" y1="94" x2="290" y2="286" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
       </svg>
       <span class="tag" id="speedTag">速度 1.00x / 基準 ±0.00x</span>
     </section>
@@ -163,7 +162,7 @@ const events = [
   return { ...ev, shapeKey: ev.frets.join('-'), displayName: `${ev.chord} ${shapeText}` };
 });
 
-const rowY = [140,194,248,302];
+const rowY = [124,172,220,268];
 const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
 const playheadX = 290;
 const columnGap = 92;
@@ -261,7 +260,7 @@ function pill(x, y, text, active) {
   const glow = active ? ' filter="url(#glow)"' : '';
   const fill = active ? 'rgba(41,240,208,.22)' : 'rgba(7,12,24,.94)';
   const stroke = active ? 'rgba(41,240,208,.34)' : 'rgba(255,255,255,.08)';
-  return `<rect x="${x-18}" y="${y-24}" width="36" height="48" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="28" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
+  return `<rect x="${x-18}" y="${y-21}" width="36" height="42" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="26" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
 }
 
 function syncPlayButton() {
@@ -436,16 +435,16 @@ function renderRight(anchor) {
     const x = playheadX + (positions[i] - anchor);
     if (x < 60 || x > 910) continue;
     if (lastBar !== ev.bar) {
-      html += `<line x1="${x-40}" y1="92" x2="${x-40}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
-      html += `<text x="${x + columnGap}" y="42" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
+      html += `<line x1="${x-40}" y1="86" x2="${x-40}" y2="282" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+      html += `<text x="${x + columnGap}" y="38" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
       lastBar = ev.bar;
     }
     const isCurrent = i === currentIndex;
-    html += `<text x="${x}" y="82" fill="#f7fbff" font-size="${isCurrent ? 30 : 26}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
+    html += `<text x="${x}" y="70" fill="#f7fbff" font-size="${isCurrent ? 28 : 24}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
     for (let r = 0; r < 4; r += 1) html += pill(x, rowY[r], ev.frets[r], isCurrent);
   }
   const lastVisible = playheadX + (positions[events.length - 1] - anchor) + columnGap;
-  html += `<line x1="${lastVisible}" y1="92" x2="${lastVisible}" y2="292" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+  html += `<line x1="${lastVisible}" y1="86" x2="${lastVisible}" y2="282" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
   content.innerHTML = html;
 }
 
@@ -471,101 +470,7 @@ function stopPlayback() {
   syncPlayButton();
 }
 
-
-let audioCtx = null;
-let audioMaster = null;
-let audioComp = null;
-let lastSoundedEventKey = '';
-const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
-const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const DEVICE_MASTER_GAIN = isIOSLike ? 3.35 : 1.15;
-const DEVICE_PRE_GAIN = isIOSLike ? 0.30 : 0.16;
-const DEVICE_ENV_PEAK = isIOSLike ? 0.105 : 0.055;
-const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.045 : 0.020;
-
-function ensureAudio() {
-  const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) return null;
-  if (!audioCtx) {
-    audioCtx = new Ctx();
-    audioComp = audioCtx.createDynamicsCompressor();
-    audioComp.threshold.value = isIOSLike ? -28 : -21;
-    audioComp.knee.value = 14;
-    audioComp.ratio.value = isIOSLike ? 6.8 : 4.2;
-    audioComp.attack.value = 0.003;
-    audioComp.release.value = 0.18;
-    audioMaster = audioCtx.createGain();
-    audioMaster.gain.value = DEVICE_MASTER_GAIN;
-    audioComp.connect(audioMaster);
-    audioMaster.connect(audioCtx.destination);
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-  return audioCtx;
-}
-
-function fretToFreq(baseFreq, fret) {
-  return baseFreq * Math.pow(2, (fret || 0) / 12);
-}
-
-function playEventSound(ev) {
-  const ctx = ensureAudio();
-  if (!ctx || !ev) return;
-  const now = ctx.currentTime;
-  ev.frets.forEach((fret, idx) => {
-    if (fret == null) return;
-    const t0 = now + idx * 0.008;
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const pre = ctx.createGain();
-    const env = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    const freq = fretToFreq(openStringFreqs[idx], fret);
-    osc1.type = 'triangle';
-    osc2.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, t0);
-    osc2.frequency.setValueAtTime(freq * 2, t0);
-
-    pre.gain.setValueAtTime(DEVICE_PRE_GAIN, t0);
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(isIOSLike ? 2350 : 1750, t0);
-    filter.Q.setValueAtTime(0.7, t0);
-
-    env.gain.setValueAtTime(0.0001, t0);
-    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_PEAK, t0 + 0.012);
-    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_SUSTAIN, t0 + 0.11);
-    env.gain.exponentialRampToValueAtTime(0.0001, t0 + (isIOSLike ? 0.50 : 0.42));
-
-    osc1.connect(pre);
-    osc2.connect(pre);
-    pre.connect(filter);
-    filter.connect(env);
-    env.connect(audioComp);
-
-    osc1.start(t0);
-    osc2.start(t0);
-    osc1.stop(t0 + (isIOSLike ? 0.52 : 0.44));
-    osc2.stop(t0 + (isIOSLike ? 0.50 : 0.42));
-  });
-}
-
-function soundCurrentEvent(force = false) {
-  const ev = events[currentIndex];
-  if (!ev) return;
-  const key = String(currentIndex);
-  if (!force && key === lastSoundedEventKey) return;
-  playEventSound(ev);
-  lastSoundedEventKey = key;
-}
-
 function togglePlay() {
-  if (!running) {
-    ensureAudio();
-    soundCurrentEvent(true);
-  }
   running = !running;
   lastTs = null;
   syncPlayButton();
@@ -573,37 +478,29 @@ function togglePlay() {
 
 function goFirst() {
   stopPlayback();
-  ensureAudio();
   currentIndex = 0;
   progress = 0;
   render();
-  soundCurrentEvent(true);
 }
 
 function goBack() {
   stopPlayback();
-  ensureAudio();
   currentIndex = Math.max(0, currentIndex - 1);
   progress = 0;
   render();
-  soundCurrentEvent(true);
 }
 
 function replay() {
   stopPlayback();
-  ensureAudio();
   progress = 0;
   render();
-  soundCurrentEvent(true);
 }
 
 function goNext() {
   stopPlayback();
-  ensureAudio();
   currentIndex = Math.min(events.length - 1, currentIndex + 1);
   progress = 0;
   render();
-  soundCurrentEvent(true);
 }
 
 function changeSpeed(direction) {
@@ -622,7 +519,6 @@ function loop(ts) {
     while (progress >= getCurrentDistance() && currentIndex < events.length - 1) {
       progress -= getCurrentDistance();
       currentIndex += 1;
-      soundCurrentEvent(true);
     }
     if (currentIndex >= events.length - 1 && progress >= getCurrentDistance()) {
       progress = 0;
@@ -642,10 +538,7 @@ attachButtonFeedback(slowBtn, () => changeSpeed(-1));
 attachButtonFeedback(fastBtn, () => changeSpeed(1));
 
 if (document.getElementById('micBtn')) {
-  document.getElementById('micBtn').addEventListener('click', () => {
-    ensureAudio();
-    flashButton(document.getElementById('micBtn'));
-  });
+  document.getElementById('micBtn').addEventListener('click', () => flashButton(document.getElementById('micBtn')));
 }
 
 applyViewportFit();
