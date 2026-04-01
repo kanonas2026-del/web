@@ -30,8 +30,8 @@ body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
 .note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
 svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-.tab-card svg{flex:1;min-height:0}
-.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:0}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
+.tab-card svg{flex:1;min-height:0;margin-top:12px;margin-bottom:10px}
+.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:10px;position:relative;z-index:2}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
 body.compact-practice .top{min-height:50px}
@@ -61,9 +61,9 @@ body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
 body.compact-practice .card-head{margin-bottom:6px}
 body.compact-practice .card-head-label{font-size:11px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:100%}
+body.compact-practice .tab-card svg{height:100%;margin-top:10px;margin-bottom:8px}
 body.compact-practice .tag{margin-top:6px;padding:3px 8px;font-size:11px;align-self:flex-start}
-body.compact-practice .transport{gap:6px;margin-top:0}
+body.compact-practice .transport{gap:6px;margin-top:8px;position:relative;z-index:2}
 body.compact-practice .transport button{min-height:32px;font-size:12px;border-radius:10px}
 body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
 
@@ -91,17 +91,17 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
       <svg id="svg" viewBox="0 0 940 340" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="tabClip"><rect x="120" y="54" width="740" height="236"></rect></clipPath>
+          <clipPath id="tabClip"><rect x="120" y="72" width="740" height="196"></rect></clipPath>
         </defs>
         <text x="78" y="129" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
         <text x="78" y="177" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
         <text x="78" y="225" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
         <text x="78" y="273" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
-        <line x1="120" y1="94" x2="120" y2="286" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
-        <line x1="120" y1="124" x2="860" y2="124" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="172" x2="860" y2="172" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="220" x2="860" y2="220" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
-        <line x1="120" y1="268" x2="860" y2="268" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="116" x2="120" y2="268" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="132" x2="860" y2="132" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="168" x2="860" y2="168" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="204" x2="860" y2="204" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="240" x2="860" y2="240" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
         <g id="content" clip-path="url(#tabClip)"></g>
         <rect x="278" y="94" width="24" height="192" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
         <line x1="290" y1="94" x2="290" y2="286" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
@@ -163,7 +163,7 @@ const events = [
   return { ...ev, shapeKey: ev.frets.join('-'), displayName: `${ev.chord} ${shapeText}` };
 });
 
-const rowY = [124,172,220,268];
+const rowY = [132,168,204,240];
 const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
 const playheadX = 290;
 const columnGap = 92;
@@ -449,16 +449,16 @@ function renderRight(anchor) {
     const x = playheadX + (positions[i] - anchor);
     if (x < 60 || x > 910) continue;
     if (lastBar !== ev.bar) {
-      html += `<line x1="${x-40}" y1="86" x2="${x-40}" y2="282" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
-      html += `<text x="${x + columnGap}" y="38" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
+      html += `<line x1="${x-40}" y1="108" x2="${x-40}" y2="254" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+      html += `<text x="${x + columnGap}" y="64" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
       lastBar = ev.bar;
     }
     const isCurrent = i === currentIndex;
-    html += `<text x="${x}" y="70" fill="#f7fbff" font-size="${isCurrent ? 28 : 24}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
+    html += `<text x="${x}" y="90" fill="#f7fbff" font-size="${isCurrent ? 28 : 24}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
     for (let r = 0; r < 4; r += 1) html += pill(x, rowY[r], ev.frets[r], isCurrent);
   }
   const lastVisible = playheadX + (positions[events.length - 1] - anchor) + columnGap;
-  html += `<line x1="${lastVisible}" y1="86" x2="${lastVisible}" y2="282" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+  html += `<line x1="${lastVisible}" y1="108" x2="${lastVisible}" y2="254" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
   content.innerHTML = html;
 }
 
