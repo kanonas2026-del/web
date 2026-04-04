@@ -125,7 +125,15 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 </div>
 </div>
 <script type="module">
-import { SONG_LIBRARY, getSongById } from "./data/song-library.js";
+const SONG_LIBRARY = [
+  { id: 'kirakira', title: 'きらきら星', subtitle: '4/4 / ゆっくり練習 / BPM 60' },
+  { id: 'saints', title: '聖者の行進', subtitle: '4/4 / ベーシック伴奏 / BPM 68' },
+  { id: 'rag', title: '12th Street Rag', subtitle: '4/4 / Swing / BPM 72' }
+];
+
+function getSongById(id) {
+  return SONG_LIBRARY.find(song => song.id === id);
+}
 
 const fallbackSong = getSongById("kirakira") || SONG_LIBRARY[0];
 let savedSongId = fallbackSong.id;
