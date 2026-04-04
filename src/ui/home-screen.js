@@ -44,9 +44,7 @@ function getLastSong() {
 function saveLastSong(id) {
   try {
     localStorage.setItem(LAST_SONG_KEY, id);
-  } catch (_) {
-    // noop
-  }
+  } catch (_) {}
 }
 
 function goPractice(songId) {
@@ -84,8 +82,8 @@ function renderTop() {
         <button class="card" type="button" id="teacherBtn">
           <span class="card-kicker">IMPORT</span>
           <h2>先生の譜面を入れる</h2>
-          <p>譜面読込の入口です</p>
-          <span class="card-meta">準備中</span>
+          <p>TAB譜画像を読み込み、補正して確認する</p>
+          <span class="card-meta">縦A4 / 複数枚対応</span>
         </button>
 
         <button class="card" type="button" id="tuningBtn">
@@ -98,24 +96,13 @@ function renderTop() {
     </div>
   `;
 
-  const libraryBtn = document.getElementById('libraryBtn');
-  if (libraryBtn) {
-    libraryBtn.addEventListener('click', renderLibrary);
-  }
-
-  const teacherBtn = document.getElementById('teacherBtn');
-  if (teacherBtn) {
-    teacherBtn.addEventListener('click', () => {
-      window.alert('先生の譜面を入れる は準備中です。');
-    });
-  }
-
-  const tuningBtn = document.getElementById('tuningBtn');
-  if (tuningBtn) {
-    tuningBtn.addEventListener('click', () => {
-      window.alert('チューニング は準備中です。');
-    });
-  }
+  document.getElementById('libraryBtn')?.addEventListener('click', renderLibrary);
+  document.getElementById('teacherBtn')?.addEventListener('click', () => {
+    window.location.href = './import-score.html';
+  });
+  document.getElementById('tuningBtn')?.addEventListener('click', () => {
+    window.alert('チューニング は準備中です。');
+  });
 }
 
 function renderLibrary() {
@@ -156,10 +143,7 @@ function renderLibrary() {
     });
   });
 
-  const backTopBtn = document.getElementById('backTopBtn');
-  if (backTopBtn) {
-    backTopBtn.addEventListener('click', renderTop);
-  }
+  document.getElementById('backTopBtn')?.addEventListener('click', renderTop);
 }
 
 if (app) {
