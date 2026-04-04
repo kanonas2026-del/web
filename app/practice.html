@@ -126,14 +126,139 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 </div>
 <script type="module">
 const SONG_LIBRARY = [
-  { id: 'kirakira', title: 'きらきら星', subtitle: '4/4 / ゆっくり練習 / BPM 60' },
-  { id: 'saints', title: '聖者の行進', subtitle: '4/4 / ベーシック伴奏 / BPM 68' },
-  { id: 'rag', title: '12th Street Rag', subtitle: '4/4 / Swing / BPM 72' }
+  {
+    id: 'kirakira',
+    title: 'きらきら星',
+    subtitle: '4/4 / ゆっくり練習 / BPM 60',
+    bpm: 60,
+    bars: 12,
+    events: [
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:5, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:10, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:10, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:10, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:11, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:11, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:11, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:11, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:12, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:12, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:12, strum:'↓', frets:[3,0,0,0], chord:'C'}
+    ]
+  },
+  {
+    id: 'saints',
+    title: '聖者の行進',
+    subtitle: '4/4 / ベーシック伴奏 / BPM 68',
+    bpm: 68,
+    bars: 12,
+    events: [
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:4, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'}
+    ]
+  },
+  {
+    id: 'rag',
+    title: '12th Street Rag',
+    subtitle: '4/4 / スウィング練習 / BPM 72',
+    bpm: 72,
+    bars: 40,
+    events: [
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↑', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[1,0,1,0], chord:'Gdim'},
+      {bar:1, strum:'↑', frets:[1,0,1,0], chord:'Gdim'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:2, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[3,2,1,1], chord:'Bb'},
+      {bar:3, strum:'↓', frets:[3,2,1,1], chord:'Bb'},
+      {bar:3, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:4, strum:'↑', frets:[2,3,2,0], chord:'G'},
+      {bar:5, strum:'↓', frets:[0,2,3,2], chord:'D7'},
+      {bar:5, strum:'↓', frets:[0,2,3,2], chord:'D7'},
+      {bar:5, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↑', frets:[3,2,1,1], chord:'Bb'},
+      {bar:8, strum:'↓', frets:[0,1,0,2], chord:'F'}
+    ]
+  }
 ];
 
-function getSongById(id) {
-  return SONG_LIBRARY.find(song => song.id === id);
+function getSongById(songId) {
+  return SONG_LIBRARY.find((song) => song.id === songId) || null;
 }
+
 
 const fallbackSong = getSongById("kirakira") || SONG_LIBRARY[0];
 let savedSongId = fallbackSong.id;
@@ -509,14 +634,7 @@ function render() {
   const fastDelta = faster - getSpeed();
   slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
   fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
-  const topBtn = document.getElementById('topBtn');
-if (topBtn) {
-  topBtn.addEventListener('click', () => {
-    window.location.href = './index.html';
-  });
-}
-
-applyViewportFit();
+  applyViewportFit();
 }
 
 function stopPlayback() {
@@ -694,6 +812,13 @@ attachButtonFeedback(replayBtn, replay);
 attachButtonFeedback(nextBtn, goNext);
 attachButtonFeedback(slowBtn, () => changeSpeed(-1));
 attachButtonFeedback(fastBtn, () => changeSpeed(1));
+
+const topBtn = document.getElementById('topBtn');
+if (topBtn) {
+  topBtn.addEventListener('click', () => {
+    window.location.href = './index.html';
+  });
+}
 
 if (document.getElementById('micBtn')) {
   document.getElementById('micBtn').addEventListener('click', () => {
