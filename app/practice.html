@@ -12,12 +12,13 @@ body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 52
 body.compact-practice{padding:0;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
 body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
 body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:8px}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px}.top-copy{min-width:0}.top-actions{display:flex;justify-content:flex-end;align-items:flex-start;padding-top:4px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}.head-nav-btn{min-height:38px;padding:0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;box-shadow:0 0 18px rgba(41,240,208,.08)}
 .layout{display:grid;grid-template-columns:minmax(360px,1fr) minmax(420px,1.08fr);gap:12px;align-items:stretch}
 .tab-card{display:flex;flex-direction:column;min-height:0;position:relative}
 .card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px;min-height:0;height:100%}
 .tab-frame-overlay{display:none}
 .left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
+.chip-button{cursor:pointer;font-family:inherit;appearance:none;-webkit-appearance:none}
 .grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
 .header,.row{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:center}.header{margin-bottom:6px}.cells,.headcells{display:grid;grid-template-columns:repeat(4,minmax(48px,1fr));gap:6px}.headcell{width:1.3em;justify-self:end;transform:translateX(45%);color:#d9e7ff;font-size:18px}.row+.row{margin-top:6px}.labelwrap{display:flex;align-items:center;gap:6px;min-width:0}.label{font-size:14px;white-space:nowrap}.open-side{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 8px;border-radius:999px;font-size:13px;font-weight:800;letter-spacing:.02em;position:relative;z-index:2}.open-side-current{background:rgba(41,240,208,.18);border:1px solid rgba(41,240,208,.32);color:#f4fffd;box-shadow:0 0 12px rgba(41,240,208,.18)}.open-side-next{background:rgba(255,220,120,.12);border:1px solid rgba(255,220,120,.30);color:#fff7d8;box-shadow:0 0 12px rgba(255,220,120,.12)}.cell{min-height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
 .cell-next{background: rgba(255,207,90,.15);border-color: rgba(255,207,90,.34);box-shadow: inset 0 0 0 1px rgba(255,207,90,.18), 0 0 16px rgba(255,207,90,.12)}
@@ -35,10 +36,12 @@ svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,
 .transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:10px;position:relative;z-index:2}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
 .tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
 
-body.compact-practice .top{min-height:50px}
+body.compact-practice .top{min-height:50px;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+body.compact-practice .top-actions{padding-top:2px}
 body.compact-practice .eyebrow{margin:0 0 2px;font-size:10px}
 body.compact-practice .top h1{font-size:22px}
 body.compact-practice .sub{margin-top:2px;font-size:12px}
+body.compact-practice .head-nav-btn{min-height:30px;padding:0 12px;font-size:12px;border-radius:10px}
 body.compact-practice .layout{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:8px;align-items:stretch;min-height:0}
 body.compact-practice .tab-card{align-self:stretch;position:relative}
 body.compact-practice .tab-frame-overlay{display:block;position:absolute;left:8px;right:8px;top:0;height:0;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);pointer-events:none;z-index:0}
@@ -79,7 +82,8 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 <div id="viewportFit">
 <div id="app">
   <div class="top">
-    <div><p class="eyebrow">PRACTICE</p><h1>きらきら星</h1><p class="sub">4/4 / ゆっくり練習 / BPM 60</p></div>
+    <div class="top-copy"><p class="eyebrow">PRACTICE</p><h1 id="songTitle">きらきら星</h1><p class="sub" id="songSubtitle">4/4 / ゆっくり練習 / BPM 60</p></div>
+    <div class="top-actions"><button id="topBtn" class="head-nav-btn" type="button">TOPへ戻る</button></div>
   </div>
   <div class="layout">
     <section class="card">
@@ -120,51 +124,28 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
   </div>
 </div>
 </div>
-<script>
-const events = [
-  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:1, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:2, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
-  {bar:2, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
-  {bar:2, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:3, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:3, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:3, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:3, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:4, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:4, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:4, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:5, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:5, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:5, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:5, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:6, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:6, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:6, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:7, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:7, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:7, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:7, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:8, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:8, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:8, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:9, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:10, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
-  {bar:10, strum:'↓', frets:[0, 1, 0, 2], chord:'F' },
-  {bar:10, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:11, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:11, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:11, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:11, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-  {bar:12, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:12, strum:'↓', frets:[2, 1, 2, 0], chord:'G7' },
-  {bar:12, strum:'↓', frets:[3, 0, 0, 0], chord:'C' },
-].map(ev => {
+<script type="module">
+import { SONG_LIBRARY, getSongById } from "./data/song-library.js";
+
+const fallbackSong = getSongById("kirakira") || SONG_LIBRARY[0];
+let savedSongId = fallbackSong.id;
+try {
+  savedSongId = localStorage.getItem("ukuleleSelectedSong") || fallbackSong.id;
+} catch {}
+const params = new URLSearchParams(window.location.search);
+const requestedSongId = params.get("song") || savedSongId;
+const currentSong = getSongById(requestedSongId) || fallbackSong;
+try {
+  localStorage.setItem("ukuleleSelectedSong", currentSong.id);
+} catch {}
+const titleEl = document.getElementById("songTitle");
+const subtitleEl = document.getElementById("songSubtitle");
+if (titleEl) titleEl.textContent = currentSong.title;
+if (subtitleEl) subtitleEl.textContent = currentSong.subtitle;
+document.title = `Practice - ${currentSong.title}`;
+
+
+const events = currentSong.events.map(ev => {
   const shapeText = ev.frets.join('');
   return { ...ev, shapeKey: ev.frets.join('-'), displayName: `${ev.chord} ${shapeText}` };
 });
@@ -520,7 +501,14 @@ function render() {
   const fastDelta = faster - getSpeed();
   slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
   fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
-  applyViewportFit();
+  const topBtn = document.getElementById('topBtn');
+if (topBtn) {
+  topBtn.addEventListener('click', () => {
+    window.location.href = './index.html';
+  });
+}
+
+applyViewportFit();
 }
 
 function stopPlayback() {
