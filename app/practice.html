@@ -14,8 +14,9 @@ body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
 body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:8px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}
 .layout{display:grid;grid-template-columns:minmax(360px,1fr) minmax(420px,1.08fr);gap:12px;align-items:stretch}
-.tab-card{display:flex;flex-direction:column;min-height:0}
+.tab-card{display:flex;flex-direction:column;min-height:0;position:relative}
 .card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px;min-height:0;height:100%}
+.tab-frame-overlay{display:none}
 .left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
 .grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
 .header,.row{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:center}.header{margin-bottom:6px}.cells,.headcells{display:grid;grid-template-columns:repeat(4,minmax(48px,1fr));gap:6px}.headcell{width:1.3em;justify-self:end;transform:translateX(45%);color:#d9e7ff;font-size:18px}.row+.row{margin-top:6px}.labelwrap{display:flex;align-items:center;gap:6px;min-width:0}.label{font-size:14px;white-space:nowrap}.open-side{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 8px;border-radius:999px;font-size:13px;font-weight:800;letter-spacing:.02em;position:relative;z-index:2}.open-side-current{background:rgba(41,240,208,.18);border:1px solid rgba(41,240,208,.32);color:#f4fffd;box-shadow:0 0 12px rgba(41,240,208,.18)}.open-side-next{background:rgba(255,220,120,.12);border:1px solid rgba(255,220,120,.30);color:#fff7d8;box-shadow:0 0 12px rgba(255,220,120,.12)}.cell{min-height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
@@ -39,7 +40,11 @@ body.compact-practice .eyebrow{margin:0 0 2px;font-size:10px}
 body.compact-practice .top h1{font-size:22px}
 body.compact-practice .sub{margin-top:2px;font-size:12px}
 body.compact-practice .layout{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:8px;align-items:stretch;min-height:0}
-body.compact-practice .tab-card{align-self:stretch}
+body.compact-practice .tab-card{align-self:stretch;position:relative}
+body.compact-practice .tab-frame-overlay{display:block;position:absolute;left:8px;right:8px;top:0;height:0;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);pointer-events:none;z-index:0}
+body.compact-practice .tab-card .card-head,
+body.compact-practice .tab-card svg,
+body.compact-practice .tab-card .tag{position:relative;z-index:1}
 body.compact-practice .card{padding:8px;border-radius:14px}
 body.compact-practice .left-head{margin-bottom:8px}
 body.compact-practice .title-big{font-size:31px}
@@ -61,7 +66,7 @@ body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
 body.compact-practice .card-head{margin-bottom:6px}
 body.compact-practice .card-head-label{font-size:11px}
 body.compact-practice svg{border-radius:12px}
-body.compact-practice .tab-card svg{height:100%;margin-top:10px;margin-bottom:8px}
+body.compact-practice .tab-card svg{height:100%;margin-top:10px;margin-bottom:8px;background:transparent;border-color:transparent}
 body.compact-practice .tag{margin-top:6px;padding:3px 8px;font-size:11px;align-self:flex-start}
 body.compact-practice .transport{gap:6px;margin-top:8px;position:relative;z-index:2}
 body.compact-practice .transport button{min-height:32px;font-size:12px;border-radius:10px}
@@ -88,6 +93,7 @@ body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !im
 
     <section class="card tab-card">
       <div class="card-head"><span class="card-head-label">流れるTAB</span><span class="dot"></span></div>
+      <div class="tab-frame-overlay" id="tabFrameOverlay" aria-hidden="true"></div>
       <svg id="svg" viewBox="0 0 940 340" aria-label="right box integration preview">
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
@@ -208,6 +214,43 @@ let progress = 0;
 let speedIndex = speedSteps.indexOf(0.75);
 
 const viewportFit = document.getElementById('viewportFit');
+const leftGridEl = document.getElementById('leftGrid');
+const tabCardEl = document.querySelector('.tab-card');
+const tabFrameOverlayEl = document.getElementById('tabFrameOverlay');
+
+function getOffsetTopWithin(el, ancestor) {
+  let top = 0;
+  let node = el;
+  while (node && node !== ancestor) {
+    top += node.offsetTop || 0;
+    node = node.offsetParent;
+  }
+  return top;
+}
+
+function syncTabFrameOverlay() {
+  if (!tabFrameOverlayEl || !leftGridEl || !tabCardEl) return;
+  const compact = document.body.classList.contains('compact-practice');
+  if (!compact) {
+    tabFrameOverlayEl.style.display = 'none';
+    return;
+  }
+
+  const root = document.getElementById('app');
+  const topInRoot = getOffsetTopWithin(leftGridEl, root);
+  const cardTopInRoot = getOffsetTopWithin(tabCardEl, root);
+  const desiredTop = Math.max(0, topInRoot - cardTopInRoot);
+  const desiredHeight = Math.max(0, leftGridEl.offsetHeight);
+  const tabCardStyle = window.getComputedStyle(tabCardEl);
+  const padLeft = parseFloat(tabCardStyle.paddingLeft) || 0;
+  const padRight = parseFloat(tabCardStyle.paddingRight) || 0;
+
+  tabFrameOverlayEl.style.display = 'block';
+  tabFrameOverlayEl.style.left = `${padLeft}px`;
+  tabFrameOverlayEl.style.right = `${padRight}px`;
+  tabFrameOverlayEl.style.top = `${desiredTop}px`;
+  tabFrameOverlayEl.style.height = `${desiredHeight}px`;
+}
 
 function applyViewportFit() {
   const compact = window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 520;
@@ -238,6 +281,7 @@ function applyViewportFit() {
 
   root.style.width = Math.floor(availableW / scale) + 'px';
   root.style.transform = `translate(${padX}px, ${padY}px) scale(${scale})`;
+  syncTabFrameOverlay();
 }
 
 function getSpeed() {
@@ -466,6 +510,7 @@ function render() {
   const anchor = positions[currentIndex] + progress;
   renderRight(anchor);
   renderLeft(anchor);
+  syncTabFrameOverlay();
   const delta = getSpeed() - 1.0;
   const deltaText = delta === 0 ? '±0.00x' : `${delta > 0 ? '+' : ''}${delta.toFixed(2)}x`;
   speedTag.textContent = `速度 ${getSpeed().toFixed(2)}x / 基準 ${deltaText}`;
