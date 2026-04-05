@@ -1,44 +1,32 @@
-/* 修正版：既存機能 + 解析UI（簡易） */
+// FIX V3（致命エラー修正 + 動作安定）
 
-console.log("FIXED IMPORT SCORE");
+console.log("IMPORT SCORE FIX V3");
 
-// === 既存最低限機能復元 ===
+// ===== 状態 =====
+let pages = JSON.parse(localStorage.getItem("ukulele_pages") || "[]");
+let activeIndex = pages.length ? pages.length-1 : 0;
+
+// ===== 要素 =====
 const fileInput = document.getElementById('fileInput');
 const addMoreBtn = document.getElementById('addMoreBtn');
 const backTopBtn = document.getElementById('backTopBtn');
 const sourceCanvas = document.getElementById('sourceCanvas');
 const processedCanvas = document.getElementById('processedCanvas');
 
-let currentImage = null;
+// ===== UIフィードバック =====
+function flash(el){
+  if(!el) return;
+  el.style.opacity = "0.5";
+  setTimeout(()=> el.style.opacity = "1",150);
+}
 
-// 画像読み込み
-fileInput?.addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
+// ===== 保存 =====
+function save(){
+  localStorage.setItem("ukulele_pages", JSON.stringify(pages));
+}
 
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    currentImage = new Image();
-    currentImage.onload = ()=>{
-      drawToCanvas(currentImage, sourceCanvas);
-      drawToCanvas(currentImage, processedCanvas);
-      runAnalysis();
-    };
-    currentImage.src = reader.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-addMoreBtn?.addEventListener('click', ()=>{
-  fileInput.click();
-});
-
-// TOP戻る
-backTopBtn?.addEventListener('click', ()=>{
-  location.href = "./index.html";
-});
-
-function drawToCanvas(img, canvas){
+// ===== 描画 =====
+function draw(img, canvas){
   if(!canvas) return;
   canvas.width = img.width;
   canvas.height = img.height;
@@ -46,7 +34,57 @@ function drawToCanvas(img, canvas){
   ctx.drawImage(img,0,0);
 }
 
-// === 解析UI追加 ===
+// ===== 読み込み =====
+fileInput?.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+
+      if(pages.length >= 3){
+        alert("最大3枚までです");
+        return;
+      }
+
+      pages.push(reader.result);
+      activeIndex = pages.length -1;
+      save();
+      render();
+
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ===== ボタン =====
+addMoreBtn?.addEventListener('click', ()=>{
+  flash(addMoreBtn);
+  fileInput.click();
+});
+
+backTopBtn?.addEventListener('click', ()=>{
+  flash(backTopBtn);
+  location.href = "./index.html";
+});
+
+// ===== 表示 =====
+function render(){
+  if(pages.length === 0) return;
+
+  const img = new Image();
+  img.onload = ()=>{
+    draw(img, sourceCanvas);
+    draw(img, processedCanvas);
+    runAnalysis();
+  };
+  img.src = pages[activeIndex];
+}
+
+// ===== 解析UI =====
 function ensureAnalysisUi(){
   if(document.getElementById("analysisCanvas")) return;
 
@@ -74,7 +112,6 @@ function runAnalysis(){
   const ctx = canvas.getContext("2d");
   ctx.drawImage(processedCanvas,0,0);
 
-  // テスト線（動作確認）
   ctx.strokeStyle = "red";
   for(let i=0;i<5;i++){
     ctx.beginPath();
@@ -83,5 +120,9 @@ function runAnalysis(){
     ctx.stroke();
   }
 
-  document.getElementById("analysisText").textContent = "解析OK（暫定）";
+  document.getElementById('analysisText').textContent =
+    "解析OK / 画像数:" + pages.length;
 }
+
+// ===== 初期表示 =====
+render();
