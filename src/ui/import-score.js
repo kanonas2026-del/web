@@ -30,7 +30,7 @@ function uid() {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 function defaultSettings() {
-  return { rotate: 0, brightness: 1, contrast: 1.25, shadow: 0.55, threshold: 0.18 };
+  return { rotate: 0, brightness: 1.00, contrast: 1.10, shadow: 0.22, threshold: 0.06 };
 }
 function updateLabels() {
   rotateValue.textContent = `${Number(rotateRange.value).toFixed(1)}°`;
@@ -247,30 +247,40 @@ function enhanceImage(dataUrl, settings) {
       work.width = targetW;
       work.height = targetH;
       const ctx = work.getContext('2d', { willReadFrequently: true });
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#fdfdfd';
       ctx.fillRect(0, 0, targetW, targetH);
       ctx.translate(targetW / 2, targetH / 2);
       ctx.rotate(radians);
       ctx.drawImage(img, -img.width / 2, -img.height / 2);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+
       const imageData = ctx.getImageData(0, 0, targetW, targetH);
       const data = imageData.data;
       const bg = estimateBackground(work, 28);
       const bgData = bg.data;
+
       for (let i = 0; i < data.length; i += 4) {
         const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        const bgGray = bgData[i] || 255;
-        const normalized = gray * (1 + settings.shadow) - bgGray * settings.shadow + 128 * settings.shadow;
+        const bgGray = bgData[i] || 245;
+
+        let normalized = gray;
+        normalized = normalized * (1 + settings.shadow * 0.35) - bgGray * (settings.shadow * 0.18) + 10;
+
         const contrasted = ((normalized - 128) * settings.contrast) + 128;
         const brightened = contrasted * settings.brightness;
-        const clipped = Math.max(0, Math.min(255, brightened));
-        const whitened = clipped > (255 * (1 - settings.threshold)) ? 255 : clipped;
-        data[i] = whitened;
-        data[i + 1] = whitened;
-        data[i + 2] = whitened;
+        const clipped = Math.max(8, Math.min(245, brightened));
+
+        const gentleBoost = clipped > (245 - settings.threshold * 120)
+          ? Math.min(245, clipped + settings.threshold * 18)
+          : clipped;
+
+        data[i] = gentleBoost;
+        data[i + 1] = gentleBoost;
+        data[i + 2] = gentleBoost;
       }
+
       ctx.putImageData(imageData, 0, 0);
-      resolve(work.toDataURL('image/jpeg', 0.92));
+      resolve(work.toDataURL('image/jpeg', 0.95));
     };
     img.src = dataUrl;
   });
@@ -280,7 +290,7 @@ async function processActive(autoMode = false) {
   if (!page) return;
   const token = ++processingToken;
   const settings = autoMode
-    ? { rotate: Number(rotateRange.value), brightness: 1.08, contrast: 1.55, shadow: 0.72, threshold: 0.24 }
+    ? { rotate: Number(rotateRange.value), brightness: 1.00, contrast: 1.12, shadow: 0.22, threshold: 0.06 }
     : currentSettings();
   if (autoMode) applySettingsToControls(settings);
   page.settings = settings;
@@ -307,7 +317,7 @@ fileInput?.addEventListener('change', async event => {
 });
 addMoreBtn?.addEventListener('click', () => fileInput?.click());
 autoEnhanceBtn?.addEventListener('click', () => processActive(true));
-resetViewBtn?.addEventListener('click', resetActive);
+resetViewBtn?.addEventListener('click', () => resetActive());
 backTopBtn?.addEventListener('click', () => { window.location.href = './index.html'; });
 [rotateRange, brightnessRange, contrastRange, shadowRange, thresholdRange].forEach(input => {
   input?.addEventListener('input', () => {
