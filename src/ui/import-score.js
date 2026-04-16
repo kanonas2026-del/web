@@ -21,6 +21,9 @@ const shadowValue = document.getElementById('shadowValue');
 const thresholdValue = document.getElementById('thresholdValue');
 
 const STORAGE_KEY = 'ukulele_import_score_pages_v2';
+const DB_NAME = 'ukulele_import_score_db';
+const DB_STORE = 'state';
+const DB_KEY = 'pages';
 let pages = [];
 let activeId = null;
 let processingToken = 0;
@@ -44,29 +47,65 @@ function escapeHtml(value) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
-function savePages() {
-  try {
-    const safePages = pages.map(({ id, name, previewUrl, processedUrl, settings, width, height }) => ({
-      id, name, previewUrl, processedUrl, settings, width, height
-    }));
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(safePages));
-  } catch (_) {}
+function getSafePages() {
+  return pages.map(({ id, name, previewUrl, processedUrl, settings, width, height }) => ({
+    id, name, previewUrl, processedUrl, settings, width, height
+  }));
 }
-function loadPages() {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return;
-    pages = parsed;
-    activeId = pages[0]?.id || null;
-  } catch (_) {}
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbWriteState(payload) {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(payload, DB_KEY);
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+    tx.onabort = () => { db.close(); reject(tx.error); };
+  });
+}
+async function dbReadState() {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).get(DB_KEY);
+    req.onsuccess = () => { db.close(); resolve(req.result); };
+    req.onerror = () => { db.close(); reject(req.error); };
+  });
+}
+async function savePages() {
+  const payload = { pages: getSafePages(), activeId, savedAt: Date.now() };
+  try { await dbWriteState(payload); } catch (_) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (_) {}
+}
+async function loadPages() {
+  let payload = null;
+  try { payload = await dbReadState(); } catch (_) {}
+  if (!payload) {
+    try { payload = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (_) {}
+  }
+  if (!payload) return;
+  const parsedPages = Array.isArray(payload) ? payload : payload.pages;
+  const parsedActiveId = Array.isArray(payload) ? null : payload.activeId;
+  if (!Array.isArray(parsedPages)) return;
+  pages = parsedPages;
+  activeId = parsedActiveId || pages[0]?.id || null;
 }
 function getActivePage() {
   return pages.find(page => page.id === activeId) || null;
 }
 function setActive(id) {
   activeId = id;
+  savePages();
   renderThumbs();
   renderPreview();
 }
@@ -318,7 +357,7 @@ fileInput?.addEventListener('change', async event => {
 addMoreBtn?.addEventListener('click', () => fileInput?.click());
 autoEnhanceBtn?.addEventListener('click', () => processActive(true));
 resetViewBtn?.addEventListener('click', () => resetActive());
-backTopBtn?.addEventListener('click', () => { window.location.href = './teacher.html'; });
+backTopBtn?.addEventListener('click', () => { window.location.href = './index.html'; });
 [rotateRange, brightnessRange, contrastRange, shadowRange, thresholdRange].forEach(input => {
   input?.addEventListener('input', () => {
     updateLabels();
@@ -326,7 +365,9 @@ backTopBtn?.addEventListener('click', () => { window.location.href = './teacher.
     inputTimer = setTimeout(() => processActive(false), 120);
   });
 });
-loadPages();
-updateLabels();
-renderThumbs();
-renderPreview();
+(async () => {
+  await loadPages();
+  updateLabels();
+  renderThumbs();
+  renderPreview();
+})();
