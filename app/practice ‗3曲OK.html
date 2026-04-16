@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice</title>
+<style>
+html,body{height:100%}
+body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%);color:#edf4ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
+#viewportFit{position:relative;min-height:calc(100vh - 32px)}
+#app{max-width:1280px;margin:0 auto;transform-origin:top left;display:grid;grid-template-rows:auto 1fr auto;gap:12px}
+body.compact-practice{padding:0;overflow:hidden;background:radial-gradient(1200px 520px at 50% -10%, rgba(41,240,208,.08), transparent 60%),linear-gradient(180deg,#081025 0%,#061023 100%)}
+body.compact-practice #viewportFit{min-height:100vh;width:100vw;overflow:hidden}
+body.compact-practice #app{position:absolute;left:0;top:0;max-width:none;margin:0;box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:8px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px}.top-copy{min-width:0}.top-actions{display:flex;justify-content:flex-end;align-items:flex-start;padding-top:4px}.eyebrow{margin:0 0 8px;color:#b8c4df;font-size:12px;letter-spacing:.12em}.top h1{margin:0;font-size:32px;line-height:1.1}.sub{margin:8px 0 0;color:#b8c4df;font-size:16px}.head-nav-btn{min-height:38px;padding:0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;box-shadow:0 0 18px rgba(41,240,208,.08)}
+.layout{display:grid;grid-template-columns:minmax(360px,1fr) minmax(420px,1.08fr);gap:12px;align-items:stretch}
+.tab-card{display:flex;flex-direction:column;min-height:0;position:relative}
+.card{background:linear-gradient(180deg, rgba(20,28,49,.96), rgba(16,24,43,.96));border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.24);padding:14px;min-height:0;height:100%}
+.tab-frame-overlay{display:none}
+.left-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.title-big{font-size:44px;line-height:1}.next{margin-top:8px;color:#cfd9ee;font-size:17px;font-weight:600;min-height:1.4em}.chip{min-height:30px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(41,240,208,.12);border:1px solid rgba(41,240,208,.24);font-size:12px;color:#dffefa}
+.chip-button{cursor:pointer;font-family:inherit;appearance:none;-webkit-appearance:none}
+.grid{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.header,.row{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:center}.header{margin-bottom:6px}.cells,.headcells{display:grid;grid-template-columns:repeat(4,minmax(48px,1fr));gap:6px}.headcell{width:1.3em;justify-self:end;transform:translateX(45%);color:#d9e7ff;font-size:18px}.row+.row{margin-top:6px}.labelwrap{display:flex;align-items:center;gap:6px;min-width:0}.label{font-size:14px;white-space:nowrap}.open-side{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 8px;border-radius:999px;font-size:13px;font-weight:800;letter-spacing:.02em;position:relative;z-index:2}.open-side-current{background:rgba(41,240,208,.18);border:1px solid rgba(41,240,208,.32);color:#f4fffd;box-shadow:0 0 12px rgba(41,240,208,.18)}.open-side-next{background:rgba(255,220,120,.12);border:1px solid rgba(255,220,120,.30);color:#fff7d8;box-shadow:0 0 12px rgba(255,220,120,.12)}.cell{min-height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.cell-next{background: rgba(255,207,90,.15);border-color: rgba(255,207,90,.34);box-shadow: inset 0 0 0 1px rgba(255,207,90,.18), 0 0 16px rgba(255,207,90,.12)}
+.cell-next::after{content:"";position:absolute;inset:4px;border-radius:8px;background: radial-gradient(circle, rgba(255,234,160,.34) 0%, rgba(255,220,120,.18) 42%, rgba(255,207,90,.08) 68%, rgba(255,207,90,0) 100%);filter: blur(2px);opacity:1;animation: glow 1.2s ease-in-out infinite}
+.marker{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;width:34px;height:34px;background:rgba(41,240,208,.22);border:1px solid rgba(41,240,208,.34);color:#f4fffd;font-weight:800;font-size:20px;box-shadow:0 0 16px rgba(41,240,208,.32)}
+.marker-text{font-size:18px;line-height:1;font-weight:800;letter-spacing:.02em;transform:translateY(-.5px)}
+.marker-ghost{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;width:30px;height:30px;background:rgba(255,220,120,.16);border:1px solid rgba(255,220,120,.34);box-shadow:0 0 18px rgba(255,220,120,.24), inset 0 0 14px rgba(255,244,190,.16)}.marker-ghost-empty{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;width:24px;height:24px;background:rgba(255,207,90,.07);border:1px solid rgba(255,220,120,.22);box-shadow:0 0 10px rgba(255,220,120,.10)}
+.open{font-size:16px;font-weight:700;color:#edf4ff;position:relative;z-index:2}
+.open-ghost{display:none}
+.summary{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,207,90,.10);border:1px solid rgba(255,207,90,.18);color:#fff7d8;font-size:17px;font-weight:700;min-height:1.4em}
+.card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}.card-head-label{color:#b8c4df;font-size:12px;letter-spacing:.12em}.dot{width:8px;height:8px;border-radius:50%;background:#29f0d0;box-shadow:0 0 12px rgba(41,240,208,.8)}
+.note{margin:0 0 12px;color:#b8c4df;font-size:14px;line-height:1.65}
+svg{width:100%;height:auto;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.tab-card svg{flex:1;min-height:0;margin-top:12px;margin-bottom:10px}
+.transport{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:10px;position:relative;z-index:2}.transport button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;transition:box-shadow .18s ease,border-color .18s ease,background .18s ease,transform .12s ease}.transport button.flash{background:linear-gradient(180deg, rgba(41,240,208,.22), rgba(41,240,208,.08));border-color:rgba(41,240,208,.36);box-shadow:0 0 18px rgba(41,240,208,.24)}.transport button.running,.transport .primary{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;font-weight:700;box-shadow:0 0 18px rgba(41,240,208,.16)}.transport button:active{transform:translateY(1px)}
+.tag{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(41,240,208,.24);background:rgba(41,240,208,.10);font-size:12px;color:#dffefa}
+
+body.compact-practice .top{min-height:50px;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+body.compact-practice .top-actions{padding-top:2px}
+body.compact-practice .eyebrow{margin:0 0 2px;font-size:10px}
+body.compact-practice .top h1{font-size:22px}
+body.compact-practice .sub{margin-top:2px;font-size:12px}
+body.compact-practice .head-nav-btn{min-height:30px;padding:0 12px;font-size:12px;border-radius:10px}
+body.compact-practice .layout{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:8px;align-items:stretch;min-height:0}
+body.compact-practice .tab-card{align-self:stretch;position:relative}
+body.compact-practice .tab-frame-overlay{display:block;position:absolute;left:8px;right:8px;top:0;height:0;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);pointer-events:none;z-index:0}
+body.compact-practice .tab-card .card-head,
+body.compact-practice .tab-card svg,
+body.compact-practice .tab-card .tag{position:relative;z-index:1}
+body.compact-practice .card{padding:8px;border-radius:14px}
+body.compact-practice .left-head{margin-bottom:8px}
+body.compact-practice .title-big{font-size:31px}
+body.compact-practice .next{margin-top:4px;font-size:14px}
+body.compact-practice .chip{min-height:26px;padding:0 8px;font-size:11px}
+body.compact-practice .grid{padding:10px;border-radius:12px}
+body.compact-practice .header,.row{grid-template-columns:88px 1fr;gap:6px}
+body.compact-practice .cells,.headcells{gap:5px}
+body.compact-practice .headcell{font-size:15px}
+body.compact-practice .label{font-size:12px}
+body.compact-practice .open-side{min-width:24px;height:24px;padding:0 7px;font-size:12px}
+body.compact-practice .cell{min-height:38px;border-radius:8px}
+body.compact-practice .marker{width:28px;height:28px;font-size:17px}
+body.compact-practice .marker-text{font-size:16px}
+body.compact-practice .marker-ghost{width:22px;height:22px}
+body.compact-practice .marker-ghost-empty{width:18px;height:18px}
+body.compact-practice .open{font-size:14px}
+body.compact-practice .summary{margin-top:8px;padding:9px 11px;font-size:13px}
+body.compact-practice .card-head{margin-bottom:6px}
+body.compact-practice .card-head-label{font-size:11px}
+body.compact-practice svg{border-radius:12px}
+body.compact-practice .tab-card svg{height:100%;margin-top:10px;margin-bottom:8px;background:transparent;border-color:transparent}
+body.compact-practice .tag{margin-top:6px;padding:3px 8px;font-size:11px;align-self:flex-start}
+body.compact-practice .transport{gap:6px;margin-top:8px;position:relative;z-index:2}
+body.compact-practice .transport button{min-height:32px;font-size:12px;border-radius:10px}
+body.compact-practice [style*="position:fixed"]{top:8px !important;right:8px !important;font-size:10px !important;padding:3px 7px !important}
+
+@keyframes glow{0%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}50%{box-shadow: inset 0 0 0 1px rgba(255,234,160,.34), 0 0 24px rgba(255,220,120,.22); background: rgba(255,220,120,.18);}100%{box-shadow: inset 0 0 0 1px rgba(255,220,120,.20), 0 0 14px rgba(255,220,120,.10); background: rgba(255,207,90,.10);}}
+</style>
+</head>
+<body>
+<div id="viewportFit">
+<div id="app">
+  <div class="top">
+    <div class="top-copy"><p class="eyebrow">PRACTICE</p><h1 id="songTitle">きらきら星</h1><p class="sub" id="songSubtitle">4/4 / ゆっくり練習 / BPM 60</p></div>
+    <div class="top-actions"><button id="topBtn" class="head-nav-btn" type="button">TOPへ戻る</button></div>
+  </div>
+  <div class="layout">
+    <section class="card">
+      <div class="left-head">
+        <div><div class="title-big" id="currentName">Gm 1320</div><div class="next" id="nextName">次の形: Gm 0120</div></div>
+        <div class="chip" id="statusChip">7小節 / ↑ / 1.00x</div>
+      </div>
+      <div class="grid" id="leftGrid"></div>
+      <div class="summary" id="summary">そのまま維持</div>
+    </section>
+
+    <section class="card tab-card">
+      <div class="card-head"><span class="card-head-label">流れるTAB</span><span class="dot"></span></div>
+      <div class="tab-frame-overlay" id="tabFrameOverlay" aria-hidden="true"></div>
+      <svg id="svg" viewBox="0 0 940 340" aria-label="right box integration preview">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="tabClip"><rect x="120" y="72" width="740" height="196"></rect></clipPath>
+        </defs>
+        <text x="78" y="129" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">1(A)</text>
+        <text x="78" y="177" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">2(E)</text>
+        <text x="78" y="225" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">3(C)</text>
+        <text x="78" y="273" fill="#eef5ff" font-size="16" font-weight="700" text-anchor="end">4(G)</text>
+        <line x1="120" y1="116" x2="120" y2="268" stroke="rgba(255,255,255,.22)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="120" y1="132" x2="860" y2="132" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="168" x2="860" y2="168" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="204" x2="860" y2="204" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="240" x2="860" y2="240" stroke="rgba(255,255,255,.20)" stroke-width="5" stroke-linecap="round"/>
+        <g id="content" clip-path="url(#tabClip)"></g>
+        <rect x="278" y="94" width="24" height="192" fill="rgba(41,240,208,.14)" filter="url(#glow)"></rect>
+        <line x1="290" y1="94" x2="290" y2="286" stroke="#29f0d0" stroke-width="4" filter="url(#glow)" stroke-linecap="round"/>
+      </svg>
+      <span class="tag" id="speedTag">速度 1.00x / 基準 ±0.00x</span>
+    </section>
+  </div>
+  <div class="transport">
+    <button id="firstBtn">最初へ</button><button id="backBtn">戻る</button><button id="replayBtn">もう一回</button><button id="playBtn" class="primary">再生</button><button id="nextBtn">次へ</button><button id="slowBtn">遅く</button><button id="fastBtn">速く</button><button id="micBtn">🎤</button>
+  </div>
+</div>
+</div>
+<script type="module">
+const SONG_LIBRARY = [
+  {
+    id: 'kirakira',
+    title: 'きらきら星',
+    subtitle: '4/4 / ゆっくり練習 / BPM 60',
+    bpm: 60,
+    bars: 12,
+    events: [
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:5, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:9, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:10, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:10, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:10, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:11, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:11, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:11, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:11, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:12, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:12, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:12, strum:'↓', frets:[3,0,0,0], chord:'C'}
+    ]
+  },
+  {
+    id: 'saints',
+    title: '聖者の行進',
+    subtitle: '4/4 / ベーシック伴奏 / BPM 68',
+    bpm: 68,
+    bars: 12,
+    events: [
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:1, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:3, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:4, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:5, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'}
+    ]
+  },
+  {
+    id: 'rag',
+    title: '12th Street Rag',
+    subtitle: '4/4 / スウィング練習 / BPM 72',
+    bpm: 72,
+    bars: 40,
+    events: [
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↑', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:1, strum:'↓', frets:[1,0,1,0], chord:'Gdim'},
+      {bar:1, strum:'↑', frets:[1,0,1,0], chord:'Gdim'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:2, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:2, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:2, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:3, strum:'↓', frets:[3,2,1,1], chord:'Bb'},
+      {bar:3, strum:'↓', frets:[3,2,1,1], chord:'Bb'},
+      {bar:3, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:3, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:4, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↑', frets:[3,0,0,0], chord:'C'},
+      {bar:4, strum:'↓', frets:[2,3,2,0], chord:'G'},
+      {bar:4, strum:'↑', frets:[2,3,2,0], chord:'G'},
+      {bar:5, strum:'↓', frets:[0,2,3,2], chord:'D7'},
+      {bar:5, strum:'↓', frets:[0,2,3,2], chord:'D7'},
+      {bar:5, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:5, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↓', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:6, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:6, strum:'↑', frets:[2,1,2,0], chord:'G7'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:7, strum:'↑', frets:[0,1,0,2], chord:'F'},
+      {bar:7, strum:'↓', frets:[2,1,2,0], chord:'G7'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↓', frets:[3,0,0,0], chord:'C'},
+      {bar:8, strum:'↑', frets:[3,2,1,1], chord:'Bb'},
+      {bar:8, strum:'↓', frets:[0,1,0,2], chord:'F'}
+    ]
+  }
+];
+
+function getSongById(songId) {
+  return SONG_LIBRARY.find((song) => song.id === songId) || null;
+}
+
+
+const fallbackSong = getSongById("kirakira") || SONG_LIBRARY[0];
+let savedSongId = fallbackSong.id;
+try {
+  savedSongId = localStorage.getItem("ukuleleSelectedSong") || fallbackSong.id;
+} catch {}
+const params = new URLSearchParams(window.location.search);
+const requestedSongId = params.get("song") || savedSongId;
+const currentSong = getSongById(requestedSongId) || fallbackSong;
+try {
+  localStorage.setItem("ukuleleSelectedSong", currentSong.id);
+} catch {}
+const titleEl = document.getElementById("songTitle");
+const subtitleEl = document.getElementById("songSubtitle");
+if (titleEl) titleEl.textContent = currentSong.title;
+if (subtitleEl) subtitleEl.textContent = currentSong.subtitle;
+document.title = `Practice - ${currentSong.title}`;
+
+
+const events = currentSong.events.map(ev => {
+  const shapeText = ev.frets.join('');
+  return { ...ev, shapeKey: ev.frets.join('-'), displayName: `${ev.chord} ${shapeText}` };
+});
+
+const rowY = [132,168,204,240];
+const rowLabels = ['1(A)','2(E)','3(C)','4(G)'];
+const playheadX = 290;
+const columnGap = 92;
+const measureGap = 36;
+const basePxPerSec = 150;
+const speedSteps = [0.35, 0.4, 0.5, 0.6, 0.75, 0.9, 1.0, 1.15, 1.3];
+const prepGlowRatio = 0.82;
+const prepFingerRatio = 0.52;
+const currentCommitRatio = 0.30;
+
+const content = document.getElementById('content');
+const leftGrid = document.getElementById('leftGrid');
+const currentName = document.getElementById('currentName');
+const nextName = document.getElementById('nextName');
+const summary = document.getElementById('summary');
+const statusChip = document.getElementById('statusChip');
+const speedTag = document.getElementById('speedTag');
+
+const playBtn = document.getElementById('playBtn');
+const firstBtn = document.getElementById('firstBtn');
+const backBtn = document.getElementById('backBtn');
+const replayBtn = document.getElementById('replayBtn');
+const nextBtn = document.getElementById('nextBtn');
+const slowBtn = document.getElementById('slowBtn');
+const fastBtn = document.getElementById('fastBtn');
+
+const positions = (() => {
+  let x = 0;
+  return events.map((ev, idx) => {
+    if (idx === 0) return 0;
+    const prev = events[idx - 1];
+    x += columnGap;
+    if (ev.bar !== prev.bar) x += measureGap;
+    return x;
+  });
+})();
+
+let running = false;
+let lastTs = null;
+let currentIndex = 0;
+let progress = 0;
+let speedIndex = speedSteps.indexOf(0.75);
+
+const viewportFit = document.getElementById('viewportFit');
+const leftGridEl = document.getElementById('leftGrid');
+const tabCardEl = document.querySelector('.tab-card');
+const tabFrameOverlayEl = document.getElementById('tabFrameOverlay');
+
+function getOffsetTopWithin(el, ancestor) {
+  let top = 0;
+  let node = el;
+  while (node && node !== ancestor) {
+    top += node.offsetTop || 0;
+    node = node.offsetParent;
+  }
+  return top;
+}
+
+function syncTabFrameOverlay() {
+  if (!tabFrameOverlayEl || !leftGridEl || !tabCardEl) return;
+  const compact = document.body.classList.contains('compact-practice');
+  if (!compact) {
+    tabFrameOverlayEl.style.display = 'none';
+    return;
+  }
+
+  const root = document.getElementById('app');
+  const topInRoot = getOffsetTopWithin(leftGridEl, root);
+  const cardTopInRoot = getOffsetTopWithin(tabCardEl, root);
+  const desiredTop = Math.max(0, topInRoot - cardTopInRoot);
+  const desiredHeight = Math.max(0, leftGridEl.offsetHeight);
+  const tabCardStyle = window.getComputedStyle(tabCardEl);
+  const padLeft = parseFloat(tabCardStyle.paddingLeft) || 0;
+  const padRight = parseFloat(tabCardStyle.paddingRight) || 0;
+
+  tabFrameOverlayEl.style.display = 'block';
+  tabFrameOverlayEl.style.left = `${padLeft}px`;
+  tabFrameOverlayEl.style.right = `${padRight}px`;
+  tabFrameOverlayEl.style.top = `${desiredTop}px`;
+  tabFrameOverlayEl.style.height = `${desiredHeight}px`;
+}
+
+function applyViewportFit() {
+  const compact = window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 520;
+  document.body.classList.toggle('compact-practice', compact);
+
+  const root = document.getElementById('app');
+  root.style.position = '';
+  root.style.left = '';
+  root.style.top = '';
+  root.style.width = '';
+  root.style.transform = '';
+
+  if (!compact) return;
+
+  const padX = 8;
+  const padY = 8;
+  const availableW = Math.max(1, window.innerWidth - padX * 2);
+  const availableH = Math.max(1, window.innerHeight - padY * 2);
+
+  root.style.position = 'absolute';
+  root.style.left = '0';
+  root.style.top = '0';
+  root.style.width = availableW + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(1)`;
+
+  const naturalH = Math.max(root.scrollHeight, root.offsetHeight);
+  const scale = Math.min(1, availableH / naturalH);
+
+  root.style.width = Math.floor(availableW / scale) + 'px';
+  root.style.transform = `translate(${padX}px, ${padY}px) scale(${scale})`;
+  syncTabFrameOverlay();
+}
+
+function getSpeed() {
+  return speedSteps[speedIndex];
+}
+
+function getCurrentDistance() {
+  if (currentIndex >= events.length - 1) return columnGap;
+  return positions[currentIndex + 1] - positions[currentIndex];
+}
+
+function getPrepGlowPx() {
+  return getCurrentDistance() * prepGlowRatio;
+}
+
+function getPrepFingerPx() {
+  return getCurrentDistance() * prepFingerRatio;
+}
+
+function pill(x, y, text, active) {
+  const glow = active ? ' filter="url(#glow)"' : '';
+  const fill = active ? 'rgba(41,240,208,.22)' : 'rgba(7,12,24,.94)';
+  const stroke = active ? 'rgba(41,240,208,.34)' : 'rgba(255,255,255,.08)';
+  return `<rect x="${x-18}" y="${y-21}" width="36" height="42" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1"${glow}></rect><text x="${x}" y="${y}" fill="#fff" font-size="26" font-weight="900" dominant-baseline="middle" text-anchor="middle">${text}</text>`;
+}
+
+function syncPlayButton() {
+  playBtn.textContent = running ? '停止' : '再生';
+  playBtn.classList.toggle('running', running);
+}
+function flashButton(btn) {
+  if (!btn) return;
+  btn.classList.remove('flash');
+  void btn.offsetWidth;
+  btn.classList.add('flash');
+  window.clearTimeout(btn._flashTimer);
+  btn._flashTimer = window.setTimeout(() => btn.classList.remove('flash'), 260);
+}
+
+function attachButtonFeedback(btn, handler) {
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    flashButton(btn);
+    handler();
+  });
+}
+
+
+function getNextDifferentIndex(fromIndex = currentIndex) {
+  const currentShape = events[fromIndex]?.shapeKey;
+  for (let i = fromIndex + 1; i < events.length; i += 1) {
+    if (events[i].shapeKey !== currentShape) return i;
+  }
+  return -1;
+}
+
+function getDisplayCurrentIndex(anchor) {
+  const nextDifferentIndex = getNextDifferentIndex(currentIndex);
+  if (nextDifferentIndex < 0) return currentIndex;
+  const remain = positions[nextDifferentIndex] - anchor;
+  const commitLead = Math.max(1, getCurrentDistance() * currentCommitRatio);
+  return remain <= commitLead ? nextDifferentIndex : currentIndex;
+}
+
+function getPrepState(nextIndex, anchor) {
+  if (nextIndex < 0) return { glowProgress: 0, fingerProgress: 0, fingerVisible: false };
+  const remain = positions[nextIndex] - anchor;
+  const glowLead = Math.max(1, getPrepGlowPx());
+  const fingerLead = Math.max(1, getPrepFingerPx());
+  const glowRaw = 1 - (remain / glowLead);
+  const fingerRaw = 1 - (remain / fingerLead);
+  const glowProgress = Math.max(0, Math.min(1, glowRaw));
+  const fingerProgress = Math.max(0, Math.min(1, fingerRaw));
+  return {
+    glowProgress,
+    fingerProgress,
+    fingerVisible: false
+  };
+}
+
+function getWindowStart(currentEvent, prepEvent) {
+  const positives = [];
+  [currentEvent, prepEvent].forEach(ev => {
+    if (!ev) return;
+    ev.frets.forEach(f => { if (f > 0) positives.push(f); });
+  });
+  if (!positives.length) return 1;
+  const minFret = Math.min(...positives);
+  const maxFret = Math.max(...positives);
+  return Math.max(1, Math.min(minFret, maxFret - 3));
+}
+
+function buildColumnValues(currentEvent, prepEvent) {
+  const start = getWindowStart(currentEvent, prepEvent);
+  return [start, start + 1, start + 2, start + 3];
+}
+
+function formatColumnLabel(fret) {
+  return String(fret);
+}
+
+const fingerGlyphs = ['人', '中', '薬', '小'];
+
+function getFingerLabels(frets) {
+  const entries = frets
+    .map((fret, rowIdx) => ({ fret, rowIdx }))
+    .filter(item => item.fret > 0)
+    .sort((a, b) => (a.fret - b.fret) || (a.rowIdx - b.rowIdx));
+  const labels = Array(4).fill('');
+  entries.forEach((item, idx) => {
+    labels[item.rowIdx] = fingerGlyphs[Math.min(idx, fingerGlyphs.length - 1)];
+  });
+  return labels;
+}
+
+function markerForCurrent(fret, fingerLabel) {
+  if (fret === 0) return '<span class="open">開</span>';
+  return `<span class="marker"><span class="marker-text">${fingerLabel || '人'}</span></span>`;
+}
+
+function markerForNext() {
+  return '<span class="marker-ghost"></span>';
+}
+
+function buildLeftGrid(currentEvent, prepEvent, prepState) {
+  const columnValues = buildColumnValues(currentEvent, prepEvent);
+  const currentLabels = getFingerLabels(currentEvent.frets);
+  const headerCells = columnValues.map(fret => `<span class="headcell">${formatColumnLabel(fret)}</span>`).join('');
+  const header = `
+    <div class="header">
+      <span></span>
+      <div class="headcells">${headerCells}</div>
+    </div>`;
+
+  const rows = rowLabels.map((label, rowIdx) => {
+    const currentFret = currentEvent.frets[rowIdx];
+    const prepFret = prepEvent ? prepEvent.frets[rowIdx] : null;
+    const currentOpen = currentFret === 0;
+    const prepOpen = prepEvent && prepFret === 0 && prepState.glowProgress > 0.06;
+
+    let cells = '';
+    for (let col = 0; col < 4; col += 1) {
+      const fret = columnValues[col];
+      const showCurrent = currentFret > 0 && currentFret === fret;
+      const prepMatch = prepEvent && prepFret > 0 && prepFret === fret;
+      const classes = ['cell'];
+      const prepActive = prepMatch && prepState.glowProgress > 0.06;
+      if (prepActive) classes.push('cell-next');
+      const style = prepActive ? ` style="opacity:${(0.30 + prepState.glowProgress * 0.56).toFixed(3)}"` : '';
+      let inner = '';
+      if (prepActive && !showCurrent) {
+        inner = markerForNext();
+      }
+      if (showCurrent) {
+        inner = markerForCurrent(currentFret, currentLabels[rowIdx]);
+      }
+      cells += `<span class="${classes.join(' ')}"${style}>${inner}</span>`;
+    }
+
+    const sideBits = [`<span class="label">${label}</span>`];
+    if (currentOpen) sideBits.push('<span class="open-side open-side-current">開</span>');
+    if (prepOpen && !currentOpen) sideBits.push('<span class="open-side open-side-next">開</span>');
+
+    return `<div class="row"><span class="labelwrap">${sideBits.join('')}</span><div class="cells">${cells}</div></div>`;
+  }).join('');
+
+  leftGrid.innerHTML = header + rows;
+}
+
+function buildSummary(currentEvent, prepEvent) {
+  if (!prepEvent) return '最後の形です';
+  const diffs = [];
+  for (let i = 0; i < 4; i += 1) {
+    const cur = currentEvent.frets[i];
+    const nxt = prepEvent.frets[i];
+    if (cur === nxt) continue;
+    const prefix = `${i + 1}弦`;
+    if (nxt === 0) {
+      diffs.push(`${prefix}を開放へ`);
+    } else if (cur === 0) {
+      diffs.push(`${prefix}を${nxt}Fへ`);
+    } else {
+      diffs.push(`${prefix} ${cur}→${nxt}`);
+    }
+  }
+  if (!diffs.length) return 'そのまま維持';
+  return diffs.slice(0, 2).join(' / ');
+}
+
+function renderLeft(anchor) {
+  const displayCurrentIndex = getDisplayCurrentIndex(anchor);
+  const currentEvent = events[displayCurrentIndex];
+  const nextDifferentIndex = getNextDifferentIndex(displayCurrentIndex);
+  const prepState = getPrepState(nextDifferentIndex, anchor);
+  const prepEvent = prepState.glowProgress > 0.10 ? events[nextDifferentIndex] : null;
+
+  currentName.textContent = currentEvent.displayName;
+  nextName.textContent = prepEvent ? `次の形: ${prepEvent.displayName}` : '次の形: なし';
+  statusChip.textContent = `${currentEvent.bar}小節 / ${currentEvent.strum} / ${currentEvent.displayName}`;
+  summary.textContent = buildSummary(currentEvent, prepEvent);
+  buildLeftGrid(currentEvent, prepEvent, prepState);
+}
+
+function renderRight(anchor) {
+  let html = '';
+  let lastBar = null;
+  for (let i = 0; i < events.length; i += 1) {
+    const ev = events[i];
+    const x = playheadX + (positions[i] - anchor);
+    if (x < 60 || x > 910) continue;
+    if (lastBar !== ev.bar) {
+      html += `<line x1="${x-40}" y1="108" x2="${x-40}" y2="254" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+      html += `<text x="${x + columnGap}" y="64" fill="#d6e2f8" font-size="16" font-weight="700" text-anchor="middle">${ev.bar}小節</text>`;
+      lastBar = ev.bar;
+    }
+    const isCurrent = i === currentIndex;
+    html += `<text x="${x}" y="90" fill="#f7fbff" font-size="${isCurrent ? 28 : 24}" font-weight="700" text-anchor="middle">${ev.strum}</text>`;
+    for (let r = 0; r < 4; r += 1) html += pill(x, rowY[r], ev.frets[r], isCurrent);
+  }
+  const lastVisible = playheadX + (positions[events.length - 1] - anchor) + columnGap;
+  html += `<line x1="${lastVisible}" y1="108" x2="${lastVisible}" y2="254" stroke="rgba(255,255,255,.18)" stroke-width="3"></line>`;
+  content.innerHTML = html;
+}
+
+function render() {
+  const anchor = positions[currentIndex] + progress;
+  renderRight(anchor);
+  renderLeft(anchor);
+  syncTabFrameOverlay();
+  const delta = getSpeed() - 1.0;
+  const deltaText = delta === 0 ? '±0.00x' : `${delta > 0 ? '+' : ''}${delta.toFixed(2)}x`;
+  speedTag.textContent = `速度 ${getSpeed().toFixed(2)}x / 基準 ${deltaText}`;
+  const slower = speedSteps[Math.max(0, speedIndex - 1)];
+  const faster = speedSteps[Math.min(speedSteps.length - 1, speedIndex + 1)];
+  const slowDelta = slower - getSpeed();
+  const fastDelta = faster - getSpeed();
+  slowBtn.textContent = speedIndex === 0 ? '遅く' : `遅く ${slowDelta.toFixed(2)}x`;
+  fastBtn.textContent = speedIndex === speedSteps.length - 1 ? '速く' : `速く +${fastDelta.toFixed(2)}x`;
+  applyViewportFit();
+}
+
+function stopPlayback() {
+  running = false;
+  lastTs = null;
+  syncPlayButton();
+}
+
+let audioCtx = null;
+let audioMaster = null;
+let audioComp = null;
+let lastSoundedEventKey = '';
+const openStringFreqs = [440.0, 329.63, 261.63, 392.0];
+const isIOSLike = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const DEVICE_MASTER_GAIN = isIOSLike ? 10.40 : 1.15;
+const DEVICE_PRE_GAIN = isIOSLike ? 0.72 : 0.16;
+const DEVICE_ENV_PEAK = isIOSLike ? 0.200 : 0.055;
+const DEVICE_ENV_SUSTAIN = isIOSLike ? 0.095 : 0.020;
+
+function ensureAudio() {
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return null;
+  if (!audioCtx) {
+    audioCtx = new Ctx();
+    audioComp = audioCtx.createDynamicsCompressor();
+    audioComp.threshold.value = isIOSLike ? -36 : -21;
+    audioComp.knee.value = isIOSLike ? 20 : 14;
+    audioComp.ratio.value = isIOSLike ? 9.0 : 4.2;
+    audioComp.attack.value = 0.003;
+    audioComp.release.value = isIOSLike ? 0.24 : 0.18;
+    audioMaster = audioCtx.createGain();
+    audioMaster.gain.value = DEVICE_MASTER_GAIN;
+    audioComp.connect(audioMaster);
+    audioMaster.connect(audioCtx.destination);
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function fretToFreq(baseFreq, fret) {
+  return baseFreq * Math.pow(2, (fret || 0) / 12);
+}
+
+function playEventSound(ev) {
+  const ctx = ensureAudio();
+  if (!ctx || !ev) return;
+  const now = ctx.currentTime;
+  ev.frets.forEach((fret, idx) => {
+    if (fret == null) return;
+    const t0 = now + idx * 0.008;
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const pre = ctx.createGain();
+    const env = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    const freq = fretToFreq(openStringFreqs[idx], fret);
+    osc1.type = 'triangle';
+    osc2.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, t0);
+    osc2.frequency.setValueAtTime(freq * 2, t0);
+
+    pre.gain.setValueAtTime(DEVICE_PRE_GAIN, t0);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(isIOSLike ? 3200 : 1750, t0);
+    filter.Q.setValueAtTime(0.7, t0);
+
+    env.gain.setValueAtTime(0.0001, t0);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_PEAK, t0 + 0.012);
+    env.gain.exponentialRampToValueAtTime(DEVICE_ENV_SUSTAIN, t0 + 0.11);
+    env.gain.exponentialRampToValueAtTime(0.0001, t0 + (isIOSLike ? 0.58 : 0.42));
+
+    osc1.connect(pre);
+    osc2.connect(pre);
+    pre.connect(filter);
+    filter.connect(env);
+    env.connect(audioComp);
+
+    osc1.start(t0);
+    osc2.start(t0);
+    osc1.stop(t0 + (isIOSLike ? 0.60 : 0.44));
+    osc2.stop(t0 + (isIOSLike ? 0.58 : 0.42));
+  });
+}
+
+function soundCurrentEvent(force = false) {
+  const ev = events[currentIndex];
+  if (!ev) return;
+  const key = String(currentIndex);
+  if (!force && key === lastSoundedEventKey) return;
+  playEventSound(ev);
+  lastSoundedEventKey = key;
+}
+
+
+function togglePlay() {
+  if (!running) {
+    ensureAudio();
+    soundCurrentEvent(true);
+  }
+  running = !running;
+  lastTs = null;
+  syncPlayButton();
+}
+
+function goFirst() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = 0;
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function goBack() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = Math.max(0, currentIndex - 1);
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function replay() {
+  stopPlayback();
+  ensureAudio();
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function goNext() {
+  stopPlayback();
+  ensureAudio();
+  currentIndex = Math.min(events.length - 1, currentIndex + 1);
+  progress = 0;
+  render();
+  soundCurrentEvent(true);
+}
+
+function changeSpeed(direction) {
+  const nextIndex = Math.max(0, Math.min(speedSteps.length - 1, speedIndex + direction));
+  if (nextIndex === speedIndex) return;
+  speedIndex = nextIndex;
+  render();
+}
+
+function loop(ts) {
+  if (lastTs == null) lastTs = ts;
+  const dt = (ts - lastTs) / 1000;
+  lastTs = ts;
+  if (running) {
+    progress += (basePxPerSec * getSpeed()) * dt;
+    while (progress >= getCurrentDistance() && currentIndex < events.length - 1) {
+      progress -= getCurrentDistance();
+      currentIndex += 1;
+      soundCurrentEvent(true);
+    }
+    if (currentIndex >= events.length - 1 && progress >= getCurrentDistance()) {
+      progress = 0;
+      stopPlayback();
+    }
+    render();
+  }
+  requestAnimationFrame(loop);
+}
+
+attachButtonFeedback(playBtn, togglePlay);
+attachButtonFeedback(firstBtn, goFirst);
+attachButtonFeedback(backBtn, goBack);
+attachButtonFeedback(replayBtn, replay);
+attachButtonFeedback(nextBtn, goNext);
+attachButtonFeedback(slowBtn, () => changeSpeed(-1));
+attachButtonFeedback(fastBtn, () => changeSpeed(1));
+
+const topBtn = document.getElementById('topBtn');
+if (topBtn) {
+  topBtn.addEventListener('click', () => {
+    window.location.href = './index.html';
+  });
+}
+
+if (document.getElementById('micBtn')) {
+  document.getElementById('micBtn').addEventListener('click', () => {
+    ensureAudio();
+    flashButton(document.getElementById('micBtn'));
+  });
+}
+
+applyViewportFit();
+window.addEventListener('resize', applyViewportFit);
+window.addEventListener('orientationchange', () => setTimeout(applyViewportFit, 50));
+render();
+syncPlayButton();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
