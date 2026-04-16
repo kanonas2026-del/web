@@ -7,10 +7,16 @@ body{margin:0;min-height:100vh;padding:10px;background:radial-gradient(1200px 52
 .eyebrow{margin:0 0 8px;color:#29f0d0;font-size:12px;letter-spacing:.14em}
 .page-header h1{margin:0;font-size:26px;line-height:1.1}
 .sub{margin:8px 0 0;color:#b8c4df;font-size:14px;line-height:1.6}
-.head-nav-btn,.primary-btn,.ghost-btn,.thumb-btn{min-height:42px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.head-nav-btn,.primary-btn,.ghost-btn,.thumb-btn{min-height:42px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#edf4ff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:transform .06s ease,opacity .06s ease,background .12s ease,border-color .12s ease,box-shadow .12s ease}
 .primary-btn{background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.32);color:#e8fffb;box-shadow:0 0 18px rgba(41,240,208,.16)}
 .file-label input{display:none}
 .ghost-btn{background:rgba(255,255,255,.03)}
+.head-nav-btn:hover,.ghost-btn:hover,.thumb-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+.primary-btn:hover{background:rgba(41,240,208,.22);border-color:rgba(41,240,208,.44);box-shadow:0 0 22px rgba(41,240,208,.16)}
+.head-nav-btn:active,.primary-btn:active,.ghost-btn:active,.thumb-btn:active{transform:scale(.985);opacity:.78}
+.head-nav-btn:active,.ghost-btn:active,.thumb-btn:active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.20)}
+.primary-btn:active{background:rgba(41,240,208,.28);border-color:rgba(41,240,208,.52);box-shadow:0 0 24px rgba(41,240,208,.20)}
+.head-nav-btn:focus-visible,.primary-btn:focus-visible,.ghost-btn:focus-visible,.thumb-btn:focus-visible{outline:none;border-color:rgba(41,240,208,.48);box-shadow:0 0 0 2px rgba(41,240,208,.18)}
 .upload-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .helper{margin:10px 0 0;color:#b8c4df;font-size:13px;line-height:1.6}
 .helper.small{font-size:12px}
@@ -30,9 +36,10 @@ body{margin:0;min-height:100vh;padding:10px;background:radial-gradient(1200px 52
 .thumb-sub{margin-top:4px;color:#b8c4df;font-size:11px;word-break:break-all}
 .thumb-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .thumb-btn{min-height:28px;padding:0 9px;font-size:12px;border-radius:10px}
-.preview-grid{display:grid;grid-template-columns:1fr;gap:10px}
-.preview-box{display:grid;gap:8px}
-.canvas-wrap{border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:8px;display:grid;place-items:center;min-height:220px;overflow:auto}
+.preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.preview-box{display:grid;gap:8px;min-width:0}
+.preview-box h3{font-size:13px}
+.canvas-wrap{border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:6px;display:grid;place-items:center;min-height:160px;overflow:auto}
 canvas{max-width:100%;height:auto;display:block;background:#fff;border-radius:12px}
 .controls-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .controls-grid label{display:grid;gap:6px;font-size:14px;color:#d9e7ff}
