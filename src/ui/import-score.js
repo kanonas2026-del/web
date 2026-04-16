@@ -357,7 +357,7 @@ fileInput?.addEventListener('change', async event => {
 addMoreBtn?.addEventListener('click', () => fileInput?.click());
 autoEnhanceBtn?.addEventListener('click', () => processActive(true));
 resetViewBtn?.addEventListener('click', () => resetActive());
-backTopBtn?.addEventListener('click', () => { window.location.href = './index.html'; });
+backTopBtn?.addEventListener('click', () => { window.location.href = './teacher.html'; });
 [rotateRange, brightnessRange, contrastRange, shadowRange, thresholdRange].forEach(input => {
   input?.addEventListener('input', () => {
     updateLabels();
