@@ -98,7 +98,7 @@ function renderTop() {
 
   document.getElementById('libraryBtn')?.addEventListener('click', renderLibrary);
   document.getElementById('teacherBtn')?.addEventListener('click', () => {
-    window.location.href = './import-score.html';
+    window.location.href = './teacher.html';
   });
   document.getElementById('tuningBtn')?.addEventListener('click', () => {
     window.alert('チューニング は準備中です。');
