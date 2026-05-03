@@ -1,0 +1,199 @@
+/* Teacher score preview: clean generated TAB */
+.score-preview-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.score-preview-sub{
+  margin:4px 0 0;
+  color:#b8c4df;
+  font-size:12px;
+  line-height:1.6;
+}
+.score-preview-status{
+  min-height:30px;
+  padding:0 12px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(41,240,208,.14);
+  border:1px solid rgba(41,240,208,.34);
+  color:#e8fffb;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.score-meta-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.score-meta-item{
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  padding:10px 12px;
+  display:grid;
+  gap:4px;
+}
+.score-meta-label{font-size:11px;color:#9fb0d0}
+.score-meta-value{font-size:15px;color:#edf4ff;font-weight:700}
+.score-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.score-preview-scroll{
+  overflow:auto;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(4,10,24,.42);
+  padding:10px;
+}
+.score-preview-root{
+  min-width:680px;
+  display:grid;
+  gap:12px;
+}
+.score-system{
+  position:relative;
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.06);
+  padding:30px 12px 12px 52px;
+}
+.score-system-title{
+  position:absolute;
+  left:12px;
+  top:10px;
+  color:#29f0d0;
+  font-size:12px;
+  font-weight:700;
+}
+.score-staff{
+  display:grid;
+  gap:7px;
+}
+.score-line{
+  position:relative;
+  min-height:22px;
+  border-top:2px solid rgba(232,244,255,.74);
+}
+.score-line::before{
+  content:attr(data-string);
+  position:absolute;
+  left:-36px;
+  top:-10px;
+  color:#d9e7ff;
+  font-size:12px;
+  font-weight:700;
+}
+.score-grid{
+  position:absolute;
+  inset:30px 12px 12px 52px;
+  pointer-events:none;
+  display:grid;
+  grid-template-columns:repeat(16,1fr);
+}
+.score-grid span{
+  border-left:1px solid rgba(255,255,255,.05);
+}
+.score-grid span:nth-child(4n+1){
+  border-left-color:rgba(41,240,208,.20);
+}
+.score-note{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  min-width:18px;
+  height:18px;
+  border-radius:999px;
+  background:rgba(41,240,208,.18);
+  border:1px solid rgba(41,240,208,.42);
+  color:#e8fffb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+}
+.score-chord{
+  position:absolute;
+  top:6px;
+  transform:translateX(-50%);
+  color:#edf4ff;
+  font-size:12px;
+  font-weight:700;
+}
+.score-strum{
+  position:absolute;
+  bottom:3px;
+  transform:translateX(-50%);
+  color:#ffe8a3;
+  font-size:14px;
+  font-weight:800;
+}
+.score-rule-panel{
+  display:grid;
+  gap:8px;
+}
+.score-rule-item{
+  border-radius:12px;
+  padding:9px 11px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  color:#d9e7ff;
+  font-size:13px;
+  line-height:1.5;
+}
+.score-rule-item.warn{
+  background:rgba(255,200,0,.10);
+  border-color:rgba(255,200,0,.28);
+  color:#ffe8a3;
+}
+@media (max-width: 760px){
+  .score-preview-root{min-width:600px}
+  .score-meta-grid{grid-template-columns:1fr 1fr}
+}
+
+/* Editable generated TAB */
+.score-edit-help{
+  border-radius:12px;
+  padding:9px 11px;
+  background:rgba(41,240,208,.08);
+  border:1px solid rgba(41,240,208,.22);
+  color:#d9fff8;
+  font-size:13px;
+  line-height:1.55;
+}
+.score-note{
+  user-select:none;
+}
+.score-note.is-editable{
+  cursor:pointer;
+  box-shadow:0 0 0 2px rgba(255,232,163,.20), 0 0 16px rgba(255,232,163,.16);
+  border-color:rgba(255,232,163,.55);
+}
+.score-note.is-edited{
+  background:rgba(255,200,0,.22);
+  border-color:rgba(255,200,0,.46);
+  color:#fff3c4;
+}
+.score-note.is-active-edit{
+  transform:translate(-50%,-50%) scale(1.18);
+}
+.score-toolbar .teacher-mini-btn.is-edit-mode{
+  background:rgba(255,200,0,.14);
+  border-color:rgba(255,200,0,.34);
+  color:#ffe8a3;
+  box-shadow:0 0 16px rgba(255,200,0,.10);
+}
+.score-edit-flash{
+  animation: scoreEditFlash .28s ease-out;
+}
+@keyframes scoreEditFlash{
+  0%{filter:brightness(1.35)}
+  100%{filter:brightness(1)}
+}

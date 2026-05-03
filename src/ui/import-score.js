@@ -1,6 +1,7 @@
 const fileInput = document.getElementById('fileInput');
 const addMoreBtn = document.getElementById('addMoreBtn');
 const autoEnhanceBtn = document.getElementById('autoEnhanceBtn');
+const shapeCorrectBtn = document.getElementById('shapeCorrectBtn');
 const resetViewBtn = document.getElementById('resetViewBtn');
 const backTopBtn = document.getElementById('backTopBtn');
 const thumbList = document.getElementById('thumbList');
@@ -33,7 +34,7 @@ function uid() {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 function defaultSettings() {
-  return { rotate: 0, brightness: 1.00, contrast: 1.10, shadow: 0.22, threshold: 0.06 };
+  return { rotate: 0, brightness: 1.00, contrast: 1.04, shadow: 0.08, threshold: 0.00 };
 }
 function updateLabels() {
   rotateValue.textContent = `${Number(rotateRange.value).toFixed(1)}°`;
@@ -295,31 +296,35 @@ function enhanceImage(dataUrl, settings) {
 
       const imageData = ctx.getImageData(0, 0, targetW, targetH);
       const data = imageData.data;
-      const bg = estimateBackground(work, 28);
-      const bgData = bg.data;
 
       for (let i = 0; i < data.length; i += 4) {
-        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        const bgGray = bgData[i] || 245;
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
 
-        let normalized = gray;
-        normalized = normalized * (1 + settings.shadow * 0.35) - bgGray * (settings.shadow * 0.18) + 10;
+        const contrast = Math.max(0.90, Math.min(1.18, settings.contrast));
+        const brightness = Math.max(0.92, Math.min(1.08, settings.brightness));
+        const shadow = Math.max(0, Math.min(0.16, settings.shadow));
 
-        const contrasted = ((normalized - 128) * settings.contrast) + 128;
-        const brightened = contrasted * settings.brightness;
-        const clipped = Math.max(8, Math.min(245, brightened));
+        let value = ((gray - 128) * contrast) + 128;
+        value = value * brightness;
 
-        const gentleBoost = clipped > (245 - settings.threshold * 120)
-          ? Math.min(245, clipped + settings.threshold * 18)
-          : clipped;
+        // Only lift very dark uneven paper shadow slightly. Do not push paper to pure white.
+        if (gray > 120 && gray < 230) {
+          value += shadow * 18;
+        }
 
-        data[i] = gentleBoost;
-        data[i + 1] = gentleBoost;
-        data[i + 2] = gentleBoost;
+        // Preserve notes, handwriting, TAB numbers, and staff lines. Avoid hard thresholding.
+        const clipped = Math.max(18, Math.min(238, value));
+
+        data[i] = clipped;
+        data[i + 1] = clipped;
+        data[i + 2] = clipped;
       }
 
       ctx.putImageData(imageData, 0, 0);
-      resolve(work.toDataURL('image/jpeg', 0.95));
+      resolve(work.toDataURL('image/jpeg', 0.96));
     };
     img.src = dataUrl;
   });
@@ -329,7 +334,7 @@ async function processActive(autoMode = false) {
   if (!page) return;
   const token = ++processingToken;
   const settings = autoMode
-    ? { rotate: Number(rotateRange.value), brightness: 1.00, contrast: 1.12, shadow: 0.22, threshold: 0.06 }
+    ? { rotate: Number(rotateRange.value), brightness: 1.00, contrast: 1.05, shadow: 0.08, threshold: 0.00 }
     : currentSettings();
   if (autoMode) applySettingsToControls(settings);
   page.settings = settings;
@@ -350,12 +355,101 @@ function resetActive() {
   renderThumbs();
   renderPreview();
 }
+
+function autoCropCanvasByContent(canvas) {
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = img.data;
+  const w = canvas.width;
+  const h = canvas.height;
+  let minX = w, minY = h, maxX = 0, maxY = 0;
+  for (let y = 0; y < h; y += 3) {
+    for (let x = 0; x < w; x += 3) {
+      const i = (y * w + x) * 4;
+      const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      if (gray < 238) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (minX >= maxX || minY >= maxY) return canvas;
+  const padX = Math.round(w * 0.025);
+  const padY = Math.round(h * 0.025);
+  minX = Math.max(0, minX - padX);
+  minY = Math.max(0, minY - padY);
+  maxX = Math.min(w, maxX + padX);
+  maxY = Math.min(h, maxY + padY);
+  const out = document.createElement('canvas');
+  out.width = Math.max(1, maxX - minX);
+  out.height = Math.max(1, maxY - minY);
+  const octx = out.getContext('2d');
+  octx.drawImage(canvas, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+  return out;
+}
+function gentleShapeCanvas(dataUrl, settings) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const radians = (settings.rotate || 0) * Math.PI / 180;
+      const sin = Math.abs(Math.sin(radians));
+      const cos = Math.abs(Math.cos(radians));
+      const targetW = Math.round(img.width * cos + img.height * sin);
+      const targetH = Math.round(img.width * sin + img.height * cos);
+      const base = document.createElement('canvas');
+      base.width = targetW;
+      base.height = targetH;
+      const ctx = base.getContext('2d', { willReadFrequently: true });
+      ctx.fillStyle = '#fdfdfd';
+      ctx.fillRect(0, 0, targetW, targetH);
+      ctx.translate(targetW / 2, targetH / 2);
+      ctx.rotate(radians);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+      const cropped = autoCropCanvasByContent(base);
+      const cctx = cropped.getContext('2d', { willReadFrequently: true });
+      const imageData = cctx.getImageData(0, 0, cropped.width, cropped.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        let v = gray;
+        // safe shadow lift: do not crush staff/text
+        if (v > 165) v = Math.min(246, v + 10);
+        else v = Math.max(18, v * 0.96);
+        data[i] = v;
+        data[i + 1] = v;
+        data[i + 2] = v;
+      }
+      cctx.putImageData(imageData, 0, 0);
+      resolve(cropped.toDataURL('image/jpeg', 0.95));
+    };
+    img.src = dataUrl;
+  });
+}
+async function shapeCorrectActive() {
+  const page = getActivePage();
+  if (!page) return;
+  const token = ++processingToken;
+  const settings = currentSettings();
+  page.settings = settings;
+  const processed = await gentleShapeCanvas(page.previewUrl, settings);
+  if (token !== processingToken) return;
+  page.processedUrl = processed;
+  await savePages();
+  renderThumbs();
+  renderPreview();
+}
+
 fileInput?.addEventListener('change', async event => {
   await readFiles(event.target.files);
   fileInput.value = '';
 });
 addMoreBtn?.addEventListener('click', () => fileInput?.click());
 autoEnhanceBtn?.addEventListener('click', () => processActive(true));
+shapeCorrectBtn?.addEventListener('click', () => shapeCorrectActive());
 resetViewBtn?.addEventListener('click', () => resetActive());
 backTopBtn?.addEventListener('click', () => { window.location.href = './teacher.html'; });
 [rotateRange, brightnessRange, contrastRange, shadowRange, thresholdRange].forEach(input => {

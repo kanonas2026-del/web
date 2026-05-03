@@ -234,3 +234,71 @@ body.teacher-body{
   color:#ffd2d2;
   box-shadow:0 0 16px rgba(255,110,110,.08);
 }
+
+
+.teacher-shell-wide{max-width:1180px}
+.teacher-pagebar{display:grid;gap:8px}
+.teacher-page-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.teacher-page-tab{
+  min-height:42px;
+  padding:0 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.05);
+  color:#edf4ff;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  -webkit-appearance:none;
+  appearance:none;
+}
+.teacher-page-tab.is-active{
+  background:rgba(41,240,208,.16);
+  border-color:rgba(41,240,208,.34);
+  color:#e8fffb;
+  box-shadow:0 0 18px rgba(41,240,208,.10);
+}
+.teacher-score-layout{display:grid;gap:12px}
+.teacher-image-frame.compact{min-height:180px}
+.teacher-image-frame.compact img{max-height:44vh;object-fit:contain}
+.teacher-review-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.teacher-review-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:28px;padding:0 10px;border-radius:999px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+  color:#d9e7ff;font-size:12px;font-weight:700;
+}
+.teacher-review-badge.is-partial{background:rgba(255,200,0,.12);border-color:rgba(255,200,0,.30);color:#ffe8a3}
+.teacher-review-badge.is-complete{background:rgba(41,240,208,.14);border-color:rgba(41,240,208,.34);color:#e8fffb}
+.teacher-review-grid{display:grid;gap:10px}
+.teacher-review-item{
+  display:grid;gap:8px;border-radius:14px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  padding:12px;
+}
+.teacher-review-label{color:#d9e7ff;font-size:14px;font-weight:700}
+.teacher-review-actions{display:flex;flex-wrap:wrap;gap:8px}
+.teacher-mini-btn{
+  min-height:36px;padding:0 12px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);
+  color:#edf4ff;font-size:13px;font-weight:700;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  transition:transform .06s ease,opacity .06s ease,background .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+.teacher-mini-btn:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18)}
+.teacher-mini-btn:active{transform:scale(.985);opacity:.84}
+.teacher-mini-btn.is-selected-ok{
+  background:rgba(41,240,208,.16);border-color:rgba(41,240,208,.34);
+  color:#e8fffb;box-shadow:0 0 16px rgba(41,240,208,.10);
+}
+.teacher-mini-btn.is-selected-hold{
+  background:rgba(255,200,0,.12);border-color:rgba(255,200,0,.30);
+  color:#ffe8a3;box-shadow:0 0 16px rgba(255,200,0,.08);
+}
+.teacher-mini-btn.is-selected-ng{
+  background:rgba(255,110,110,.14);border-color:rgba(255,110,110,.34);
+  color:#ffd2d2;box-shadow:0 0 16px rgba(255,110,110,.08);
+}
+@media (min-width: 900px){
+  .teacher-score-layout{grid-template-columns:.78fr 1.22fr;align-items:start}
+}

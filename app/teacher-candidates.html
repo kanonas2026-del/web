@@ -6,18 +6,19 @@
   <title>候補を確認する</title>
   <link rel="stylesheet" href="../src/styles/tokens.css">
   <link rel="stylesheet" href="../src/styles/base.css">
-  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503b">
+  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503k">
+  <link rel="stylesheet" href="../src/styles/score-preview.css?v=20260503k">
 </head>
 <body class="teacher-body">
-  <main class="teacher-shell">
+  <main class="teacher-shell teacher-shell-wide">
     <section class="teacher-card">
       <div class="teacher-headline">
         <div>
           <p class="teacher-eyebrow">STEP 2</p>
-          <h1 class="teacher-title">候補を確認する</h1>
-          <p class="teacher-sub">STEP1で取り込んだ譜面をここで確認します。まずは画像表示までをつなぎます。</p>
+          <h1 class="teacher-title">生成TAB譜面を確認する</h1>
+          <p class="teacher-sub">画像をそのまま読む画面ではなく、アプリ側でまっすぐなTAB譜面データとして再構成する土台です。</p>
         </div>
-        <span class="teacher-badge">v20260503b</span>
+        <span class="teacher-badge">v20260503k</span>
       </div>
     </section>
 
@@ -46,55 +47,75 @@
         </div>
       </section>
 
-      <section class="teacher-grid candidate-grid">
-        <section class="teacher-card teacher-row">
-          <p class="teacher-note">STEP1から引き継いだ画像</p>
-          <div class="teacher-image-frame">
-            <img id="candidateImage" alt="補正後譜面" />
+      <section class="teacher-score-layout">
+        <section class="teacher-card teacher-row teacher-source-card">
+          <p class="teacher-note">取り込み画像</p>
+          <div class="teacher-image-frame compact">
+            <img id="candidateImage" alt="取り込み譜面" />
           </div>
           <p class="teacher-image-caption" id="candidateCaption"></p>
         </section>
 
-        <section class="teacher-card teacher-row">
-          <div class="teacher-review-head">
-            <p class="teacher-note">確認結果</p>
-            <span class="teacher-review-badge" id="reviewBadge">未確認</span>
+        <section class="teacher-card teacher-row teacher-generated-card">
+          <div class="score-preview-head">
+            <div>
+              <p class="teacher-note">生成されたTAB譜面</p>
+              <p class="score-preview-sub">AIではなく、内部データモデルから再描画します。ここから音楽ルール・指表示・再生へつなぎます。</p>
+            </div>
+            <div class="score-preview-status" id="scoreStatus">下書き</div>
           </div>
-          <div class="teacher-review-grid">
-            <div class="teacher-review-item" data-review-key="lines">
-              <div class="teacher-review-label">4線候補</div>
-              <div class="teacher-review-actions">
-                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
-              </div>
-            </div>
-            <div class="teacher-review-item" data-review-key="bars">
-              <div class="teacher-review-label">小節候補</div>
-              <div class="teacher-review-actions">
-                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
-              </div>
-            </div>
-            <div class="teacher-review-item" data-review-key="digits">
-              <div class="teacher-review-label">数字候補</div>
-              <div class="teacher-review-actions">
-                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
-              </div>
-            </div>
-            <div class="teacher-review-item" data-review-key="stroke">
-              <div class="teacher-review-label">ストローク候補</div>
-              <div class="teacher-review-actions">
-                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
-              </div>
-            </div>
+
+          <div class="score-meta-grid" id="scoreMeta"></div>
+
+          <div class="score-toolbar">
+            <button type="button" class="teacher-mini-btn is-selected-ok" id="playScoreBtn">再生</button>
+            <button type="button" class="teacher-mini-btn" id="stopScoreBtn">停止</button>
+            <button type="button" class="teacher-mini-btn" id="editScoreBtn">修正モード OFF</button>
+            <button type="button" class="teacher-mini-btn" id="undoScoreBtn">1つ戻す</button>
+            <button type="button" class="teacher-mini-btn" id="resetDraftBtn">下書きに戻す</button>
+            <button type="button" class="teacher-mini-btn" id="sendPracticeBtn">練習へ送る（準備中）</button>
           </div>
+
+          <div class="score-edit-help" id="scoreEditHelp">修正モードをONにすると、TAB数字をタップして 0→1→2→3→4→5→0 の順に直せます。</div>
+          <div class="score-preview-scroll">
+            <div id="scorePreviewRoot" class="score-preview-root"></div>
+          </div>
+
+          <div class="score-rule-panel" id="scoreRulePanel"></div>
         </section>
+      </section>
+
+      <section class="teacher-card teacher-row">
+        <div class="teacher-review-head">
+          <p class="teacher-note">確認結果</p>
+          <span class="teacher-review-badge" id="reviewBadge">未確認</span>
+        </div>
+        <div class="teacher-review-grid">
+          <div class="teacher-review-item" data-review-key="score">
+            <div class="teacher-review-label">生成譜面</div>
+            <div class="teacher-review-actions">
+              <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
+            </div>
+          </div>
+          <div class="teacher-review-item" data-review-key="rhythm">
+            <div class="teacher-review-label">テンポ・リズム</div>
+            <div class="teacher-review-actions">
+              <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
+            </div>
+          </div>
+          <div class="teacher-review-item" data-review-key="fingering">
+            <div class="teacher-review-label">押さえる指への展開</div>
+            <div class="teacher-review-actions">
+              <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+              <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="teacher-card">
@@ -105,7 +126,7 @@
           </a>
           <button class="teacher-btn subtle disabled" type="button" disabled>
             <span>STEP 3 人が確定する</span>
-            <span>準備中</span>
+            <span>次段階</span>
           </button>
           <a class="teacher-link subtle" href="./teacher.html">
             <span>メニューへ戻る</span>
@@ -115,6 +136,7 @@
       </section>
     </section>
   </main>
-  <script type="module" src="../src/ui/teacher-screen.js?v=20260503b"></script>
+
+  <script type="module" src="../src/ui/teacher-screen.js?v=20260503k"></script>
 </body>
 </html>
