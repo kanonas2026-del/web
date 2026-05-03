@@ -6,7 +6,7 @@
   <title>候補を確認する</title>
   <link rel="stylesheet" href="../src/styles/tokens.css">
   <link rel="stylesheet" href="../src/styles/base.css">
-  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260416e">
+  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260416k">
 </head>
 <body class="teacher-body">
   <main class="teacher-shell">
@@ -15,50 +15,133 @@
         <div>
           <p class="teacher-eyebrow">STEP 2</p>
           <h1 class="teacher-title">候補を確認する</h1>
-          <p class="teacher-sub">ここで、補正後画像から得た候補を人が確認していく流れにします。今回は骨組みまでです。</p>
+          <p class="teacher-sub">STEP1で取り込んだ譜面を表示し、4線・小節・数字・ストローク候補を人が確認できる土台です。</p>
         </div>
-        <span class="teacher-badge">v20260416e</span>
+        <span class="teacher-badge">v20260416k</span>
       </div>
     </section>
 
-    <section class="teacher-grid">
-      <section class="teacher-card teacher-row">
-        <p class="teacher-note">この画面でやること</p>
-        <div class="teacher-flow">
-          <div class="teacher-flow-item"><strong>A.</strong> 小節ごとの候補を見る</div>
-          <div class="teacher-flow-item"><strong>B.</strong> 4線・数字・ストローク候補を確認する</div>
-          <div class="teacher-flow-item"><strong>C.</strong> 音楽的におかしい候補を除外する</div>
-          <div class="teacher-flow-item"><strong>D.</strong> 次の確定画面へ渡す</div>
-        </div>
-      </section>
-
-      <section class="teacher-card teacher-row">
-        <p class="teacher-note">今の状態</p>
-        <div class="teacher-flow">
-          <div class="teacher-flow-item">候補一覧 UI: 次に実装</div>
-          <div class="teacher-flow-item">音楽的フィルター: 次に実装</div>
-          <div class="teacher-flow-item">JSON出力: その次</div>
-        </div>
-      </section>
-    </section>
-
-    <section class="teacher-card">
+    <section class="teacher-card teacher-row" id="candidateEmpty" hidden>
+      <p class="teacher-note">STEP1のデータがありません</p>
+      <div class="teacher-flow">
+        <div class="teacher-flow-item">先に「STEP 1 譜面を取り込む」で画像を選んでください。</div>
+      </div>
       <div class="teacher-menu">
         <a class="teacher-link primary" href="./import-score.html">
-          <span>STEP 1 に戻る</span>
-          <span>←</span>
+          <span>STEP 1 へ進む</span>
+          <span>→</span>
         </a>
-        <button class="teacher-btn subtle disabled" type="button" disabled>
-          <span>STEP 3 人が確定する</span>
-          <span>準備中</span>
-        </button>
         <a class="teacher-link subtle" href="./teacher.html">
           <span>メニューへ戻る</span>
           <span>←</span>
         </a>
       </div>
     </section>
+
+    <section id="candidateContent" hidden>
+      <section class="teacher-card teacher-row">
+        <div class="teacher-pagebar">
+          <p class="teacher-note">取り込みページ</p>
+          <div class="teacher-page-tabs" id="pageTabs"></div>
+        </div>
+      </section>
+
+      <section class="teacher-grid candidate-grid">
+        <section class="teacher-card teacher-row">
+          <p class="teacher-note">補正後画像</p>
+          <div class="teacher-image-frame">
+            <img id="candidateImage" alt="補正後譜面" />
+          </div>
+          <p class="teacher-image-caption" id="candidateCaption"></p>
+        </section>
+
+        <section class="teacher-card teacher-row">
+          <p class="teacher-note">確認候補</p>
+          <div class="teacher-candidate-list">
+            <div class="teacher-candidate-box">
+              <div class="teacher-candidate-label">4線候補</div>
+              <div class="teacher-candidate-text">各段の4本ラインを確認し、歪み込みで読む前提です。</div>
+            </div>
+            <div class="teacher-candidate-box">
+              <div class="teacher-candidate-label">小節候補</div>
+              <div class="teacher-candidate-text">縦線位置と段区切りを人が見て確認します。</div>
+            </div>
+            <div class="teacher-candidate-box">
+              <div class="teacher-candidate-label">数字候補</div>
+              <div class="teacher-candidate-text">フレット番号の読取り候補を並べる想定です。</div>
+            </div>
+            <div class="teacher-candidate-box">
+              <div class="teacher-candidate-label">ストローク候補</div>
+              <div class="teacher-candidate-text">↑ ↓ やリズム記号を後で候補化します。</div>
+            </div>
+          </div>
+
+          <div class="teacher-review">
+            <div class="teacher-review-head">
+              <p class="teacher-note">確認結果</p>
+              <span class="teacher-review-badge" id="reviewStatusBadge">未確認</span>
+            </div>
+            <div class="teacher-review-grid">
+              <div class="teacher-review-item" data-review-key="lines">
+                <div class="teacher-review-label">4線</div>
+                <div class="teacher-review-actions">
+                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                </div>
+              </div>
+              <div class="teacher-review-item" data-review-key="bars">
+                <div class="teacher-review-label">小節</div>
+                <div class="teacher-review-actions">
+                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                </div>
+              </div>
+              <div class="teacher-review-item" data-review-key="digits">
+                <div class="teacher-review-label">数字</div>
+                <div class="teacher-review-actions">
+                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                </div>
+              </div>
+              <div class="teacher-review-item" data-review-key="strokes">
+                <div class="teacher-review-label">ストローク</div>
+                <div class="teacher-review-actions">
+                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="teacher-card teacher-row">
+        <p class="teacher-note">このページでやること</p>
+        <div class="teacher-flow">
+          <div class="teacher-flow-item"><strong>A.</strong> 補正後譜面を見ながら候補を確認する</div>
+          <div class="teacher-flow-item"><strong>B.</strong> 音楽的に不自然な候補を除外する</div>
+          <div class="teacher-flow-item"><strong>C.</strong> 次のSTEP 3で人が確定する</div>
+        </div>
+      </section>
+
+      <section class="teacher-card">
+        <div class="teacher-menu">
+          <a class="teacher-link primary" href="./import-score.html">
+            <span>STEP 1 に戻る</span>
+            <span>←</span>
+          </a>
+          <button class="teacher-btn subtle disabled" type="button" disabled>
+            <span>STEP 3 人が確定する</span>
+            <span>準備中</span>
+          </button>
+          <a class="teacher-link subtle" href="./teacher.html">
+            <span>メニューへ戻る</span>
+            <span>←</span>
+          </a>
+        </div>
+      </section>
+    </section>
   </main>
-  <script type="module" src="../src/ui/teacher-screen.js?v=20260416e"></script>
+  <script type="module" src="../src/ui/teacher-screen.js?v=20260416k"></script>
 </body>
 </html>
