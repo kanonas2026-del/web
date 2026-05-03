@@ -6,7 +6,7 @@
   <title>候補を確認する</title>
   <link rel="stylesheet" href="../src/styles/tokens.css">
   <link rel="stylesheet" href="../src/styles/base.css">
-  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260416k">
+  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503b">
 </head>
 <body class="teacher-body">
   <main class="teacher-shell">
@@ -15,9 +15,9 @@
         <div>
           <p class="teacher-eyebrow">STEP 2</p>
           <h1 class="teacher-title">候補を確認する</h1>
-          <p class="teacher-sub">STEP1で取り込んだ譜面を表示し、4線・小節・数字・ストローク候補を人が確認できる土台です。</p>
+          <p class="teacher-sub">STEP1で取り込んだ譜面をここで確認します。まずは画像表示までをつなぎます。</p>
         </div>
-        <span class="teacher-badge">v20260416k</span>
+        <span class="teacher-badge">v20260503b</span>
       </div>
     </section>
 
@@ -48,7 +48,7 @@
 
       <section class="teacher-grid candidate-grid">
         <section class="teacher-card teacher-row">
-          <p class="teacher-note">補正後画像</p>
+          <p class="teacher-note">STEP1から引き継いだ画像</p>
           <div class="teacher-image-frame">
             <img id="candidateImage" alt="補正後譜面" />
           </div>
@@ -56,72 +56,45 @@
         </section>
 
         <section class="teacher-card teacher-row">
-          <p class="teacher-note">確認候補</p>
-          <div class="teacher-candidate-list">
-            <div class="teacher-candidate-box">
-              <div class="teacher-candidate-label">4線候補</div>
-              <div class="teacher-candidate-text">各段の4本ラインを確認し、歪み込みで読む前提です。</div>
-            </div>
-            <div class="teacher-candidate-box">
-              <div class="teacher-candidate-label">小節候補</div>
-              <div class="teacher-candidate-text">縦線位置と段区切りを人が見て確認します。</div>
-            </div>
-            <div class="teacher-candidate-box">
-              <div class="teacher-candidate-label">数字候補</div>
-              <div class="teacher-candidate-text">フレット番号の読取り候補を並べる想定です。</div>
-            </div>
-            <div class="teacher-candidate-box">
-              <div class="teacher-candidate-label">ストローク候補</div>
-              <div class="teacher-candidate-text">↑ ↓ やリズム記号を後で候補化します。</div>
-            </div>
+          <div class="teacher-review-head">
+            <p class="teacher-note">確認結果</p>
+            <span class="teacher-review-badge" id="reviewBadge">未確認</span>
           </div>
-
-          <div class="teacher-review">
-            <div class="teacher-review-head">
-              <p class="teacher-note">確認結果</p>
-              <span class="teacher-review-badge" id="reviewStatusBadge">未確認</span>
+          <div class="teacher-review-grid">
+            <div class="teacher-review-item" data-review-key="lines">
+              <div class="teacher-review-label">4線候補</div>
+              <div class="teacher-review-actions">
+                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
+              </div>
             </div>
-            <div class="teacher-review-grid">
-              <div class="teacher-review-item" data-review-key="lines">
-                <div class="teacher-review-label">4線</div>
-                <div class="teacher-review-actions">
-                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                </div>
+            <div class="teacher-review-item" data-review-key="bars">
+              <div class="teacher-review-label">小節候補</div>
+              <div class="teacher-review-actions">
+                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
               </div>
-              <div class="teacher-review-item" data-review-key="bars">
-                <div class="teacher-review-label">小節</div>
-                <div class="teacher-review-actions">
-                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                </div>
+            </div>
+            <div class="teacher-review-item" data-review-key="digits">
+              <div class="teacher-review-label">数字候補</div>
+              <div class="teacher-review-actions">
+                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
               </div>
-              <div class="teacher-review-item" data-review-key="digits">
-                <div class="teacher-review-label">数字</div>
-                <div class="teacher-review-actions">
-                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                </div>
-              </div>
-              <div class="teacher-review-item" data-review-key="strokes">
-                <div class="teacher-review-label">ストローク</div>
-                <div class="teacher-review-actions">
-                  <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
-                  <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
-                </div>
+            </div>
+            <div class="teacher-review-item" data-review-key="stroke">
+              <div class="teacher-review-label">ストローク候補</div>
+              <div class="teacher-review-actions">
+                <button type="button" class="teacher-mini-btn" data-review-value="ok">OK</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="hold">保留</button>
+                <button type="button" class="teacher-mini-btn" data-review-value="ng">違う</button>
               </div>
             </div>
           </div>
         </section>
-      </section>
-
-      <section class="teacher-card teacher-row">
-        <p class="teacher-note">このページでやること</p>
-        <div class="teacher-flow">
-          <div class="teacher-flow-item"><strong>A.</strong> 補正後譜面を見ながら候補を確認する</div>
-          <div class="teacher-flow-item"><strong>B.</strong> 音楽的に不自然な候補を除外する</div>
-          <div class="teacher-flow-item"><strong>C.</strong> 次のSTEP 3で人が確定する</div>
-        </div>
       </section>
 
       <section class="teacher-card">
@@ -142,6 +115,6 @@
       </section>
     </section>
   </main>
-  <script type="module" src="../src/ui/teacher-screen.js?v=20260416k"></script>
+  <script type="module" src="../src/ui/teacher-screen.js?v=20260503b"></script>
 </body>
 </html>
