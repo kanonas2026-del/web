@@ -6,8 +6,8 @@
   <title>候補を確認する</title>
   <link rel="stylesheet" href="../src/styles/tokens.css">
   <link rel="stylesheet" href="../src/styles/base.css">
-  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503k">
-  <link rel="stylesheet" href="../src/styles/score-preview.css?v=20260503k">
+  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503p">
+  <link rel="stylesheet" href="../src/styles/score-preview.css?v=20260503p">
 </head>
 <body class="teacher-body">
   <main class="teacher-shell teacher-shell-wide">
@@ -18,7 +18,7 @@
           <h1 class="teacher-title">生成TAB譜面を確認する</h1>
           <p class="teacher-sub">画像をそのまま読む画面ではなく、アプリ側でまっすぐなTAB譜面データとして再構成する土台です。</p>
         </div>
-        <span class="teacher-badge">v20260503k</span>
+        <span class="teacher-badge">v20260503p</span>
       </div>
     </section>
 
@@ -74,9 +74,14 @@
             <button type="button" class="teacher-mini-btn" id="undoScoreBtn">1つ戻す</button>
             <button type="button" class="teacher-mini-btn" id="resetDraftBtn">下書きに戻す</button>
             <button type="button" class="teacher-mini-btn" id="sendPracticeBtn">練習へ送る（準備中）</button>
+            <span class="score-zoom-label" id="scoreZoomLabel">100%</span>
+            <button type="button" class="teacher-mini-btn" id="zoomOutBtn">ズーム−</button>
+            <button type="button" class="teacher-mini-btn" id="zoomResetBtn">100%</button>
+            <button type="button" class="teacher-mini-btn" id="zoomInBtn">ズーム＋</button>
           </div>
 
-          <div class="score-edit-help" id="scoreEditHelp">修正モードをONにすると、TAB数字をタップして 0→1→2→3→4→5→0 の順に直せます。</div>
+          <div class="score-edit-help" id="scoreEditHelp">修正モードをONにすると、TAB数字をタップして 0→1→2→…→12→0 の順に直せます。</div>
+          <div class="score-rule-item warn" id="scoreErrorPanel" hidden>生成TABの描画で問題が出ました。画面を再読み込みしてください。</div>
           <div class="score-preview-scroll">
             <div id="scorePreviewRoot" class="score-preview-root"></div>
           </div>
@@ -137,6 +142,6 @@
     </section>
   </main>
 
-  <script type="module" src="../src/ui/teacher-screen.js?v=20260503k"></script>
+  <script type="module" src="../src/ui/teacher-screen.js?v=20260503p"></script>
 </body>
 </html>

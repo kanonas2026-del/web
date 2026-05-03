@@ -1,7 +1,7 @@
 import { createDraftScoreFromImport } from '../data/score-model.js';
 import { evaluateScoreDraft, fingeringHintForShape } from '../data/music-rules.js';
 
-const lineY = { A: 21, E: 50, C: 79, G: 108 };
+const lineY = { A: 64, E: 96, C: 128, G: 160 };
 
 export function renderScoreMeta(root, score) {
   root.innerHTML = '';
@@ -19,8 +19,15 @@ export function renderScoreMeta(root, score) {
   });
 }
 
-function pctForTick(tick, grid) {
-  return 4 + (tick / grid) * 92;
+function xForTick(tick, grid) {
+  const ratio = tick / grid;
+  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px)`;
+}
+
+function noteXForString(tick, grid, stringName) {
+  const ratio = tick / grid;
+  const offsets = { A: -4, E: 4, C: -4, G: 4 };
+  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px + ${(offsets[stringName] || 0)}px)`;
 }
 
 function addGrid(system, grid) {
@@ -35,7 +42,7 @@ function addGrid(system, grid) {
 function addChord(system, text, tick, grid) {
   const el = document.createElement('div');
   el.className = 'score-chord';
-  el.style.left = `${pctForTick(tick, grid)}%`;
+  el.style.left = xForTick(tick, grid);
   el.textContent = text || '';
   system.appendChild(el);
 }
@@ -44,7 +51,7 @@ function addStrum(system, text, tick, grid) {
   if (!text) return;
   const el = document.createElement('div');
   el.className = 'score-strum';
-  el.style.left = `${pctForTick(tick, grid)}%`;
+  el.style.left = xForTick(tick, grid);
   el.textContent = text;
   system.appendChild(el);
 }
@@ -53,11 +60,11 @@ function addNote(system, stringName, fret, tick, grid, context) {
   if (typeof fret !== 'number') return;
   const el = document.createElement('button');
   el.type = 'button';
-  el.className = 'score-note' + (context.editMode ? ' is-editable' : '');
+  el.className = 'score-note' + (fret === 0 ? ' is-open-string' : ' is-fretted') + (fret >= 10 ? ' is-two-digit' : '') + (context.editMode ? ' is-editable' : '');
   if (context.editedMap?.has(`${context.barIndex}:${context.noteIndex}:${stringName}`)) {
     el.classList.add('is-edited');
   }
-  el.style.left = `${pctForTick(tick, grid)}%`;
+  el.style.left = noteXForString(tick, grid, stringName);
   el.style.top = `${lineY[stringName]}px`;
   el.textContent = String(fret);
   el.setAttribute('aria-label', `${stringName}弦 ${fret}フレット`);
@@ -67,7 +74,7 @@ function addNote(system, stringName, fret, tick, grid, context) {
     setTimeout(() => el.classList.remove('is-active-edit', 'score-edit-flash'), 260);
     context.onNoteTap({
       barIndex: context.barIndex,
-      noteIndex: context.noteIndex,
+      noteIndex,
       stringName,
       currentFret: fret
     });
