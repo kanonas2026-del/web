@@ -6,8 +6,8 @@
   <title>候補を確認する</title>
   <link rel="stylesheet" href="../src/styles/tokens.css">
   <link rel="stylesheet" href="../src/styles/base.css">
-  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503p">
-  <link rel="stylesheet" href="../src/styles/score-preview.css?v=20260503p">
+  <link rel="stylesheet" href="../src/styles/teacher.css?v=20260503s">
+  <link rel="stylesheet" href="../src/styles/score-preview.css?v=20260503s">
 </head>
 <body class="teacher-body">
   <main class="teacher-shell teacher-shell-wide">
@@ -18,7 +18,7 @@
           <h1 class="teacher-title">生成TAB譜面を確認する</h1>
           <p class="teacher-sub">画像をそのまま読む画面ではなく、アプリ側でまっすぐなTAB譜面データとして再構成する土台です。</p>
         </div>
-        <span class="teacher-badge">v20260503p</span>
+        <span class="teacher-badge">v20260503s</span>
       </div>
     </section>
 
@@ -50,8 +50,16 @@
       <section class="teacher-score-layout">
         <section class="teacher-card teacher-row teacher-source-card">
           <p class="teacher-note">取り込み画像</p>
-          <div class="teacher-image-frame compact">
-            <img id="candidateImage" alt="取り込み譜面" />
+          <div class="source-image-toolbar">
+            <span class="source-zoom-label" id="sourceZoomLabel">100%</span>
+            <button type="button" class="teacher-mini-btn" id="sourceZoomOutBtn">画像−</button>
+            <button type="button" class="teacher-mini-btn" id="sourceZoomResetBtn">100%</button>
+            <button type="button" class="teacher-mini-btn" id="sourceZoomInBtn">画像＋</button>
+          </div>
+          <div class="teacher-image-frame compact source-image-scroll" id="sourceImageScroll">
+            <div class="source-image-stage" id="sourceImageStage">
+              <img id="candidateImage" alt="取り込み譜面" />
+            </div>
           </div>
           <p class="teacher-image-caption" id="candidateCaption"></p>
         </section>
@@ -142,6 +150,6 @@
     </section>
   </main>
 
-  <script type="module" src="../src/ui/teacher-screen.js?v=20260503p"></script>
+  <script type="module" src="../src/ui/teacher-screen.js?v=20260503s"></script>
 </body>
 </html>

@@ -6,8 +6,11 @@ const REVIEW_KEY = 'ukulele_teacher_step2_review_v2';
 const EDIT_KEY = 'ukulele_teacher_score_editor_v3';
 const HISTORY_KEY = 'ukulele_teacher_score_history_v2';
 const ZOOM_KEY = 'ukulele_teacher_score_zoom_v1';
+const SOURCE_ZOOM_KEY = 'ukulele_teacher_source_image_zoom_v1';
 
-const lineY = { A: 64, E: 96, C: 128, G: 160 };
+const lineY = { A: 72, E: 104, C: 136, G: 168 };
+const STAFF_LEFT = 108;
+const STAFF_RIGHT = 16;
 const stringBaseFreq = { G: 392.00, C: 261.63, E: 329.63, A: 440.00 };
 let audioCtx = null;
 let timers = [];
@@ -173,12 +176,10 @@ function updateNoteFret(score, barIndex, noteIndex, stringName, nextFret) {
 
 function xForTick(tick, grid) {
   const ratio = tick / grid;
-  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px)`;
+  return `calc(${STAFF_LEFT}px + ${ratio} * (100% - ${STAFF_LEFT + STAFF_RIGHT}px))`;
 }
 function noteXForString(tick, grid, stringName) {
-  const ratio = tick / grid;
-  const offsets = { A: -4, E: 4, C: -4, G: 4 };
-  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px + ${(offsets[stringName] || 0)}px)`;
+  return xForTick(tick, grid);
 }
 
 function renderScoreMeta(root, score) {
@@ -245,7 +246,14 @@ function renderBar(bar, score, options, barIndex) {
   const system = document.createElement('div');
   system.className = 'score-system';
   system.dataset.bar = String(bar.index);
-  system.innerHTML = `<div class="score-system-title">Bar ${bar.index} / ${bar.chord || ''}</div>`;
+
+  const head = document.createElement('div');
+  head.className = 'score-system-head';
+  head.innerHTML = `
+    <div class="score-system-title">Bar ${bar.index}</div>
+    <div class="score-system-chord">${bar.chord || ''}</div>
+  `;
+  system.appendChild(head);
 
   addGrid(system, score.grid);
 
@@ -259,7 +267,6 @@ function renderBar(bar, score, options, barIndex) {
   });
   system.appendChild(staff);
 
-  addChord(system, bar.chord, 0, score.grid);
   (bar.strum || []).forEach((symbol, i) => addStrum(system, symbol, i * 2, score.grid));
   (bar.notes || []).forEach((note, noteIndex) => {
     score.strings.forEach(s => addNote(system, s, note[s], note.t, score.grid, {
@@ -311,6 +318,26 @@ function applyScoreZoom(root, label, value) {
   root.style.zoom = String(zoom);
   if (label) label.textContent = `${Math.round(zoom * 100)}%`;
   writeScoreZoom(zoom);
+}
+
+function readSourceZoom() {
+  try {
+    const value = Number(localStorage.getItem(SOURCE_ZOOM_KEY) || '1');
+    return Math.max(0.7, Math.min(2.6, value || 1));
+  } catch (_) {
+    return 1;
+  }
+}
+function writeSourceZoom(value) {
+  try { localStorage.setItem(SOURCE_ZOOM_KEY, String(value)); } catch (_) {}
+}
+function applySourceZoom(stage, label, value) {
+  if (!stage) return;
+  const zoom = Math.max(0.7, Math.min(2.6, value));
+  stage.style.setProperty('--source-zoom', String(zoom));
+  stage.style.zoom = String(zoom);
+  if (label) label.textContent = `${Math.round(zoom * 100)}%`;
+  writeSourceZoom(zoom);
 }
 
 function clearTimers() {
@@ -443,6 +470,11 @@ function renderCandidatePage(payload) {
   const tabs = document.getElementById('pageTabs');
   const image = document.getElementById('candidateImage');
   const caption = document.getElementById('candidateCaption');
+  const sourceImageStage = document.getElementById('sourceImageStage');
+  const sourceZoomLabel = document.getElementById('sourceZoomLabel');
+  const sourceZoomOutBtn = document.getElementById('sourceZoomOutBtn');
+  const sourceZoomResetBtn = document.getElementById('sourceZoomResetBtn');
+  const sourceZoomInBtn = document.getElementById('sourceZoomInBtn');
   const meta = document.getElementById('scoreMeta');
   const scoreRoot = document.getElementById('scorePreviewRoot');
   const rulePanel = document.getElementById('scoreRulePanel');
@@ -464,6 +496,7 @@ function renderCandidatePage(payload) {
   let currentDraftScore = null;
   let editMode = false;
   let scoreZoom = readScoreZoom();
+  let sourceZoom = readSourceZoom();
   const editedMap = new Set();
 
   function getCurrentPage() {
@@ -524,6 +557,7 @@ function renderCandidatePage(payload) {
     image.src = page.processedUrl || page.previewUrl || '';
     image.alt = `${page.name || '譜面'} の画像`;
     caption.textContent = (page.name || '選択画像') + (page.processedUrl ? '（補正後）' : '（元画像）');
+    applySourceZoom(sourceImageStage, sourceZoomLabel, sourceZoom);
 
     currentDraftScore = createDraftScoreFromImport(page, Math.max(0, index));
     currentScore = loadDraftScore(currentDraftScore.id) || currentDraftScore;
@@ -573,6 +607,19 @@ function renderCandidatePage(payload) {
   zoomInBtn?.addEventListener('click', () => {
     scoreZoom = Math.min(1.8, Math.round((scoreZoom + 0.1) * 10) / 10);
     applyScoreZoom(scoreRoot, scoreZoomLabel, scoreZoom);
+  });
+
+  sourceZoomOutBtn?.addEventListener('click', () => {
+    sourceZoom = Math.max(0.7, Math.round((sourceZoom - 0.1) * 10) / 10);
+    applySourceZoom(sourceImageStage, sourceZoomLabel, sourceZoom);
+  });
+  sourceZoomResetBtn?.addEventListener('click', () => {
+    sourceZoom = 1;
+    applySourceZoom(sourceImageStage, sourceZoomLabel, sourceZoom);
+  });
+  sourceZoomInBtn?.addEventListener('click', () => {
+    sourceZoom = Math.min(2.6, Math.round((sourceZoom + 0.1) * 10) / 10);
+    applySourceZoom(sourceImageStage, sourceZoomLabel, sourceZoom);
   });
 
   renderTabs();

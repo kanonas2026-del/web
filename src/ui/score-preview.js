@@ -1,7 +1,9 @@
 import { createDraftScoreFromImport } from '../data/score-model.js';
 import { evaluateScoreDraft, fingeringHintForShape } from '../data/music-rules.js';
 
-const lineY = { A: 64, E: 96, C: 128, G: 160 };
+const lineY = { A: 72, E: 104, C: 136, G: 168 };
+const STAFF_LEFT = 108;
+const STAFF_RIGHT = 16;
 
 export function renderScoreMeta(root, score) {
   root.innerHTML = '';
@@ -21,13 +23,11 @@ export function renderScoreMeta(root, score) {
 
 function xForTick(tick, grid) {
   const ratio = tick / grid;
-  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px)`;
+  return `calc(${STAFF_LEFT}px + ${ratio} * (100% - ${STAFF_LEFT + STAFF_RIGHT}px))`;
 }
 
 function noteXForString(tick, grid, stringName) {
-  const ratio = tick / grid;
-  const offsets = { A: -4, E: 4, C: -4, G: 4 };
-  return `calc(82px + ${ratio * 100}% - ${ratio * 98}px + ${(offsets[stringName] || 0)}px)`;
+  return xForTick(tick, grid);
 }
 
 function addGrid(system, grid) {
@@ -86,7 +86,14 @@ function renderBar(bar, score, options, barIndex) {
   const system = document.createElement('div');
   system.className = 'score-system';
   system.dataset.bar = String(bar.index);
-  system.innerHTML = `<div class="score-system-title">Bar ${bar.index} / ${bar.chord || ''}</div>`;
+
+  const head = document.createElement('div');
+  head.className = 'score-system-head';
+  head.innerHTML = `
+    <div class="score-system-title">Bar ${bar.index}</div>
+    <div class="score-system-chord">${bar.chord || ''}</div>
+  `;
+  system.appendChild(head);
 
   addGrid(system, score.grid);
 
@@ -100,10 +107,7 @@ function renderBar(bar, score, options, barIndex) {
   });
   system.appendChild(staff);
 
-  addChord(system, bar.chord, 0, score.grid);
-  (bar.strum || []).forEach((symbol, i) => {
-    addStrum(system, symbol, i * 2, score.grid);
-  });
+  (bar.strum || []).forEach((symbol, i) => addStrum(system, symbol, i * 2, score.grid));
   (bar.notes || []).forEach((note, noteIndex) => {
     score.strings.forEach(s => addNote(system, s, note[s], note.t, score.grid, {
       editMode: !!options.editMode,
@@ -112,10 +116,6 @@ function renderBar(bar, score, options, barIndex) {
       barIndex,
       noteIndex
     }));
-    const hint = fingeringHintForShape(note);
-    if (hint !== '初級運指' && note.t === 0) {
-      system.title = hint;
-    }
   });
 
   return system;
